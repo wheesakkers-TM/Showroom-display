@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showroom opening hours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Tuinmaximaal signage — CONFIG in the <script> below.
+   Brand: forest #003017, deep #001A13, orange #FF8000,
+          lime #A2BA1C, white cards, Century Gothic / Jost.
+   ============================================================ */
+:root{
+  --forest:#003017; --forest-2:#001A13;
+  --orange:#FF8000; --lime:#A2BA1C; --lime-bright:#B9D06A;
+  --card:#FFFFFF; --ink:#12261C; --muted:#636363;
+  --sage:#A7BE86;
+  --panel:rgba(255,255,255,.06); --panel-border:rgba(255,255,255,.13);
+  --line-soft:rgba(255,255,255,.15);
+  --dot-quiet:#5B9A1F; --dot-moderate:#F0912B; --dot-busy:#C6362A;
+  --closed:#4C5B52;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--forest-2);}
+body{font-family:"Century Gothic","Jost",system-ui,-apple-system,Segoe UI,sans-serif;
+  color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--forest-2);}
+#stage{width:1920px;height:1080px;transform-origin:center center;
+  background:linear-gradient(160deg,#003017 0%,#00251A 62%,#001A13 100%);
+  display:flex;flex-direction:column;padding:48px 60px 28px;}
+
+/* header */
+.head{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:1px solid var(--line-soft);padding-bottom:22px;}
+.head__eyebrow{font-weight:700;letter-spacing:.4em;text-transform:uppercase;
+  font-size:20px;color:var(--orange);margin-bottom:8px;}
+.head__title{font-weight:700;font-size:60px;line-height:.98;letter-spacing:-.005em;color:#fff;}
+.head__sub{font-weight:500;font-size:24px;color:var(--sage);margin-top:12px;}
+.head__right{text-align:right;}
+.clock{font-weight:700;font-size:64px;line-height:1;color:#fff;font-variant-numeric:tabular-nums;}
+.today{font-weight:500;font-size:24px;color:var(--sage);margin-top:6px;}
+
+/* columns */
+.cols{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:44px;padding-top:30px;min-height:0;}
+.col{display:flex;flex-direction:column;min-height:0;}
+.col__head{display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:12px;margin-bottom:18px;border-bottom:1px solid var(--line-soft);}
+.col__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:30px;color:#fff;}
+.col__range{font-weight:500;font-size:23px;color:var(--sage);}
+.col__body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.fit{display:flex;flex-direction:column;gap:22px;transform-origin:top center;}
+
+/* section labels */
+.sec{display:flex;flex-direction:column;}
+.sec__head{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:20px;margin-bottom:12px;}
+.sec__head--special{color:var(--orange);}
+.sec__head--open{color:var(--lime);}
+
+/* compact "open as usual" chips (top strip) */
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.chip{display:flex;align-items:center;gap:11px;background:var(--panel);
+  border:1px solid var(--panel-border);border-radius:10px;padding:11px 14px;}
+.chip__dot{width:12px;height:12px;border-radius:50%;background:var(--lime);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 26%,transparent);flex-shrink:0;}
+.chip__name{font-weight:600;font-size:22px;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chip__cc{font-weight:700;font-size:14px;letter-spacing:.09em;color:var(--sage);}
+
+/* enlarged exception cards (white, they pop off the forest bg) */
+.xcards{display:flex;flex-direction:column;gap:14px;}
+.xcard{background:var(--card);border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.28);
+  padding:16px 26px;overflow:hidden;}
+.xcard__head{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.xcard__name{font-weight:700;font-size:32px;line-height:1;color:var(--ink);}
+.badge{font-weight:700;font-size:16px;letter-spacing:.09em;color:#fff;background:var(--ink);
+  padding:5px 11px;border-radius:7px;}
+.xcard__days{display:flex;flex-direction:column;gap:7px;}
+.day{display:flex;align-items:center;gap:14px;font-size:23px;}
+.day__lead{display:inline-flex;align-items:center;gap:9px;min-width:168px;font-weight:700;}
+.day__lead--closed{color:var(--closed);}
+.day__lead--closed svg{width:25px;height:25px;fill:var(--closed);}
+.day__lead--time{color:var(--ink);font-variant-numeric:tabular-nums;}
+.day__when{min-width:142px;color:#78857C;font-weight:500;}
+.day__reason{flex:1;color:#3F4A43;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.day__crowd{display:inline-flex;align-items:center;gap:9px;margin-left:auto;font-weight:600;color:#6E7A72;white-space:nowrap;}
+.day__crowd i{width:17px;height:17px;border-radius:50%;background:var(--dot);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--dot) 24%,transparent);}
+
+/* week with no exceptions */
+.allopen{display:flex;align-items:center;gap:18px;background:var(--panel);
+  border:1px solid var(--panel-border);border-radius:14px;padding:22px 28px;margin-bottom:20px;}
+.allopen svg{width:52px;height:52px;stroke:var(--lime);stroke-width:2.4;fill:none;flex-shrink:0;}
+.allopen__t{font-weight:700;font-size:32px;color:#fff;}
+.allopen__s{font-weight:500;font-size:23px;color:var(--sage);margin-top:4px;}
+
+/* footer + brand accent bar */
+.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 2px 0;}
+.foot__note{font-weight:500;font-size:20px;color:var(--sage);display:flex;align-items:center;gap:10px;}
+.pulse{width:11px;height:11px;border-radius:50%;background:var(--lime);animation:pulse 2.4s ease-out infinite;}
+.foot__brand{font-weight:700;font-size:20px;letter-spacing:.26em;color:var(--sage);text-transform:uppercase;}
+.brandbar{height:6px;background:var(--orange);border-radius:3px;margin-top:12px;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--lime) 55%,transparent);}70%{box-shadow:0 0 0 12px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+
+.xcard,.allopen{animation:rise .5s ease both;}
+@keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.xcard,.allopen{animation:none;}.pulse{animation:none;}}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <header class="head">
+      <div class="head__left">
+        <div class="head__eyebrow">Tuinmaximaal</div>
+        <h1 class="head__title">Showroom opening hours</h1>
+        <div class="head__sub">Special hours &mdash; this week &amp; next week</div>
+      </div>
+      <div class="head__right">
+        <div class="clock" id="clock">--:--</div>
+        <div class="today" id="today">&nbsp;</div>
+      </div>
+    </header>
+
+    <main class="cols">
+      <section class="col">
+        <div class="col__head">
+          <div class="col__label">This week</div>
+          <div class="col__range" id="range-this">&nbsp;</div>
+        </div>
+        <div class="col__body" id="body-this"></div>
+      </section>
+      <section class="col">
+        <div class="col__head">
+          <div class="col__label">Next week</div>
+          <div class="col__range" id="range-next">&nbsp;</div>
+        </div>
+        <div class="col__body" id="body-next"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="foot__note"><span class="pulse"></span><span id="updated">Loading&hellip;</span></div>
+      <div class="foot__brand">Showroom status</div>
+    </footer>
+    <div class="brandbar"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const CSV_URL = "";                 // paste Google Sheets "Publish to web -> CSV" link; empty = built-in data
+const DEMO_TODAY = "2026-12-22";    // preview date; set to null for the live date
+const REFRESH_MINUTES = 15;
+
+const SHOWROOMS = [
+  {name:"Eindhoven",country:"Netherlands"},
+  {name:"Venlo",country:"Netherlands"},
+  {name:"Uddel",country:"Netherlands"},
+  {name:"Leicester",country:"United Kingdom"},
+  {name:"London",country:"United Kingdom"},
+  {name:"Crailsheim",country:"Germany"},
+  {name:"Ingolstadt",country:"Germany"},
+  {name:"Heidelberg",country:"Germany"},
+  {name:"Bremen",country:"Germany"},
+  {name:"Berlin",country:"Germany"},
+  {name:"Munich",country:"Germany"}
+];
+
+/* Built-in exceptions (mirror of your Google Sheet).
+   Columns: Date | Showroom | Country | Status | Open from | Open until | Reason | Crowd
+   Date: dd-mm-yyyy (yyyy-mm-dd also works). */
+const SAMPLE_DATA = [
+  {Date:"24-05-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Sunday",Crowd:""},
+  {Date:"25-05-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
+  {Date:"25-05-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
+  {Date:"25-05-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
+  {Date:"25-05-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Spring Bank Holiday",Crowd:""},
+  {Date:"25-05-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
+  {Date:"04-06-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Corpus Christi",Crowd:""},
+  {Date:"14-06-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"12:00",OpenUntil:"17:00",Reason:"Sunday opening",Crowd:"Quiet"},
+  {Date:"15-08-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Assumption of Mary",Crowd:""},
+  {Date:"03-10-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
+  {Date:"01-11-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"All Saints' Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"28-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:30",Reason:"Busy day",Crowd:"Busy"},
+  {Date:"31-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
+  {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
+  {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
+];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const LOCK_SVG='<svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>';
+const CHECK_SVG='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const COUNTRY={"netherlands":"NL","united kingdom":"UK","germany":"DE"};
+function countryBadge(c){const k=(c||"").trim().toLowerCase();return COUNTRY[k]||(c||"").trim().slice(0,2).toUpperCase();}
+const CROWD={
+  quiet:{color:"var(--dot-quiet)",label:"Quiet"},
+  moderate:{color:"var(--dot-moderate)",label:"Moderate"},medium:{color:"var(--dot-moderate)",label:"Moderate"},gemiddeld:{color:"var(--dot-moderate)",label:"Moderate"},
+  busy:{color:"var(--dot-busy)",label:"Busy"},druk:{color:"var(--dot-busy)",label:"Busy"}
+};
+function crowdInfo(c){return CROWD[(c||"").trim().toLowerCase()]||null;}
+function isClosed(s){const k=(s||"").trim().toLowerCase();return k==="closed"||k==="gesloten";}
+function parseDate(s){
+  s=(s||"").trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+  const d=new Date(s);return isNaN(d)?null:d;
+}
+function mondayOf(d){const day=(d.getDay()+6)%7;return new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+const DAY=86400000;
+function fmtWhen(d){return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
+function fmtRange(a,b){
+  const sameMonth=a.getMonth()===b.getMonth();
+  const left=a.toLocaleDateString("en-GB",{day:"numeric",month:sameMonth?undefined:"short"});
+  const right=b.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  return `${left} \u2013 ${right}`;
+}
+function parseCSV(text){
+  const rows=[];let row=[],cur="",q=false;
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
+    else{if(ch==='"')q=true;else if(ch===',')row.push(cur),cur="";
+      else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";}
+      else if(ch==='\r'){}else cur+=ch;}}
+  if(cur.length||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(r=>r.some(c=>c.trim()!==""));
+}
+function rowsToObjects(rows){
+  if(!rows.length)return[];
+  const head=rows[0].map(h=>h.trim().toLowerCase());const idx=n=>head.indexOf(n);
+  const iD=idx("date"),iS=idx("showroom"),iC=idx("country"),iSt=idx("status"),
+        iF=idx("open from"),iU=idx("open until"),iR=idx("reason"),iCr=idx("crowd");
+  return rows.slice(1).map(r=>({
+    Date:(r[iD]||"").trim(),Showroom:(r[iS]||"").trim(),Country:(r[iC]||"").trim(),
+    Status:(r[iSt]||"").trim(),OpenFrom:(r[iF]||"").trim(),OpenUntil:(r[iU]||"").trim(),
+    Reason:(r[iR]||"").trim(),Crowd:(r[iCr]||"").trim()
+  }));
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function dayLineHTML(it){
+  const d=parseDate(it.Date);const when=d?fmtWhen(d):it.Date;
+  if(isClosed(it.Status)){
+    return `<div class="day"><span class="day__lead day__lead--closed">${LOCK_SVG}Closed</span>`+
+           `<span class="day__when">${when}</span><span class="day__reason">${it.Reason||""}</span></div>`;
+  }
+  const time=(it.OpenFrom&&it.OpenUntil)?`${it.OpenFrom}\u2013${it.OpenUntil}`:"Adjusted hours";
+  const cw=crowdInfo(it.Crowd);
+  const crowd=cw?`<span class="day__crowd"><i style="--dot:${cw.color}"></i>${cw.label}</span>`:"";
+  return `<div class="day"><span class="day__lead day__lead--time">${time}</span>`+
+         `<span class="day__when">${when}</span><span class="day__reason">${it.Reason||""}</span>${crowd}</div>`;
+}
+function xcardHTML(name,items){
+  const country=items[0].Country;
+  return `<div class="xcard"><div class="xcard__head">`+
+         `<span class="xcard__name">${name}</span><span class="badge">${countryBadge(country)}</span></div>`+
+         `<div class="xcard__days">${items.map(dayLineHTML).join("")}</div></div>`;
+}
+function chipHTML(s){
+  return `<div class="chip"><span class="chip__dot"></span>`+
+         `<span class="chip__name">${s.name}</span><span class="chip__cc">${countryBadge(s.country)}</span></div>`;
+}
+function openSectionHTML(showrooms,label){
+  let h=`<div class="sec"><div class="sec__head sec__head--open">${label}</div><div class="chips">`;
+  showrooms.forEach(s=>h+=chipHTML(s));
+  return h+`</div></div>`;
+}
+function buildWeek(data,mon){
+  const affected=new Map();
+  data.forEach(it=>{const d=parseDate(it.Date);if(!d)return;
+    const w=Math.round((mondayOf(d)-mon)/(7*DAY));
+    if(w===0){if(!affected.has(it.Showroom))affected.set(it.Showroom,[]);affected.get(it.Showroom).push(it);}});
+  affected.forEach(a=>a.sort((x,y)=>parseDate(x.Date)-parseDate(y.Date)));
+  const exc=[...affected.entries()].sort((a,b)=>parseDate(a[1][0].Date)-parseDate(b[1][0].Date));
+  const names=new Set(affected.keys());
+  const normals=SHOWROOMS.filter(s=>!names.has(s.name));
+
+  if(!exc.length){
+    return `<div class="allopen">${CHECK_SVG}<div><div class="allopen__t">All showrooms open as usual</div>`+
+           `<div class="allopen__s">No special hours this week</div></div></div>`+
+           openSectionHTML(SHOWROOMS,"All showrooms");
+  }
+  // Open as usual first (compact strip), then the enlarged special-hours cards.
+  let html=openSectionHTML(normals,"Open as usual");
+  html+=`<div class="sec"><div class="sec__head sec__head--special">Special hours</div><div class="xcards">`;
+  exc.forEach(([n,items])=>html+=xcardHTML(n,items));
+  html+=`</div></div>`;
+  return html;
+}
+function fitColumns(){
+  const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
+  fits.forEach(f=>f.style.transform="none");
+  let k=1;
+  fits.forEach(f=>{const avail=f.parentElement.clientHeight,need=f.scrollHeight;if(need>avail+1)k=Math.min(k,avail/need);});
+  fits.forEach(f=>f.style.transform="scale("+k+")");
+}
+function render(data){
+  const today=DEMO_TODAY?parseDate(DEMO_TODAY):new Date();
+  const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  const monThis=mondayOf(base),monNext=addDays(monThis,7);
+  document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
+  document.getElementById("range-next").textContent=fmtRange(monNext,addDays(monNext,6));
+  document.getElementById("body-this").innerHTML=`<div class="fit">${buildWeek(data,monThis)}</div>`;
+  document.getElementById("body-next").innerHTML=`<div class="fit">${buildWeek(data,monNext)}</div>`;
+  fitColumns();
+  const now=new Date();
+  document.getElementById("updated").textContent=
+    "Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* ============================================================
+   DATA + CLOCK + SCALING + BOOT
+   ============================================================ */
+async function loadData(){
+  if(!CSV_URL)return SAMPLE_DATA;
+  try{
+    const res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw new Error(res.status);
+    const objs=rowsToObjects(parseCSV(await res.text()));return objs.length?objs:SAMPLE_DATA;
+  }catch(e){console.warn("CSV load failed, using built-in data:",e);return SAMPLE_DATA;}
+}
+async function refresh(){render(await loadData());}
+function tick(){
+  const now=DEMO_TODAY?parseDate(DEMO_TODAY):new Date();const real=new Date();
+  document.getElementById("clock").textContent=real.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  document.getElementById("today").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+function fit(){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.getElementById("stage").style.transform="scale("+s+")";}
+window.addEventListener("resize",fit);
+fit();tick();refresh();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
+window.addEventListener("resize",fitColumns);
+setInterval(tick,10000);
+setInterval(refresh,REFRESH_MINUTES*60000);
+</script>
+</body>
+</html>
