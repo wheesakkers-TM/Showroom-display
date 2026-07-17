@@ -169,9 +169,9 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 /* ============================================================
    CONFIG
    ============================================================ */
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";                 // paste Google Sheets "Publish to web -> CSV" link; empty = built-in data
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
 const FORECAST_CSV_URL = "";        // optional: published CSV of the "Forecast" tab (Date, Showroom, Crowd) — colors the chip dots per day
-const DEMO_TODAY = "null";    // preview date; set to null for the live date
+const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
 const REFRESH_MINUTES = 15;
 
 const SHOWROOMS = [
@@ -272,6 +272,8 @@ function parseDate(s){
   const d=new Date(s);return isNaN(d)?null:d;
 }
 function mondayOf(d){const day=(d.getDay()+6)%7;return new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);}
+/* tolerant: if DEMO_TODAY is null, empty, or not a valid date (e.g. "null"), use the real date */
+function todayDate(){const d=DEMO_TODAY?parseDate(DEMO_TODAY):null;return d||new Date();}
 function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
 const DAY=86400000;
 function fmtWhen(d){return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
@@ -403,8 +405,9 @@ function buildWeek(data,mon,resolve,dotLabel){
         `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
   return html;
 }
-function render(data){
-  const today=DEMO_TODAY?parseDate(DEMO_TODAY):new Date();
+function render(data,problems){
+  problems=problems||[];
+  const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
   const monThis=mondayOf(base),monNext=addDays(monThis,7);
   document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
@@ -413,8 +416,9 @@ function render(data){
   document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),"dot = week peak");
   fitColumns();
   const now=new Date();
-  document.getElementById("updated").textContent=
-    "Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  if(problems.length)status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+  document.getElementById("updated").textContent=status;
 }
 function fitColumns(){
   const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
@@ -427,37 +431,58 @@ function fitColumns(){
 /* ============================================================
    DATA + CLOCK + SCALING + BOOT
    ============================================================ */
-async function loadData(){
-  // forecast (optional)
-  FORECAST={};
-  if(FORECAST_CSV_URL){
-    try{
-      const r=await fetch(FORECAST_CSV_URL,{cache:"no-store"});
-      if(r.ok){
-        const rows=parseCSV(await r.text());
-        const head=rows[0].map(h=>h.trim().toLowerCase());
-        const iD=head.indexOf("date"),iS=head.indexOf("showroom"),iC=head.indexOf("crowd");
-        rows.slice(1).forEach(row=>{
-          const d=parseDate(row[iD]);if(!d)return;
-          FORECAST[fcKey(d,(row[iS]||"").trim())]=(row[iC]||"").trim();
-        });
-      }
-    }catch(e){console.warn("Forecast CSV load failed:",e);}
-  }else if(DEMO_TODAY){
-    // demo: fill this week + next week from SAMPLE_FORECAST so the preview shows colored dots
-    const t=parseDate(DEMO_TODAY),m=mondayOf(t);
-    for(let i=0;i<14;i++){const d=addDays(m,i);
-      SHOWROOMS.forEach(s=>{FORECAST[fcKey(d,s.name)]=SAMPLE_FORECAST[s.name]||"Quiet";});}
-  }
-  if(!CSV_URL)return SAMPLE_DATA;
-  try{
-    const res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw new Error(res.status);
-    const objs=rowsToObjects(parseCSV(await res.text()));return objs.length?objs:SAMPLE_DATA;
-  }catch(e){console.warn("CSV load failed, using built-in data:",e);return SAMPLE_DATA;}
+const FETCH_TIMEOUT_MS = 6000;   // never wait longer than this per CSV
+let LAST_GOOD_DATA = null;       // keep last successful exceptions so a hiccup doesn't blank the board
+function fetchTimeout(url,ms){
+  const ctl=new AbortController();
+  const t=setTimeout(()=>ctl.abort(),ms);
+  return fetch(url,{cache:"no-store",signal:ctl.signal}).finally(()=>clearTimeout(t));
 }
-async function refresh(){render(await loadData());}
+async function loadForecast(){
+  const map={};
+  if(!FORECAST_CSV_URL){
+    const demoT=DEMO_TODAY?parseDate(DEMO_TODAY):null;
+    if(demoT){
+      const m=mondayOf(demoT);
+      for(let i=0;i<14;i++){const d=addDays(m,i);
+        SHOWROOMS.forEach(s=>{map[fcKey(d,s.name)]=SAMPLE_FORECAST[s.name]||"Quiet";});}
+    }
+    return map;
+  }
+  const r=await fetchTimeout(FORECAST_CSV_URL,FETCH_TIMEOUT_MS);
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const rows=parseCSV(await r.text());
+  if(!rows.length)return map;
+  const head=rows[0].map(h=>h.trim().toLowerCase());
+  const iD=head.indexOf("date"),iS=head.indexOf("showroom"),iC=head.indexOf("crowd");
+  if(iD<0||iS<0||iC<0)throw new Error("Forecast CSV mist kolommen Date/Showroom/Crowd");
+  rows.slice(1).forEach(row=>{
+    const d=parseDate(row[iD]);if(!d)return;
+    map[fcKey(d,(row[iS]||"").trim())]=(row[iC]||"").trim();
+  });
+  return map;
+}
+async function loadExceptions(){
+  if(!CSV_URL)return SAMPLE_DATA;                    // preview mode only
+  const res=await fetchTimeout(CSV_URL,FETCH_TIMEOUT_MS);
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const objs=rowsToObjects(parseCSV(await res.text()));
+  LAST_GOOD_DATA=objs;
+  return objs;                                       // empty sheet = everything open (not sample data)
+}
+let retryTimer=null;
+async function refresh(){
+  const [fc,ex]=await Promise.allSettled([loadForecast(),loadExceptions()]);
+  FORECAST = fc.status==="fulfilled" ? fc.value : {};
+  const data = ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]);
+  const problems=[];
+  if(FORECAST_CSV_URL && fc.status!=="fulfilled"){problems.push("forecast");console.warn("Forecast CSV:",fc.reason);}
+  if(CSV_URL && ex.status!=="fulfilled"){problems.push("hours");console.warn("Hours CSV:",ex.reason);}
+  render(data,problems);
+  if(problems.length && !retryTimer){retryTimer=setTimeout(()=>{retryTimer=null;refresh();},60000);}
+}
 function tick(){
-  const now=DEMO_TODAY?parseDate(DEMO_TODAY):new Date();const real=new Date();
+  const now=todayDate();const real=new Date();
   document.getElementById("clock").textContent=real.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
   document.getElementById("today").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
