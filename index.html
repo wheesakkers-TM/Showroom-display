@@ -9,104 +9,120 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   Tuinmaximaal signage — CONFIG in the <script> below.
+   Tuinmaximaal showroom board — CONFIG in the <script> below.
    Brand: forest #003017, deep #001A13, orange #FF8000,
           lime #A2BA1C, white cards, Century Gothic / Jost.
    ============================================================ */
 :root{
   --forest:#003017; --forest-2:#001A13;
-  --orange:#FF8000; --lime:#A2BA1C; --lime-bright:#B9D06A;
-  --card:#FFFFFF; --ink:#12261C; --muted:#636363;
-  --sage:#A7BE86;
-  --panel:rgba(255,255,255,.06); --panel-border:rgba(255,255,255,.13);
-  --line-soft:rgba(255,255,255,.15);
-  --dot-quiet:#5B9A1F; --dot-moderate:#F0912B; --dot-busy:#C6362A;
-  --closed:#4C5B52;
+  --orange:#FF8000; --orange-ink:#C85A0E;
+  --lime:#A2BA1C; --sage:#9FB884; --sage-dim:#7F9668;
+  --card:#FFFFFF; --ink:#0F241A; --muted:#6C7A72; --hair:#EBF0EA;
+  --closed-ink:#455349;
+  --dot-quiet:#4E9A2A; --dot-moderate:#E8912A; --dot-busy:#C63F2B;
+  --panel:rgba(255,255,255,.055); --panel-border:rgba(255,255,255,.12);
+  --hair-soft:rgba(255,255,255,.14);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;background:var(--forest-2);}
-body{font-family:"Century Gothic","Jost",system-ui,-apple-system,Segoe UI,sans-serif;
+body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe UI,sans-serif;
   color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;}
+.ic{width:22px;height:22px;flex-shrink:0;}
 
 #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--forest-2);}
 #stage{width:1920px;height:1080px;transform-origin:center center;
-  background:linear-gradient(160deg,#003017 0%,#00251A 62%,#001A13 100%);
-  display:flex;flex-direction:column;padding:48px 60px 28px;}
+  background:radial-gradient(120% 120% at 15% 0%, #013C1E 0%, #00301A 45%, #001A12 100%);
+  display:flex;flex-direction:column;padding:50px 60px 30px;}
 
-/* header */
+/* ---------- header ---------- */
 .head{display:flex;justify-content:space-between;align-items:flex-end;
-  border-bottom:1px solid var(--line-soft);padding-bottom:22px;}
-.head__eyebrow{font-weight:700;letter-spacing:.4em;text-transform:uppercase;
-  font-size:20px;color:var(--orange);margin-bottom:8px;}
-.head__title{font-weight:700;font-size:60px;line-height:.98;letter-spacing:-.005em;color:#fff;}
-.head__sub{font-weight:500;font-size:24px;color:var(--sage);margin-top:12px;}
-.head__right{text-align:right;}
+  border-bottom:1px solid var(--hair-soft);padding-bottom:24px;}
+.head__eyebrow{font-weight:700;letter-spacing:.42em;text-transform:uppercase;
+  font-size:20px;color:var(--orange);margin-bottom:9px;}
+.head__title{font-weight:700;font-size:62px;line-height:.96;letter-spacing:-.01em;color:#fff;}
+.head__sub{font-weight:500;font-size:25px;color:var(--sage);margin-top:13px;}
+.head__right{text-align:right;padding-bottom:2px;}
 .clock{font-weight:700;font-size:64px;line-height:1;color:#fff;font-variant-numeric:tabular-nums;}
-.today{font-weight:500;font-size:24px;color:var(--sage);margin-top:6px;}
+.today{font-weight:500;font-size:24px;color:var(--sage);margin-top:7px;}
 
-/* columns */
-.cols{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:44px;padding-top:30px;min-height:0;}
-.col{display:flex;flex-direction:column;min-height:0;}
-.col__head{display:flex;align-items:baseline;justify-content:space-between;
-  padding-bottom:12px;margin-bottom:18px;border-bottom:1px solid var(--line-soft);}
-.col__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:30px;color:#fff;}
+/* ---------- two week columns ---------- */
+.cols{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:46px;padding-top:30px;min-height:0;}
+.col{display:flex;flex-direction:column;min-height:0;position:relative;}
+.col+.col{padding-left:46px;border-left:1px solid var(--hair-soft);margin-left:-46px;}
+.col__head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:22px;}
+.col__label{font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:31px;color:#fff;}
 .col__range{font-weight:500;font-size:23px;color:var(--sage);}
-.col__body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
-.fit{display:flex;flex-direction:column;gap:22px;transform-origin:top center;}
+.col__body{flex:1;overflow:hidden;min-height:0;}
+.fit{display:flex;flex-direction:column;gap:26px;transform-origin:top left;}
 
-/* section labels */
-.sec{display:flex;flex-direction:column;}
-.sec__head{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:20px;margin-bottom:12px;}
-.sec__head--special{color:var(--orange);}
-.sec__head--open{color:var(--lime);}
+/* ---------- section labels ---------- */
+.sechead{display:flex;align-items:center;gap:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;font-size:19px;margin-bottom:15px;}
+.sechead--changes{color:var(--orange);}
+.sechead--open{color:var(--lime);}
+.sechead__count{font-weight:600;color:var(--sage-dim);letter-spacing:.06em;}
 
-/* compact "open as usual" chips (top strip) */
-.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+/* ---------- event cards (one per special day) ---------- */
+.cards{display:grid;grid-template-columns:1fr;gap:16px;}
+.cards[data-cols="2"]{grid-template-columns:1fr 1fr;}
+.card{background:var(--card);border-radius:18px;box-shadow:0 14px 34px rgba(0,0,0,.30);
+  padding:22px 26px;overflow:hidden;}
+.card__top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--hair);}
+.card__title{font-weight:700;font-size:28px;line-height:1.05;color:var(--ink);}
+.card__icon{font-size:26px;margin-left:2px;}
+.card__date{font-weight:600;font-size:21px;color:var(--muted);white-space:nowrap;}
+
+.grps{display:flex;flex-direction:column;gap:12px;}
+.grp{display:flex;align-items:flex-start;gap:16px;}
+.tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:20px;
+  padding:6px 13px;border-radius:9px;white-space:nowrap;flex-shrink:0;min-width:60px;justify-content:center;}
+.tag .ic{width:20px;height:20px;}
+.tag--closed{color:var(--closed-ink);background:rgba(69,83,73,.10);}
+.tag--adj{color:var(--orange-ink);background:rgba(255,128,0,.12);font-variant-numeric:tabular-nums;}
+.tag--crowd{color:var(--ink);background:color-mix(in srgb,var(--dot) 13%,transparent);}
+.tag--crowd .rdot{width:15px;height:15px;}
+.grp__rooms{display:flex;flex-wrap:wrap;gap:8px 10px;padding-top:3px;}
+.room{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:22px;color:var(--ink);}
+.room:not(:last-child)::after{content:"";}
+.room__cc{font-weight:700;font-size:14px;letter-spacing:.06em;color:#fff;background:var(--ink);
+  padding:2px 7px;border-radius:6px;}
+.rdot{width:14px;height:14px;border-radius:50%;background:var(--dot);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
+
+/* ---------- open-as-usual chips ---------- */
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
 .chip{display:flex;align-items:center;gap:11px;background:var(--panel);
-  border:1px solid var(--panel-border);border-radius:10px;padding:11px 14px;}
-.chip__dot{width:12px;height:12px;border-radius:50%;background:var(--lime);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 26%,transparent);flex-shrink:0;}
+  border:1px solid var(--panel-border);border-radius:11px;padding:12px 15px;}
+.chip__dot{width:12px;height:12px;border-radius:50%;background:var(--dot,var(--lime));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dot,var(--lime)) 26%,transparent);flex-shrink:0;}
 .chip__name{font-weight:600;font-size:22px;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.chip__cc{font-weight:700;font-size:14px;letter-spacing:.09em;color:var(--sage);}
+.chip__cc{font-weight:700;font-size:14px;letter-spacing:.08em;color:var(--sage);}
 
-/* enlarged exception cards (white, they pop off the forest bg) */
-.xcards{display:flex;flex-direction:column;gap:14px;}
-.xcard{background:var(--card);border-radius:14px;box-shadow:0 10px 26px rgba(0,0,0,.28);
-  padding:16px 26px;overflow:hidden;}
-.xcard__head{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
-.xcard__name{font-weight:700;font-size:32px;line-height:1;color:var(--ink);}
-.badge{font-weight:700;font-size:16px;letter-spacing:.09em;color:#fff;background:var(--ink);
-  padding:5px 11px;border-radius:7px;}
-.xcard__days{display:flex;flex-direction:column;gap:7px;}
-.day{display:flex;align-items:center;gap:14px;font-size:23px;}
-.day__lead{display:inline-flex;align-items:center;gap:9px;min-width:168px;font-weight:700;}
-.day__lead--closed{color:var(--closed);}
-.day__lead--closed svg{width:25px;height:25px;fill:var(--closed);}
-.day__lead--time{color:var(--ink);font-variant-numeric:tabular-nums;}
-.day__when{min-width:142px;color:#78857C;font-weight:500;}
-.day__reason{flex:1;color:#3F4A43;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.day__crowd{display:inline-flex;align-items:center;gap:9px;margin-left:auto;font-weight:600;color:#6E7A72;white-space:nowrap;}
-.day__crowd i{width:17px;height:17px;border-radius:50%;background:var(--dot);
-  box-shadow:0 0 0 4px color-mix(in srgb,var(--dot) 24%,transparent);}
+/* ---------- all-open hero (a week with no changes) ---------- */
+.hero{display:flex;align-items:center;gap:20px;background:var(--panel);
+  border:1px solid var(--panel-border);border-radius:16px;padding:30px 34px;margin-bottom:26px;}
+.hero__ic{width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--lime) 20%,transparent);}
+.hero__ic svg{width:38px;height:38px;stroke:var(--lime);stroke-width:2.6;fill:none;}
+.hero__t{font-weight:700;font-size:34px;color:#fff;}
+.hero__s{font-weight:500;font-size:23px;color:var(--sage);margin-top:5px;}
 
-/* week with no exceptions */
-.allopen{display:flex;align-items:center;gap:18px;background:var(--panel);
-  border:1px solid var(--panel-border);border-radius:14px;padding:22px 28px;margin-bottom:20px;}
-.allopen svg{width:52px;height:52px;stroke:var(--lime);stroke-width:2.4;fill:none;flex-shrink:0;}
-.allopen__t{font-weight:700;font-size:32px;color:#fff;}
-.allopen__s{font-weight:500;font-size:23px;color:var(--sage);margin-top:4px;}
-
-/* footer + brand accent bar */
+/* ---------- footer ---------- */
 .foot{display:flex;justify-content:space-between;align-items:center;padding:18px 2px 0;}
-.foot__note{font-weight:500;font-size:20px;color:var(--sage);display:flex;align-items:center;gap:10px;}
-.pulse{width:11px;height:11px;border-radius:50%;background:var(--lime);animation:pulse 2.4s ease-out infinite;}
-.foot__brand{font-weight:700;font-size:20px;letter-spacing:.26em;color:var(--sage);text-transform:uppercase;}
-.brandbar{height:6px;background:var(--orange);border-radius:3px;margin-top:12px;}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--lime) 55%,transparent);}70%{box-shadow:0 0 0 12px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+.foot__note{font-weight:500;font-size:19px;color:var(--sage-dim);display:flex;align-items:center;gap:10px;}
+.pulse{width:10px;height:10px;border-radius:50%;background:var(--lime);animation:pulse 2.6s ease-out infinite;}
+.foot__brand{font-weight:600;font-size:18px;letter-spacing:.08em;color:var(--sage-dim);text-transform:uppercase;}
+.legend{display:flex;gap:22px;}
+.lg{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:18px;color:var(--sage-dim);}
+.lg--label{text-transform:uppercase;letter-spacing:.12em;font-size:15px;margin-right:2px;}
+.lg i{width:12px;height:12px;border-radius:50%;background:var(--dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
+.brandbar{height:6px;background:linear-gradient(90deg,var(--orange),#ffab52);border-radius:3px;margin-top:13px;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--lime) 55%,transparent);}70%{box-shadow:0 0 0 11px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
 
-.xcard,.allopen{animation:rise .5s ease both;}
+.card,.hero{animation:rise .5s ease both;}
 @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
-@media (prefers-reduced-motion:reduce){.xcard,.allopen{animation:none;}.pulse{animation:none;}}
+@media (prefers-reduced-motion:reduce){.card,.hero{animation:none;}.pulse{animation:none;}}
 </style>
 </head>
 <body>
@@ -126,24 +142,24 @@ body{font-family:"Century Gothic","Jost",system-ui,-apple-system,Segoe UI,sans-s
 
     <main class="cols">
       <section class="col">
-        <div class="col__head">
-          <div class="col__label">This week</div>
-          <div class="col__range" id="range-this">&nbsp;</div>
-        </div>
-        <div class="col__body" id="body-this"></div>
+        <div class="col__head"><div class="col__label">This week</div><div class="col__range" id="range-this">&nbsp;</div></div>
+        <div class="col__body"><div class="fit" id="body-this"></div></div>
       </section>
       <section class="col">
-        <div class="col__head">
-          <div class="col__label">Next week</div>
-          <div class="col__range" id="range-next">&nbsp;</div>
-        </div>
-        <div class="col__body" id="body-next"></div>
+        <div class="col__head"><div class="col__label">Next week</div><div class="col__range" id="range-next">&nbsp;</div></div>
+        <div class="col__body"><div class="fit" id="body-next"></div></div>
       </section>
     </main>
 
     <footer class="foot">
       <div class="foot__note"><span class="pulse"></span><span id="updated">Loading&hellip;</span></div>
-      <div class="foot__brand">Showroom status</div>
+      <div class="legend">
+        <span class="lg lg--label">Expected footfall</span>
+        <span class="lg"><i style="--dot:var(--dot-quiet)"></i>Low</span>
+        <span class="lg"><i style="--dot:var(--dot-moderate)"></i>Moderate</span>
+        <span class="lg"><i style="--dot:var(--dot-busy)"></i>High</span>
+      </div>
+      <div class="foot__brand">Forecast based on showroom visitor data</div>
     </footer>
     <div class="brandbar"></div>
   </div>
@@ -154,6 +170,7 @@ body{font-family:"Century Gothic","Jost",system-ui,-apple-system,Segoe UI,sans-s
    CONFIG
    ============================================================ */
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";                 // paste Google Sheets "Publish to web -> CSV" link; empty = built-in data
+const FORECAST_CSV_URL = "";        // optional: published CSV of the "Forecast" tab (Date, Showroom, Crowd) — colors the chip dots per day
 const DEMO_TODAY = "null";    // preview date; set to null for the live date
 const REFRESH_MINUTES = 15;
 
@@ -191,6 +208,9 @@ const SAMPLE_DATA = [
   {Date:"26-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
   {Date:"26-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
   {Date:"28-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:30",Reason:"Busy day",Crowd:"Busy"},
+  {Date:"29-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
+  {Date:"29-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
+  {Date:"29-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
   {Date:"31-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
   {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
   {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
@@ -199,17 +219,50 @@ const SAMPLE_DATA = [
 /* ============================================================
    HELPERS
    ============================================================ */
-const LOCK_SVG='<svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>';
-const CHECK_SVG='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LOCK_SVG='<svg viewBox="0 0 24 24" class="ic"><path fill="currentColor" d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm3 8H9V6a3 3 0 0 1 6 0v3z"/></svg>';
+const CLOCK_SVG='<svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.4V12l3 1.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const CHECK_SVG='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const COUNTRY={"netherlands":"NL","united kingdom":"UK","germany":"DE"};
 function countryBadge(c){const k=(c||"").trim().toLowerCase();return COUNTRY[k]||(c||"").trim().slice(0,2).toUpperCase();}
+/* holiday icon per reason (keyword match, EN/NL/DE); no match = no icon */
+const ICONS=[
+ [/between christmas/i,"\u{1F6CD}\uFE0F"],           // 🛍️ shopping days between Xmas & NY
+ [/christmas|kerst|weihnacht/i,"\u{1F384}"],        // 🎄
+ [/boxing/i,"\u{1F381}"],                            // 🎁
+ [/new year|oudjaar|silvester|nieuwjaar/i,"\u{1F386}"], // 🎆
+ [/easter|pasen|oster/i,"\u{1F423}"],                // 🐣
+ [/whit|pinkster|pfingst/i,"\u{1F54A}\uFE0F"],       // 🕊️
+ [/ascension|hemelvaart/i,"\u{1F54A}\uFE0F"],        // 🕊️
+ [/king'?s day|koningsdag/i,"\u{1F451}"],            // 👑
+ [/bank holiday/i,"\u{1F3D6}\uFE0F"],                // 🏖️
+ [/unity|einheit/i,"\u{1F1E9}\u{1F1EA}"],            // 🇩🇪
+ [/assumption|himmelfahrt|corpus christi|fronleichnam|all saints|allerheiligen|reformation/i,"\u26EA"], // ⛪
+ [/halloween/i,"\u{1F383}"],                          // 🎃
+ [/black friday|sale/i,"\u{1F6CD}\uFE0F"],            // 🛍️
+ [/sunday opening|koopzondag/i,"\u{1F6CD}\uFE0F"],    // 🛍️
+ [/carnival|karneval|carnaval/i,"\u{1F3AD}"],         // 🎭
+ [/summer/i,"\u2600\uFE0F"],                          // ☀️
+];
+function iconFor(reason){
+  for(const [re,ic] of ICONS){if(re.test(reason||""))return ic;}
+  return "";
+}
 const CROWD={
-  quiet:{color:"var(--dot-quiet)",label:"Quiet"},
+  quiet:{color:"var(--dot-quiet)",label:"Low"},low:{color:"var(--dot-quiet)",label:"Low"},rustig:{color:"var(--dot-quiet)",label:"Low"},
   moderate:{color:"var(--dot-moderate)",label:"Moderate"},medium:{color:"var(--dot-moderate)",label:"Moderate"},gemiddeld:{color:"var(--dot-moderate)",label:"Moderate"},
-  busy:{color:"var(--dot-busy)",label:"Busy"},druk:{color:"var(--dot-busy)",label:"Busy"}
+  busy:{color:"var(--dot-busy)",label:"High"},high:{color:"var(--dot-busy)",label:"High"},druk:{color:"var(--dot-busy)",label:"High"}
 };
 function crowdInfo(c){return CROWD[(c||"").trim().toLowerCase()]||null;}
 function isClosed(s){const k=(s||"").trim().toLowerCase();return k==="closed"||k==="gesloten";}
+function isAdjusted(s){const k=(s||"").trim().toLowerCase();return k==="adjusted hours"||k==="aangepaste tijden";}
+
+/* Daily forecast (from FORECAST_CSV_URL): "dd-mm-yyyy|Showroom" -> "Quiet/Moderate/Busy" */
+let FORECAST = {};
+const SAMPLE_FORECAST = {  // demo values so the preview shows colored chips
+  "Eindhoven":"Moderate","Venlo":"Quiet","Uddel":"Quiet","Leicester":"Busy","London":"Moderate",
+  "Crailsheim":"Quiet","Ingolstadt":"Quiet","Heidelberg":"Moderate","Bremen":"Quiet","Berlin":"Quiet","Munich":"Quiet"
+};
+function fcKey(d,room){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+"|"+room;}
 function parseDate(s){
   s=(s||"").trim();
   let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
@@ -253,61 +306,102 @@ function rowsToObjects(rows){
 /* ============================================================
    RENDER
    ============================================================ */
-function dayLineHTML(it){
-  const d=parseDate(it.Date);const when=d?fmtWhen(d):it.Date;
-  if(isClosed(it.Status)){
-    return `<div class="day"><span class="day__lead day__lead--closed">${LOCK_SVG}Closed</span>`+
-           `<span class="day__when">${when}</span><span class="day__reason">${it.Reason||""}</span></div>`;
+function roomHTML(it,withCrowd){
+  const cw=withCrowd?crowdInfo(it.Crowd):null;
+  const dot=cw?`<i class="rdot" style="--dot:${cw.color}"></i>`:"";
+  return `<span class="room">${it.Showroom}<span class="room__cc">${countryBadge(it.Country)}</span>${dot}</span>`;
+}
+function eventCardHTML(ev){
+  // sub-group rows: closed together, adjusted grouped by identical time
+  const groups=new Map();
+  ev.rows.forEach(it=>{
+    if(isClosed(it.Status)){
+      if(!groups.has("closed"))groups.set("closed",{type:"closed",rooms:[]});
+      groups.get("closed").rooms.push(it);
+    }else if(isAdjusted(it.Status)||(it.OpenFrom&&it.OpenUntil)){
+      const k="adj|"+it.OpenFrom+"|"+it.OpenUntil;
+      if(!groups.has(k))groups.set(k,{type:"adj",from:it.OpenFrom,until:it.OpenUntil,rooms:[]});
+      groups.get(k).rooms.push(it);
+    }else{
+      // normal hours, flagged for expected crowd (e.g. Busy)
+      const cw=crowdInfo(it.Crowd)||CROWD.busy;
+      const k="crowd|"+cw.label;
+      if(!groups.has(k))groups.set(k,{type:"crowd",crowd:cw,rooms:[]});
+      groups.get(k).rooms.push(it);
+    }
+  });
+  // adjusted first, then crowd-only, closed last
+  const order={adj:0,crowd:1,closed:2};
+  const arr=[...groups.values()].sort((a,b)=>order[a.type]-order[b.type]);
+  const d=parseDate(ev.date);
+  const dateStr=d?fmtWhen(d):ev.date;
+  const icon=iconFor(ev.reason);
+  const title=(ev.reason?ev.reason:dateStr)+(icon?` <span class="card__icon">${icon}</span>`:"");
+  const dateChip=ev.reason?dateStr:"";
+  let g="";
+  arr.forEach(gr=>{
+    let tag,withDots=false;
+    if(gr.type==="closed"){tag=`<span class="tag tag--closed">${LOCK_SVG}Closed</span>`;}
+    else if(gr.type==="crowd"){tag=`<span class="tag tag--crowd" style="--dot:${gr.crowd.color}"><i class="rdot" style="--dot:${gr.crowd.color}"></i>Expected footfall: ${gr.crowd.label}</span>`;}
+    else{const t=(gr.from&&gr.until)?`${gr.from}\u2013${gr.until}`:"Adjusted hours";tag=`<span class="tag tag--adj">${CLOCK_SVG}${t}</span>`;withDots=true;}
+    const rooms=gr.rooms.map(it=>roomHTML(it,withDots)).join("");
+    g+=`<div class="grp">${tag}<div class="grp__rooms">${rooms}</div></div>`;
+  });
+  return `<div class="card"><div class="card__top"><div class="card__title">${title}</div>`+
+         `${dateChip?`<div class="card__date">${dateChip}</div>`:""}</div><div class="grps">${g}</div></div>`;
+}
+function chipHTML(s,resolve){
+  let color="var(--lime)";
+  if(resolve){
+    const cw=crowdInfo(resolve(s.name));
+    if(cw)color=cw.color;
   }
-  const time=(it.OpenFrom&&it.OpenUntil)?`${it.OpenFrom}\u2013${it.OpenUntil}`:"Adjusted hours";
-  const cw=crowdInfo(it.Crowd);
-  const crowd=cw?`<span class="day__crowd"><i style="--dot:${cw.color}"></i>${cw.label}</span>`:"";
-  return `<div class="day"><span class="day__lead day__lead--time">${time}</span>`+
-         `<span class="day__when">${when}</span><span class="day__reason">${it.Reason||""}</span>${crowd}</div>`;
-}
-function xcardHTML(name,items){
-  const country=items[0].Country;
-  return `<div class="xcard"><div class="xcard__head">`+
-         `<span class="xcard__name">${name}</span><span class="badge">${countryBadge(country)}</span></div>`+
-         `<div class="xcard__days">${items.map(dayLineHTML).join("")}</div></div>`;
-}
-function chipHTML(s){
-  return `<div class="chip"><span class="chip__dot"></span>`+
+  return `<div class="chip"><span class="chip__dot" style="--dot:${color};background:${color}"></span>`+
          `<span class="chip__name">${s.name}</span><span class="chip__cc">${countryBadge(s.country)}</span></div>`;
 }
-function openSectionHTML(showrooms,label){
-  let h=`<div class="sec"><div class="sec__head sec__head--open">${label}</div><div class="chips">`;
-  showrooms.forEach(s=>h+=chipHTML(s));
+function openSectionHTML(list,label,resolve){
+  if(!list.length)return "";
+  let h=`<div><div class="sechead sechead--open">Open as usual <span class="sechead__count">${label}</span></div><div class="chips">`;
+  list.forEach(s=>h+=chipHTML(s,resolve));
   return h+`</div></div>`;
 }
-function buildWeek(data,mon){
-  const affected=new Map();
-  data.forEach(it=>{const d=parseDate(it.Date);if(!d)return;
-    const w=Math.round((mondayOf(d)-mon)/(7*DAY));
-    if(w===0){if(!affected.has(it.Showroom))affected.set(it.Showroom,[]);affected.get(it.Showroom).push(it);}});
-  affected.forEach(a=>a.sort((x,y)=>parseDate(x.Date)-parseDate(y.Date)));
-  const exc=[...affected.entries()].sort((a,b)=>parseDate(a[1][0].Date)-parseDate(b[1][0].Date));
-  const names=new Set(affected.keys());
-  const normals=SHOWROOMS.filter(s=>!names.has(s.name));
-
-  if(!exc.length){
-    return `<div class="allopen">${CHECK_SVG}<div><div class="allopen__t">All showrooms open as usual</div>`+
-           `<div class="allopen__s">No special hours this week</div></div></div>`+
-           openSectionHTML(SHOWROOMS,"All showrooms");
-  }
-  // Open as usual first (compact strip), then the enlarged special-hours cards.
-  let html=openSectionHTML(normals,"Open as usual");
-  html+=`<div class="sec"><div class="sec__head sec__head--special">Special hours</div><div class="xcards">`;
-  exc.forEach(([n,items])=>html+=xcardHTML(n,items));
-  html+=`</div></div>`;
-  return html;
+const CROWD_RANK={quiet:1,low:1,rustig:1,moderate:2,medium:2,gemiddeld:2,busy:3,high:3,druk:3};
+function resolverForDay(d){return name=>FORECAST[fcKey(d,name)]||null;}
+function resolverForWeek(mon){
+  return name=>{
+    let best=null,rank=0;
+    for(let i=0;i<7;i++){
+      const v=FORECAST[fcKey(addDays(mon,i),name)];
+      if(v&&(CROWD_RANK[v.toLowerCase()]||0)>rank){rank=CROWD_RANK[v.toLowerCase()];best=v;}
+    }
+    return best;
+  };
 }
-function fitColumns(){
-  const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
-  fits.forEach(f=>f.style.transform="none");
-  let k=1;
-  fits.forEach(f=>{const avail=f.parentElement.clientHeight,need=f.scrollHeight;if(need>avail+1)k=Math.min(k,avail/need);});
-  fits.forEach(f=>f.style.transform="scale("+k+")");
+function buildWeek(data,mon,resolve,dotLabel){
+  const items=data.filter(it=>{const d=parseDate(it.Date);return d&&Math.round((mondayOf(d)-mon)/(7*DAY))===0;});
+  const names=new Set(items.map(i=>i.Showroom));
+  const normals=SHOWROOMS.filter(s=>!names.has(s.name));
+  const openLabel=(normals.length===SHOWROOMS.length?"all "+SHOWROOMS.length:normals.length+" of "+SHOWROOMS.length)+(dotLabel?" \u00b7 "+dotLabel:"");
+
+  if(!items.length){
+    return `<div class="hero"><div class="hero__ic">${CHECK_SVG}</div>`+
+           `<div><div class="hero__t">All showrooms open as usual</div>`+
+           `<div class="hero__s">No special hours this week</div></div></div>`+
+           openSectionHTML(SHOWROOMS,openLabel,resolve);
+  }
+  // group items into events by date + reason
+  const ev=new Map();
+  items.forEach(it=>{const key=it.Date+"|"+(it.Reason||"");
+    if(!ev.has(key))ev.set(key,{date:it.Date,reason:it.Reason||"",rows:[]});
+    ev.get(key).rows.push(it);});
+  const events=[...ev.values()].sort((a,b)=>parseDate(a.date)-parseDate(b.date));
+  const cols=events.length>=4?2:1;
+
+  // Open as usual (compact) on top, then the special days.
+  let html=openSectionHTML(normals,openLabel,resolve);
+  html+=`<div><div class="sechead sechead--changes">Special days <span class="sechead__count">${names.size} showroom${names.size>1?"s":""}</span></div>`+
+        `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
+  return html;
 }
 function render(data){
   const today=DEMO_TODAY?parseDate(DEMO_TODAY):new Date();
@@ -315,18 +409,46 @@ function render(data){
   const monThis=mondayOf(base),monNext=addDays(monThis,7);
   document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
   document.getElementById("range-next").textContent=fmtRange(monNext,addDays(monNext,6));
-  document.getElementById("body-this").innerHTML=`<div class="fit">${buildWeek(data,monThis)}</div>`;
-  document.getElementById("body-next").innerHTML=`<div class="fit">${buildWeek(data,monNext)}</div>`;
+  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),"dot = today");
+  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),"dot = week peak");
   fitColumns();
   const now=new Date();
   document.getElementById("updated").textContent=
     "Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+}
+function fitColumns(){
+  const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
+  fits.forEach(f=>{f.style.transform="none";f.style.width="100%";});
+  let k=1;
+  fits.forEach(f=>{const avail=f.parentElement.clientHeight,need=f.scrollHeight;if(need>avail+1)k=Math.min(k,avail/need);});
+  if(k<1)fits.forEach(f=>{f.style.width=(100/k)+"%";f.style.transform="scale("+k+")";});
 }
 
 /* ============================================================
    DATA + CLOCK + SCALING + BOOT
    ============================================================ */
 async function loadData(){
+  // forecast (optional)
+  FORECAST={};
+  if(FORECAST_CSV_URL){
+    try{
+      const r=await fetch(FORECAST_CSV_URL,{cache:"no-store"});
+      if(r.ok){
+        const rows=parseCSV(await r.text());
+        const head=rows[0].map(h=>h.trim().toLowerCase());
+        const iD=head.indexOf("date"),iS=head.indexOf("showroom"),iC=head.indexOf("crowd");
+        rows.slice(1).forEach(row=>{
+          const d=parseDate(row[iD]);if(!d)return;
+          FORECAST[fcKey(d,(row[iS]||"").trim())]=(row[iC]||"").trim();
+        });
+      }
+    }catch(e){console.warn("Forecast CSV load failed:",e);}
+  }else if(DEMO_TODAY){
+    // demo: fill this week + next week from SAMPLE_FORECAST so the preview shows colored dots
+    const t=parseDate(DEMO_TODAY),m=mondayOf(t);
+    for(let i=0;i<14;i++){const d=addDays(m,i);
+      SHOWROOMS.forEach(s=>{FORECAST[fcKey(d,s.name)]=SAMPLE_FORECAST[s.name]||"Quiet";});}
+  }
   if(!CSV_URL)return SAMPLE_DATA;
   try{
     const res=await fetch(CSV_URL,{cache:"no-store"});if(!res.ok)throw new Error(res.status);
@@ -339,11 +461,10 @@ function tick(){
   document.getElementById("clock").textContent=real.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
   document.getElementById("today").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function fit(){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.getElementById("stage").style.transform="scale("+s+")";}
-window.addEventListener("resize",fit);
-fit();tick();refresh();
+function fitStage(){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.getElementById("stage").style.transform="scale("+s+")";}
+window.addEventListener("resize",()=>{fitStage();fitColumns();});
+fitStage();tick();refresh();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
-window.addEventListener("resize",fitColumns);
 setInterval(tick,10000);
 setInterval(refresh,REFRESH_MINUTES*60000);
 </script>
