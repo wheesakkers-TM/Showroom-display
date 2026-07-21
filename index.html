@@ -179,6 +179,22 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH
 const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";        // optional: published CSV of the "Forecast" tab (Date, Showroom, Crowd) — colors the chip dots per day
 const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
 const REFRESH_MINUTES = 15;
+/* View: default = this week & next week. Add ?view=holidays to the URL for the outlook slide. */
+const VIEW = (function(){try{return new URLSearchParams(location.search).get("view")||"";}catch(e){return "";}})();
+
+/* Structural closing days per showroom (fallback when STANDARD_CSV_URL is empty).
+   Days Mon..Sun; "x" = always closed, "even"/"oneven" = closed in even/odd ISO weeks. */
+const STANDARD_DEFAULT = {
+  "Uddel":      ["","","","","","","oneven"],   // Sunday shopping in even weeks only
+  "London":     ["","","","","","","x"],
+  "Crailsheim": ["","","","","","","x"],
+  "Ingolstadt": ["","","","","","","x"],
+  "Heidelberg": ["","","","","","","x"],
+  "Bremen":     ["","","","","","","x"],
+  "Berlin":     ["","","","","","","x"],
+  "Munich":     ["","","","","","","x"]
+};
+let STANDARD = STANDARD_DEFAULT;
 
 const SHOWROOMS = [
   {name:"Eindhoven",country:"Netherlands"},
@@ -291,6 +307,22 @@ function parseDate(s){
 function mondayOf(d){const day=(d.getDay()+6)%7;return new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);}
 /* tolerant: if DEMO_TODAY is null, empty, or not a valid date (e.g. "null"), use the real date */
 function todayDate(){const d=DEMO_TODAY?parseDate(DEMO_TODAY):null;return d||new Date();}
+function isoWeek(d){
+  const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=(t.getUTCDay()+6)%7; t.setUTCDate(t.getUTCDate()-day+3);
+  const firstThu=new Date(Date.UTC(t.getUTCFullYear(),0,4));
+  const fday=(firstThu.getUTCDay()+6)%7; firstThu.setUTCDate(firstThu.getUTCDate()-fday+3);
+  return 1+Math.round((t-firstThu)/(7*DAY));
+}
+/* is this showroom structurally closed on this date (Standaard tab)? */
+function closedStandard(room,d){
+  const pat=STANDARD[room]; if(!pat)return false;
+  const v=(pat[(d.getDay()+6)%7]||"").trim().toLowerCase();
+  if(!v)return false;
+  if(v==="even")return isoWeek(d)%2===0;
+  if(v==="oneven"||v==="odd")return isoWeek(d)%2===1;
+  return true;   // "x", "dicht", "closed", anything else = always closed that weekday
+}
 function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
 const DAY=86400000;
 function fmtWhen(d){return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
@@ -369,7 +401,11 @@ function eventCardHTML(ev){
   return `<div class="card"><div class="card__top"><div class="card__title">${title}</div>`+
          `${dateChip?`<div class="card__date">${dateChip}</div>`:""}</div><div class="grps">${g}</div></div>`;
 }
-function chipHTML(s,resolve){
+function chipHTML(s,resolve,lockDate){
+  if(lockDate&&closedStandard(s.name,lockDate)){
+    return `<div class="chip chip--off"><span class="chip__lockic">${LOCK_SVG}</span>`+
+           `<span class="chip__name">${s.name}</span><span class="chip__cc">${countryBadge(s.country)}</span></div>`;
+  }
   let color="var(--lime)";
   if(resolve){
     const cw=crowdInfo(resolve(s.name));
@@ -378,10 +414,10 @@ function chipHTML(s,resolve){
   return `<div class="chip"><span class="chip__dot" style="--dot:${color};background:${color}"></span>`+
          `<span class="chip__name">${s.name}</span><span class="chip__cc">${countryBadge(s.country)}</span></div>`;
 }
-function openSectionHTML(list,label,resolve){
+function openSectionHTML(list,label,resolve,lockDate){
   if(!list.length)return "";
   let h=`<div><div class="sechead sechead--open">Open as usual <span class="sechead__count">${label}</span></div><div class="chips">`;
-  list.forEach(s=>h+=chipHTML(s,resolve));
+  list.forEach(s=>h+=chipHTML(s,resolve,lockDate));
   return h+`</div></div>`;
 }
 const CROWD_RANK={quiet:1,low:1,rustig:1,moderate:2,medium:2,gemiddeld:2,busy:3,high:3,druk:3};
@@ -429,8 +465,8 @@ function render(data,problems){
   const monThis=mondayOf(base),monNext=addDays(monThis,7);
   document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
   document.getElementById("range-next").textContent=fmtRange(monNext,addDays(monNext,6));
-  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),"dot = today");
-  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),"dot = week peak");
+  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),"expected footfall today");
+  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),"peak footfall next week");
   fitColumns();
   const now=new Date();
   let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
@@ -508,7 +544,12 @@ function tick(){
   document.getElementById("clock").textContent=real.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
   document.getElementById("today").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
-function fitStage(){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.getElementById("stage").style.transform="scale("+s+")";}
+function fitStage(){
+  const cw=document.documentElement.clientWidth||window.innerWidth;
+  const ch=document.documentElement.clientHeight||window.innerHeight;
+  const s=Math.min((cw-8)/1920,(ch-8)/1080);
+  document.getElementById("stage").style.transform="scale("+s+")";
+}
 window.addEventListener("resize",()=>{fitStage();fitColumns();});
 fitStage();tick();refresh();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
