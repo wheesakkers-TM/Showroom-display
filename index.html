@@ -65,6 +65,11 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 /* ---------- event cards (one per special day) ---------- */
 .cards{display:grid;grid-template-columns:1fr;gap:16px;}
 .cards[data-cols="2"]{grid-template-columns:1fr 1fr;}
+.cards[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
+.holi{flex:1;overflow:hidden;min-height:0;padding-top:30px;}
+.chip--off{opacity:.55;}
+.chip__lockic{display:inline-flex;flex-shrink:0;}
+.chip__lockic svg{width:15px;height:15px;fill:var(--sage);}
 .card{background:var(--card);border-radius:18px;box-shadow:0 14px 34px rgba(0,0,0,.30);
   padding:22px 26px;overflow:hidden;}
 .card__top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
@@ -132,7 +137,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
       <div class="head__left">
         <div class="head__eyebrow">Tuinmaximaal</div>
         <h1 class="head__title">Showroom opening hours</h1>
-        <div class="head__sub">Special hours &mdash; this week &amp; next week</div>
+        <div class="head__sub" id="subtitle">Special hours &mdash; this week &amp; next week</div>
       </div>
       <div class="head__right">
         <div class="clock" id="clock">--:--</div>
@@ -149,6 +154,10 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
         <div class="col__head"><div class="col__label">Next week</div><div class="col__range" id="range-next">&nbsp;</div></div>
         <div class="col__body"><div class="fit" id="body-next"></div></div>
       </section>
+    </main>
+
+    <main class="holi" id="holi" style="display:none">
+      <div class="fit" id="holi-fit"></div>
     </main>
 
     <footer class="foot">
@@ -432,17 +441,17 @@ function resolverForWeek(mon){
     return best;
   };
 }
-function buildWeek(data,mon,resolve,dotLabel){
+function buildWeek(data,mon,resolve,lockDate){
   const items=data.filter(it=>{const d=parseDate(it.Date);return d&&Math.round((mondayOf(d)-mon)/(7*DAY))===0;});
   const names=new Set(items.map(i=>i.Showroom));
   const normals=SHOWROOMS.filter(s=>!names.has(s.name));
-  const openLabel=(normals.length===SHOWROOMS.length?"all "+SHOWROOMS.length:normals.length+" of "+SHOWROOMS.length)+(dotLabel?" \u00b7 "+dotLabel:"");
+  const openLabel=(normals.length===SHOWROOMS.length?"all "+SHOWROOMS.length:normals.length+" of "+SHOWROOMS.length);
 
   if(!items.length){
     return `<div class="hero"><div class="hero__ic">${CHECK_SVG}</div>`+
            `<div><div class="hero__t">All showrooms open as usual</div>`+
            `<div class="hero__s">No special hours this week</div></div></div>`+
-           openSectionHTML(SHOWROOMS,openLabel,resolve);
+           openSectionHTML(SHOWROOMS,openLabel,resolve,lockDate);
   }
   // group items into events by date + reason
   const ev=new Map();
@@ -453,20 +462,51 @@ function buildWeek(data,mon,resolve,dotLabel){
   const cols=events.length>=4?2:1;
 
   // Open as usual (compact) on top, then the special days.
-  let html=openSectionHTML(normals,openLabel,resolve);
+  let html=openSectionHTML(normals,openLabel,resolve,lockDate);
   html+=`<div><div class="sechead sechead--changes">Special days <span class="sechead__count">${names.size} showroom${names.size>1?"s":""}</span></div>`+
         `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
   return html;
+}
+function buildHolidays(data){
+  const today=todayDate();
+  const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  const until=addDays(base,42);
+  const items=data.filter(it=>{const d=parseDate(it.Date);return d&&d>=base&&d<=until;});
+  if(!items.length){
+    return `<div class="hero"><div class="hero__ic">${CHECK_SVG}</div>`+
+           `<div><div class="hero__t">No special days coming up</div>`+
+           `<div class="hero__s">All showrooms open as usual for the next 6 weeks</div></div></div>`;
+  }
+  const ev=new Map();
+  items.forEach(it=>{const key=it.Date+"|"+(it.Reason||"");
+    if(!ev.has(key))ev.set(key,{date:it.Date,reason:it.Reason||"",rows:[]});
+    ev.get(key).rows.push(it);});
+  const events=[...ev.values()].sort((a,b)=>parseDate(a.date)-parseDate(b.date));
+  const cols=events.length>=7?3:(events.length>=3?2:1);
+  return `<div><div class="sechead sechead--changes">Coming up <span class="sechead__count">next 6 weeks \u00b7 ${events.length} special day${events.length>1?"s":""}</span></div>`+
+         `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
 }
 function render(data,problems){
   problems=problems||[];
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  if(VIEW==="holidays"){
+    document.getElementById("subtitle").innerHTML="Holidays &amp; special days &mdash; coming 6 weeks";
+    document.querySelector(".cols").style.display="none";
+    const holi=document.getElementById("holi");holi.style.display="block";
+    document.getElementById("holi-fit").innerHTML=buildHolidays(data);
+    fitColumns();
+    const now=new Date();
+    let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+    if(problems.length)status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+    document.getElementById("updated").textContent=status;
+    return;
+  }
   const monThis=mondayOf(base),monNext=addDays(monThis,7);
   document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
   document.getElementById("range-next").textContent=fmtRange(monNext,addDays(monNext,6));
-  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),"expected footfall today");
-  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),"peak footfall next week");
+  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),base);
+  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),null);
   fitColumns();
   const now=new Date();
   let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
@@ -527,15 +567,37 @@ async function loadExceptions(){
   LAST_GOOD_DATA=objs;
   return objs;                                       // empty sheet = everything open (not sample data)
 }
+async function loadStandard(){
+  if(!STANDARD_CSV_URL)return STANDARD_DEFAULT;
+  const r=await fetchTimeout(STANDARD_CSV_URL,FETCH_TIMEOUT_MS);
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const rows=parseCSV(await r.text());
+  if(rows.length<2)return STANDARD_DEFAULT;
+  const head=rows[0].map(h=>h.trim().toLowerCase());
+  const DAYS=[["ma","mon","maandag","monday"],["di","tue","dinsdag","tuesday"],["wo","wed","woensdag","wednesday"],
+              ["do","thu","donderdag","thursday"],["vr","fri","vrijdag","friday"],["za","sat","zaterdag","saturday"],
+              ["zo","sun","zondag","sunday"]];
+  const iRoom=head.findIndex(h=>h==="showroom"||h==="vestiging");
+  const dayIdx=DAYS.map(alts=>head.findIndex(h=>alts.indexOf(h)>=0));
+  if(iRoom<0||dayIdx.some(i=>i<0))throw new Error("Standaard CSV mist kolommen Showroom + Ma..Zo");
+  const out={};
+  rows.slice(1).forEach(r2=>{
+    const name=(r2[iRoom]||"").trim();if(!name)return;
+    out[name]=dayIdx.map(i=>(r2[i]||"").trim());
+  });
+  return Object.keys(out).length?out:STANDARD_DEFAULT;
+}
 let retryTimer=null;
 async function refresh(){
-  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions())]);
-  const fc=results[0],ex=results[1];
+  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions()),settle(loadStandard())]);
+  const fc=results[0],ex=results[1],st=results[2];
   FORECAST = fc.status==="fulfilled" ? fc.value : {};
+  STANDARD = st.status==="fulfilled" ? st.value : STANDARD_DEFAULT;
   const data = ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]);
   const problems=[];
   if(FORECAST_CSV_URL && fc.status!=="fulfilled"){problems.push("forecast");console.warn("Forecast CSV:",fc.reason);}
   if(CSV_URL && ex.status!=="fulfilled"){problems.push("hours");console.warn("Hours CSV:",ex.reason);}
+  if(STANDARD_CSV_URL && st.status!=="fulfilled"){problems.push("standard");console.warn("Standard CSV:",st.reason);}
   try{render(data,problems);}catch(err){showErr(err.message||err);throw err;}
   if(problems.length && !retryTimer){retryTimer=setTimeout(function(){retryTimer=null;refresh();},60000);}
 }
