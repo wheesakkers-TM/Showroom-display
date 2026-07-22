@@ -67,6 +67,12 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .cards[data-cols="2"]{grid-template-columns:1fr 1fr;}
 .cards[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
 .holi{flex:1;overflow:hidden;min-height:0;padding-top:30px;}
+.std{background:var(--panel);border:1px solid var(--panel-border);border-radius:14px;
+  padding:18px 24px;display:flex;flex-wrap:wrap;gap:12px 40px;}
+.std__item{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:22px;color:#E4EDE0;}
+.std__lock{display:inline-flex;}
+.std__lock svg{width:17px;height:17px;fill:var(--sage);}
+.std__sig{font-weight:700;color:var(--sage);}
 .chip--off{opacity:.55;}
 .chip__lockic{display:inline-flex;flex-shrink:0;}
 .chip__lockic svg{width:15px;height:15px;fill:var(--sage);}
@@ -80,11 +86,13 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 
 .grps{display:flex;flex-direction:column;gap:12px;}
 .grp{display:flex;align-items:flex-start;gap:16px;}
+.grp__tags{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;}
 .tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:20px;
   padding:6px 13px;border-radius:9px;white-space:nowrap;flex-shrink:0;min-width:60px;justify-content:center;}
 .tag .ic{width:20px;height:20px;}
 .tag--closed{color:var(--closed-ink);background:rgba(69,83,73,.10);}
 .tag--adj{color:var(--orange-ink);background:rgba(255,128,0,.12);font-variant-numeric:tabular-nums;}
+.tag--normal{color:var(--closed-ink);background:rgba(15,36,26,.07);}
 .tag--crowd{color:var(--ink);background:color-mix(in srgb,var(--dot) 13%,transparent);}
 .tag--crowd .rdot{width:15px;height:15px;}
 .grp__rooms{display:flex;flex-wrap:wrap;gap:8px 10px;padding-top:3px;}
@@ -186,7 +194,7 @@ window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.rea
    ============================================================ */
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
 const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";
-const STANDARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1306704827&single=true&output=csv";        // optional: published CSV of the "Standaard" tab (structural closing days per weekday)
+const STANDARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1306704827&single=true&output=csv";
 const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
 const REFRESH_MINUTES = 15;
 /* View: default = this week & next week. Add ?view=holidays to the URL for the outlook slide. */
@@ -367,13 +375,13 @@ function rowsToObjects(rows){
 /* ============================================================
    RENDER
    ============================================================ */
-function roomHTML(it,withCrowd){
-  const cw=withCrowd?crowdInfo(it.Crowd):null;
+function roomHTML(it,withDot){
+  const cw=withDot?crowdInfo(it.Crowd):null;
   const dot=cw?`<i class="rdot" style="--dot:${cw.color}"></i>`:"";
   return `<span class="room">${it.Showroom}<span class="room__cc">${countryBadge(it.Country)}</span>${dot}</span>`;
 }
 function eventCardHTML(ev){
-  // sub-group rows: closed together, adjusted grouped by identical time
+  // sub-group rows: closed together, adjusted grouped by identical time, normal-hours together
   const groups=new Map();
   ev.rows.forEach(it=>{
     if(isClosed(it.Status)){
@@ -384,15 +392,12 @@ function eventCardHTML(ev){
       if(!groups.has(k))groups.set(k,{type:"adj",from:it.OpenFrom,until:it.OpenUntil,rooms:[]});
       groups.get(k).rooms.push(it);
     }else{
-      // normal hours, flagged for expected crowd (e.g. Busy)
-      const cw=crowdInfo(it.Crowd)||CROWD.busy;
-      const k="crowd|"+cw.label;
-      if(!groups.has(k))groups.set(k,{type:"crowd",crowd:cw,rooms:[]});
-      groups.get(k).rooms.push(it);
+      if(!groups.has("normal"))groups.set("normal",{type:"normal",rooms:[]});
+      groups.get("normal").rooms.push(it);
     }
   });
-  // adjusted first, then crowd-only, closed last
-  const order={adj:0,crowd:1,closed:2};
+  // adjusted first, then normal-hours, closed last
+  const order={adj:0,normal:1,closed:2};
   const arr=[...groups.values()].sort((a,b)=>order[a.type]-order[b.type]);
   const d=parseDate(ev.date);
   const dateStr=d?fmtWhen(d):ev.date;
@@ -401,12 +406,12 @@ function eventCardHTML(ev){
   const dateChip=ev.reason?dateStr:"";
   let g="";
   arr.forEach(gr=>{
-    let tag,withDots=false;
-    if(gr.type==="closed"){tag=`<span class="tag tag--closed">${LOCK_SVG}Closed</span>`;}
-    else if(gr.type==="crowd"){tag=`<span class="tag tag--crowd" style="--dot:${gr.crowd.color}"><i class="rdot" style="--dot:${gr.crowd.color}"></i>Expected footfall: ${gr.crowd.label}</span>`;}
-    else{const t=(gr.from&&gr.until)?`${gr.from}\u2013${gr.until}`:"Adjusted hours";tag=`<span class="tag tag--adj">${CLOCK_SVG}${t}</span>`;withDots=true;}
+    let tag,withDots=true;
+    if(gr.type==="closed"){tag=`<span class="tag tag--closed">${LOCK_SVG}Closed</span>`;withDots=false;}
+    else if(gr.type==="normal"){tag=`<span class="tag tag--normal">${CLOCK_SVG}Normal hours</span>`;}
+    else{const t=(gr.from&&gr.until)?`${gr.from}\u2013${gr.until}`:"Adjusted hours";tag=`<span class="tag tag--adj">${CLOCK_SVG}${t}</span>`;}
     const rooms=gr.rooms.map(it=>roomHTML(it,withDots)).join("");
-    g+=`<div class="grp">${tag}<div class="grp__rooms">${rooms}</div></div>`;
+    g+=`<div class="grp"><div class="grp__tags">${tag}</div><div class="grp__rooms">${rooms}</div></div>`;
   });
   return `<div class="card"><div class="card__top"><div class="card__title">${title}</div>`+
          `${dateChip?`<div class="card__date">${dateChip}</div>`:""}</div><div class="grps">${g}</div></div>`;
@@ -468,6 +473,28 @@ function buildWeek(data,mon,resolve,lockDate){
         `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
   return html;
 }
+function standardSummaryHTML(){
+  const DAYN=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  const perRoom=new Map();
+  SHOWROOMS.forEach(s=>{
+    const pat=STANDARD[s.name];if(!pat)return;
+    const parts=[];
+    pat.forEach((v,i)=>{v=(v||"").trim().toLowerCase();if(!v)return;
+      let lbl=DAYN[i];
+      if(v==="even")lbl+=" (even weeks)";else if(v==="oneven"||v==="odd")lbl+=" (odd weeks)";
+      parts.push(lbl);});
+    if(parts.length)perRoom.set(s.name,parts.join(" & "));
+  });
+  if(!perRoom.size)return "";
+  const inv=new Map();
+  perRoom.forEach((sig,room)=>{if(!inv.has(sig))inv.set(sig,[]);inv.get(sig).push(room);});
+  let items="";
+  inv.forEach((rooms,sig)=>{
+    items+=`<span class="std__item"><span class="std__lock">${LOCK_SVG}</span><span class="std__sig">${sig}</span>${rooms.join(", ")}</span>`;
+  });
+  return `<div><div class="sechead sechead--open">Standard closing days <span class="sechead__count">every week</span></div>`+
+         `<div class="std">${items}</div></div>`;
+}
 function buildHolidays(data){
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
@@ -476,16 +503,30 @@ function buildHolidays(data){
   if(!items.length){
     return `<div class="hero"><div class="hero__ic">${CHECK_SVG}</div>`+
            `<div><div class="hero__t">No special days coming up</div>`+
-           `<div class="hero__s">All showrooms open as usual for the next 6 weeks</div></div></div>`;
+           `<div class="hero__s">All showrooms open as usual for the next 6 weeks</div></div></div>`+
+           standardSummaryHTML();
   }
   const ev=new Map();
   items.forEach(it=>{const key=it.Date+"|"+(it.Reason||"");
     if(!ev.has(key))ev.set(key,{date:it.Date,reason:it.Reason||"",rows:[]});
     ev.get(key).rows.push(it);});
   const events=[...ev.values()].sort((a,b)=>parseDate(a.date)-parseDate(b.date));
-  const cols=events.length>=7?3:(events.length>=3?2:1);
-  return `<div><div class="sechead sechead--changes">Coming up <span class="sechead__count">next 6 weeks \u00b7 ${events.length} special day${events.length>1?"s":""}</span></div>`+
-         `<div class="cards" data-cols="${cols}">`+events.map(eventCardHTML).join("")+`</div></div>`;
+  // group per week
+  const byWeek=new Map();
+  events.forEach(e=>{const m=mondayOf(parseDate(e.date));const k=m.getTime();
+    if(!byWeek.has(k))byWeek.set(k,{mon:m,events:[]});byWeek.get(k).events.push(e);});
+  const weeks=[...byWeek.values()].sort((a,b)=>a.mon-b.mon);
+  const monThis=mondayOf(base);
+  let html="";
+  weeks.forEach(w=>{
+    const off=Math.round((w.mon-monThis)/(7*DAY));
+    const label=off===0?"This week":off===1?"Next week":"Week "+isoWeek(w.mon);
+    const cols=w.events.length>=3?3:2;
+    html+=`<div><div class="sechead sechead--changes">${label} <span class="sechead__count">${fmtRange(w.mon,addDays(w.mon,6))}</span></div>`+
+          `<div class="cards" data-cols="${cols}">`+w.events.map(eventCardHTML).join("")+`</div></div>`;
+  });
+  html+=standardSummaryHTML();
+  return html;
 }
 function render(data,problems){
   problems=problems||[];
