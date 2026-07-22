@@ -67,11 +67,36 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .cards[data-cols="2"]{grid-template-columns:1fr 1fr;}
 .cards[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
 .holi{flex:1;overflow:hidden;min-height:0;padding-top:30px;}
+/* ---------- agenda board (holidays view) ---------- */
+.agcols{display:grid;grid-template-columns:1fr 1fr;gap:11px 38px;align-items:start;}
+.agcol{display:flex;flex-direction:column;gap:11px;min-width:0;}
+.wkdiv{display:flex;align-items:center;gap:14px;margin:4px 0 0;}
+.wkdiv__label{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:19px;color:var(--lime);white-space:nowrap;}
+.wkdiv__range{font-weight:600;font-size:18px;color:var(--sage-dim);white-space:nowrap;letter-spacing:.05em;}
+.wkdiv::after{content:"";flex:1;height:1px;background:var(--hair-soft);}
+.agrow{display:flex;align-items:center;gap:20px;background:var(--panel);
+  border:1px solid var(--panel-border);border-radius:14px;padding:10px 22px 10px 10px;}
+.datebox{width:86px;flex-shrink:0;background:var(--card);border-radius:10px;text-align:center;
+  padding:6px 4px 7px;box-shadow:0 8px 20px rgba(0,0,0,.25);}
+.datebox__day{font-weight:700;font-size:30px;line-height:1;color:var(--ink);}
+.datebox__sub{font-weight:700;font-size:12px;letter-spacing:.12em;color:var(--orange-ink);text-transform:uppercase;margin-top:3px;}
+.agrow__main{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;}
+.agrow__title{font-weight:700;font-size:28px;line-height:1.05;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.agrow__title .card__icon{font-size:25px;}
+.agrow__grp{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.agrow .tag{font-size:19px;padding:4px 11px;}
+.agrow .tag .ic{width:18px;height:18px;}
+.agrow .room{color:#F2F6EF;font-size:22px;}
+.agrow .room__cc{background:rgba(255,255,255,.16);}
+.agrow .tag--closed{color:#DCE5DA;background:rgba(255,255,255,.10);}
+.agrow .tag--closed .ic{fill:#DCE5DA;}
+.agrow .tag--normal{color:#CFDCCB;background:rgba(255,255,255,.08);}
+.agrow .tag--adj{color:#FFB469;background:rgba(255,128,0,.16);}
 .std{background:var(--panel);border:1px solid var(--panel-border);border-radius:14px;
   padding:18px 24px;display:flex;flex-wrap:wrap;gap:12px 40px;}
-.std__item{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:22px;color:#E4EDE0;}
+.std__item{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:23px;color:#E4EDE0;}
 .std__lock{display:inline-flex;}
-.std__lock svg{width:17px;height:17px;fill:var(--sage);}
+.std__lock svg{width:18px;height:18px;fill:var(--sage);}
 .std__sig{font-weight:700;color:var(--sage);}
 .chip--off{opacity:.55;}
 .chip__lockic{display:inline-flex;flex-shrink:0;}
@@ -144,7 +169,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
     <header class="head">
       <div class="head__left">
         <div class="head__eyebrow">Tuinmaximaal</div>
-        <h1 class="head__title">Showroom opening hours</h1>
+        <h1 class="head__title" id="title">Showroom opening hours</h1>
         <div class="head__sub" id="subtitle">Special hours &mdash; this week &amp; next week</div>
       </div>
       <div class="head__right">
@@ -495,6 +520,41 @@ function standardSummaryHTML(){
   return `<div><div class="sechead sechead--open">Standard closing days <span class="sechead__count">every week</span></div>`+
          `<div class="std">${items}</div></div>`;
 }
+function agendaRowHTML(ev){
+  const groups=new Map();
+  ev.rows.forEach(it=>{
+    if(isClosed(it.Status)){
+      if(!groups.has("closed"))groups.set("closed",{type:"closed",rooms:[]});
+      groups.get("closed").rooms.push(it);
+    }else if(isAdjusted(it.Status)||(it.OpenFrom&&it.OpenUntil)){
+      const k="adj|"+it.OpenFrom+"|"+it.OpenUntil;
+      if(!groups.has(k))groups.set(k,{type:"adj",from:it.OpenFrom,until:it.OpenUntil,rooms:[]});
+      groups.get(k).rooms.push(it);
+    }else{
+      if(!groups.has("normal"))groups.set("normal",{type:"normal",rooms:[]});
+      groups.get("normal").rooms.push(it);
+    }
+  });
+  const order={adj:0,normal:1,closed:2};
+  const arr=[...groups.values()].sort((a,b)=>order[a.type]-order[b.type]);
+  const d=parseDate(ev.date);
+  const dow=d?d.toLocaleDateString("en-GB",{weekday:"short"}):"";
+  const mon=d?d.toLocaleDateString("en-GB",{month:"short"}):"";
+  const icon=iconFor(ev.reason);
+  const title=(ev.reason||fmtWhen(d))+(icon?` <span class="card__icon">${icon}</span>`:"");
+  let grps="";
+  arr.forEach(gr=>{
+    let tag,withDots=true;
+    if(gr.type==="closed"){tag=`<span class="tag tag--closed">${LOCK_SVG}Closed</span>`;withDots=false;}
+    else if(gr.type==="normal"){tag=`<span class="tag tag--normal">${CLOCK_SVG}Normal hours</span>`;}
+    else{const t=(gr.from&&gr.until)?`${gr.from}\u2013${gr.until}`:"Adjusted hours";tag=`<span class="tag tag--adj">${CLOCK_SVG}${t}</span>`;}
+    const rooms=gr.rooms.map(it=>roomHTML(it,withDots)).join("");
+    grps+=`<div class="agrow__grp">${tag}<div class="grp__rooms">${rooms}</div></div>`;
+  });
+  return `<div class="agrow"><div class="datebox"><div class="datebox__day">${d?d.getDate():""}</div>`+
+         `<div class="datebox__sub">${dow} ${mon}</div></div>`+
+         `<div class="agrow__main"><div class="agrow__title">${title}</div>${grps}</div></div>`;
+}
 function buildHolidays(data){
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
@@ -517,14 +577,28 @@ function buildHolidays(data){
     if(!byWeek.has(k))byWeek.set(k,{mon:m,events:[]});byWeek.get(k).events.push(e);});
   const weeks=[...byWeek.values()].sort((a,b)=>a.mon-b.mon);
   const monThis=mondayOf(base);
-  let html="";
+  // flat item list (dividers + events) for near-equal column balancing
+  const flat=[];
   weeks.forEach(w=>{
     const off=Math.round((w.mon-monThis)/(7*DAY));
     const label=off===0?"This week":off===1?"Next week":"Week "+isoWeek(w.mon);
-    const cols=w.events.length>=3?3:2;
-    html+=`<div><div class="sechead sechead--changes">${label} <span class="sechead__count">${fmtRange(w.mon,addDays(w.mon,6))}</span></div>`+
-          `<div class="cards" data-cols="${cols}">`+w.events.map(eventCardHTML).join("")+`</div></div>`;
+    const div=`<div class="wkdiv"><span class="wkdiv__label">${label}</span><span class="wkdiv__range">${fmtRange(w.mon,addDays(w.mon,6))}</span></div>`;
+    flat.push({html:div,weight:1,div:div,isDiv:true});
+    w.events.forEach(e=>{
+      const kinds=new Set(e.rows.map(r=>isClosed(r.Status)?"c":(isAdjusted(r.Status)||(r.OpenFrom&&r.OpenUntil))?("a|"+r.OpenFrom+"|"+r.OpenUntil):"n"));
+      flat.push({html:agendaRowHTML(e),weight:2+(kinds.size-1),div:div,isDiv:false});
+    });
   });
+  const total=flat.reduce((s,i)=>s+i.weight,0);
+  let acc=0,split=flat.length;
+  for(let i=0;i<flat.length;i++){acc+=flat[i].weight;if(acc>=total/2){split=i+1;break;}}
+  if(split<flat.length && flat[split-1] && flat[split-1].isDiv)split--;   // no orphan week header at column bottom
+  const leftItems=flat.slice(0,split),rightItems=flat.slice(split);
+  let right="";
+  if(rightItems.length && !rightItems[0].isDiv)right+=rightItems[0].div;  // repeat week header when a week continues
+  right+=rightItems.map(i=>i.html).join("");
+  const left=leftItems.map(i=>i.html).join("");
+  let html=`<div class="agcols"><div class="agcol">${left}</div><div class="agcol">${right}</div></div>`;
   html+=standardSummaryHTML();
   return html;
 }
@@ -533,10 +607,13 @@ function render(data,problems){
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
   if(VIEW==="holidays"){
-    document.getElementById("subtitle").innerHTML="Holidays &amp; special days &mdash; coming 6 weeks";
+    document.getElementById("title").textContent="Coming up";
+    document.getElementById("subtitle").innerHTML="Holidays &amp; special days &mdash; next 6 weeks";
     document.querySelector(".cols").style.display="none";
     const holi=document.getElementById("holi");holi.style.display="block";
-    document.getElementById("holi-fit").innerHTML=buildHolidays(data);
+    const fit=document.getElementById("holi-fit");
+    fit.style.gap="14px";
+    fit.innerHTML=buildHolidays(data);
     fitColumns();
     const now=new Date();
     let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
