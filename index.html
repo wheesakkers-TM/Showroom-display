@@ -185,7 +185,8 @@ window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.rea
    CONFIG
    ============================================================ */
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
-const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";        // optional: published CSV of the "Forecast" tab (Date, Showroom, Crowd) — colors the chip dots per day
+const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";
+const STANDARD_CSV_URL = "";        // optional: published CSV of the "Standaard" tab (structural closing days per weekday)
 const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
 const REFRESH_MINUTES = 15;
 /* View: default = this week & next week. Add ?view=holidays to the URL for the outlook slide. */
