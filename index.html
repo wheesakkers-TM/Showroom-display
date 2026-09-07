@@ -67,6 +67,111 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .cards[data-cols="2"]{grid-template-columns:1fr 1fr;}
 .cards[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
 .holi{flex:1;overflow:hidden;min-height:0;padding-top:30px;}
+.stage--compact{padding:26px 60px 20px;}
+.stage--compact .head{padding-bottom:14px;}
+.stage--compact .head__eyebrow{font-size:17px;margin-bottom:5px;}
+.stage--compact .head__title{font-size:44px;}
+.stage--compact .head__sub{font-size:20px;margin-top:7px;}
+.stage--compact .clock{font-size:48px;}
+.stage--compact .today{font-size:20px;margin-top:4px;}
+.stage--compact .sched{padding-top:12px;}
+.stage--compact .foot{padding-top:12px;}
+.stage--compact .brandbar{margin-top:9px;}
+/* bare mode: no eyebrow, no footer text, small title, all space for the table */
+.stage--bare{padding:30px 60px 24px;}
+.stage--bare .head__eyebrow{display:none;}
+.stage--bare .head{padding-bottom:16px;}
+.stage--bare .head__title{font-size:38px;}
+.stage--bare .head__sub{font-size:22px;margin-top:6px;color:var(--sage);}
+.stage--bare .clock{font-size:46px;}
+.stage--bare .today{font-size:19px;}
+.stage--bare .foot{display:none;}
+.stage--bare .sched{padding-top:18px;}
+.stage--bare .grid{border-spacing:8px 8px;}
+.stage--bare .gc{height:64px;border-radius:12px;}
+.stage--bare .gc__t{font-size:24px;}
+.stage--bare .gc .gdot{width:13px;height:13px;margin-left:9px;}
+.stage--bare .gh__d{font-size:17px;}
+.stage--bare .gh__n{font-size:26px;}
+.stage--bare .gh{padding-bottom:6px;}
+.stage--bare .gh--room{width:240px;}
+.stage--bare .gflag{font-size:30px;margin-right:13px;}
+.stage--bare .grname{font-size:28px;}
+.stage--bare .gc--closed svg{width:24px;height:24px;}
+/* ---------- schedule grid (main view) ---------- */
+.sched{flex:1;overflow:hidden;min-height:0;padding-top:16px;display:flex;}
+.sched-inner{width:100%;display:flex;flex-direction:column;gap:10px;transform-origin:top center;}
+.gwrap__head{display:flex;align-items:baseline;gap:14px;margin-bottom:3px;}
+.gwrap__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:21px;color:#fff;}
+.gwrap__range{font-weight:600;font-size:17px;color:var(--sage);}
+.grid{width:100%;border-collapse:separate;border-spacing:5px 4px;table-layout:fixed;}
+.gh{padding:0 4px 2px;text-align:center;vertical-align:bottom;}
+.gh--room{width:200px;}
+.gh__d{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:var(--sage-dim);}
+.gh__n{display:block;font-weight:700;font-size:18px;color:#fff;line-height:1.05;}
+.gh--today .gh__d{color:var(--orange);}
+.gh--today .gh__n{color:var(--orange);}
+.gc{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;
+  height:37px;text-align:center;vertical-align:middle;padding:2px 5px;}
+.gc__t{font-weight:700;font-size:17px;color:#F2F6EF;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.gc .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;
+  background:var(--dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
+.gc--room{background:transparent;border:none;text-align:left;padding-left:2px;}
+.gflag{font-size:22px;margin-right:9px;vertical-align:middle;}
+.grname{font-weight:700;font-size:21px;color:#fff;vertical-align:middle;}
+.gc--closed{background:rgba(255,255,255,.03);}
+.gc--closed svg{width:17px;height:17px;fill:var(--sage-dim);opacity:.6;}
+.gc[data-tip]{position:relative;cursor:help;}
+.gc[data-tip]:hover{background:rgba(255,255,255,.07);}
+.gc[data-tip]:hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#0B1F14;border:1px solid rgba(255,255,255,.18);color:#F2F6EF;font-weight:600;font-size:16px;
+  padding:7px 14px;border-radius:9px;white-space:nowrap;z-index:9;box-shadow:0 10px 26px rgba(0,0,0,.45);pointer-events:none;}
+.gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
+.gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
+.gc--exc .gc__t{color:#FFB469;}
+.gc[data-today="1"]{outline:2px solid var(--orange);outline-offset:-1px;}
+/* ---------- nav tabs ---------- */
+.tabs{display:flex;gap:10px;padding:14px 0 0;}
+.tab{display:inline-flex;align-items:center;padding:9px 20px;border-radius:999px;border:1px solid var(--panel-border);
+  background:var(--panel);color:var(--sage);font-weight:700;font-size:18px;text-decoration:none;letter-spacing:.02em;}
+.tab--on{background:var(--orange);border-color:var(--orange);color:#1B2B1F;}
+/* ---------- month calendar (minimal) ---------- */
+.monthv{flex:1;overflow:hidden;min-height:0;padding-top:12px;display:flex;flex-direction:column;gap:8px;}
+.monthv>#month-grid{flex:1;min-height:0;}
+#month-grid .mcal{height:100%;}
+.monthv__bar{display:flex;align-items:baseline;justify-content:space-between;}
+.monthv__title{font-weight:700;font-size:34px;color:#fff;letter-spacing:.01em;}
+.monthv__nav{display:flex;gap:6px;}
+.mbtn{background:transparent;border:none;color:var(--sage);border-radius:10px;
+  font:inherit;font-weight:700;font-size:20px;padding:6px 14px;cursor:pointer;}
+.mbtn:hover{color:#fff;background:rgba(255,255,255,.06);}
+.mbtn--today{color:var(--orange);}
+.mcal{width:100%;height:100%;border-collapse:collapse;table-layout:fixed;}
+.mch{font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:var(--sage-dim);
+  padding:0 10px 8px;text-align:left;}
+.mch--w{width:52px;}
+.mcw{font-weight:700;font-size:13px;color:var(--sage-dim);vertical-align:top;padding:12px 0 0 2px;text-align:left;
+  border-top:1px solid var(--hair-soft);letter-spacing:.08em;}
+.mcd{vertical-align:top;padding:10px 10px 8px;border-top:1px solid var(--hair-soft);overflow:hidden;}
+.mcd__n{font-weight:600;font-size:15px;color:var(--sage-dim);line-height:1;margin-bottom:7px;}
+.mcd__n--today{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-5px 0 3px -6px;
+  border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;font-size:15px;}
+.mcd--out{border-top:1px solid var(--hair-soft);}
+.mcd--past{opacity:.38;}
+.mev{margin-bottom:6px;}
+.mev__t{font-weight:700;font-size:16px;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mline{display:flex;align-items:center;gap:6px;margin-top:3px;font-weight:600;font-size:14px;color:var(--sage);
+  white-space:nowrap;overflow:hidden;}
+.mline svg{width:13px;height:13px;fill:var(--sage);flex-shrink:0;}
+.mline span{overflow:hidden;text-overflow:ellipsis;}
+.mline--adj{color:#FFB469;}
+.mline--adj svg{fill:#FFB469;}
+.mev__more{font-weight:600;font-size:13px;color:var(--sage-dim);}
+.monthv .std{background:transparent;border:none;padding:6px 0 0;gap:8px 34px;border-top:1px solid var(--hair-soft);border-radius:0;}
+.monthv .std__item{font-size:16px;color:var(--sage);}
+.monthv .std__lock svg{width:14px;height:14px;}
+.monthv .sechead{display:none;}
 /* ---------- agenda board (holidays view) ---------- */
 .agcols{display:grid;grid-template-columns:1fr 1fr;gap:11px 38px;align-items:start;}
 .agcol{display:flex;flex-direction:column;gap:11px;min-width:0;}
@@ -178,6 +283,13 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
       </div>
     </header>
 
+    <nav class="tabs" id="tabs">
+      <a class="tab" data-v="" href="?">This week</a>
+      <a class="tab" data-v="next" href="?view=next">Next week</a>
+      <a class="tab" data-v="month" href="?view=month">Month</a>
+      <a class="tab" data-v="holidays" href="?view=holidays">Coming up</a>
+    </nav>
+
     <main class="cols">
       <section class="col">
         <div class="col__head"><div class="col__label">This week</div><div class="col__range" id="range-this">&nbsp;</div></div>
@@ -191,6 +303,32 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 
     <main class="holi" id="holi" style="display:none">
       <div class="fit" id="holi-fit"></div>
+    </main>
+
+    <main class="sched" id="sched" style="display:none">
+      <div class="sched-inner" id="sched-inner">
+        <section class="gwrap" id="gwrap-this">
+          <div class="gwrap__head"><span class="gwrap__label">This week</span><span class="gwrap__range" id="grid-this-range">&nbsp;</span></div>
+          <div id="grid-this"></div>
+        </section>
+        <section class="gwrap" id="gwrap-next">
+          <div class="gwrap__head"><span class="gwrap__label">Next week</span><span class="gwrap__range" id="grid-next-range">&nbsp;</span></div>
+          <div id="grid-next"></div>
+        </section>
+      </div>
+    </main>
+
+    <main class="monthv" id="monthv" style="display:none">
+      <div class="monthv__bar">
+        <div class="monthv__title" id="month-title"></div>
+        <div class="monthv__nav">
+          <button class="mbtn" id="month-prev" aria-label="Previous month">&#8592;</button>
+          <button class="mbtn mbtn--today" id="month-today">Today</button>
+          <button class="mbtn" id="month-next" aria-label="Next month">&#8594;</button>
+        </div>
+      </div>
+      <div id="month-grid"></div>
+      <div id="month-std"></div>
     </main>
 
     <footer class="foot">
@@ -210,7 +348,10 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 <script>
 /* On-screen error reporting: any script error shows in the footer (useful on signage/RDP without devtools) */
 function showErr(msg){
-  try{var el=document.getElementById("updated");if(el)el.textContent="\u26A0 Script error: "+String(msg).slice(0,160);}catch(e){}
+  try{
+    var el=document.getElementById("updated");if(el)el.textContent="\u26A0 Script error: "+String(msg).slice(0,160);
+    var f=document.querySelector(".foot");if(f)f.style.display="flex";
+  }catch(e){}
 }
 window.onerror=function(msg,src,line){showErr(msg+" (line "+line+")");};
 window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.reason.message?e.reason.message:e.reason);});
@@ -225,19 +366,27 @@ const REFRESH_MINUTES = 15;
 /* View: default = this week & next week. Add ?view=holidays to the URL for the outlook slide. */
 const VIEW = (function(){try{return new URLSearchParams(location.search).get("view")||"";}catch(e){return "";}})();
 
-/* Structural closing days per showroom (fallback when STANDARD_CSV_URL is empty).
-   Days Mon..Sun; "x" = always closed, "even"/"oneven" = closed in even/odd ISO weeks. */
+/* Standard weekly schedule per showroom (fallback when STANDARD_CSV_URL is empty).
+   Per day Mon..Sun: "" = closed, "HH:MM-HH:MM" = open those hours,
+   "even"/"oneven" = open only in even/odd ISO weeks (uses DEFAULT_HOURS).
+   This tab doubles as the year plan for normal hours. */
+const DEFAULT_HOURS="10:00-18:00";
 const STANDARD_DEFAULT = {
-  "Uddel":      ["","","","","","","oneven"],   // Sunday shopping in even weeks only
-  "London":     ["","","","","","","x"],
-  "Crailsheim": ["","","","","","","x"],
-  "Ingolstadt": ["","","","","","","x"],
-  "Heidelberg": ["","","","","","","x"],
-  "Bremen":     ["","","","","","","x"],
-  "Berlin":     ["","","","","","","x"],
-  "Munich":     ["","","","","","","x"]
+  "Eindhoven":  ["08:30-17:00","08:30-17:00","08:30-17:00","08:30-17:00","08:30-17:00","08:30-17:00","08:30-17:00"],
+  "Venlo":      ["09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-18:00","09:00-18:00"],
+  "Uddel":      ["08:00-18:00","08:00-18:00","08:00-18:00","08:00-18:00","08:00-18:00","08:00-17:00","even"],
+  "Leicester":  ["10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-17:00","11:00-17:00"],
+  "London":     ["10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-17:00",""],
+  "Crailsheim": ["09:00-16:30","09:00-16:30","09:00-16:30","","09:00-16:30","09:00-16:30",""],
+  "Ingolstadt": ["09:00-16:30","09:00-16:30","","09:00-16:30","09:00-16:30","09:00-16:30",""],
+  "Heidelberg": ["09:00-16:30","","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
+  "Bremen":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
+  "Berlin":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
+  "Munich":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""]
 };
 let STANDARD = STANDARD_DEFAULT;
+const FLAG={"netherlands":"\u{1F1F3}\u{1F1F1}","united kingdom":"\u{1F1EC}\u{1F1E7}","germany":"\u{1F1E9}\u{1F1EA}"};
+function flagFor(c){return FLAG[(c||"").trim().toLowerCase()]||"";}
 
 const SHOWROOMS = [
   {name:"Eindhoven",country:"Netherlands"},
@@ -306,6 +455,8 @@ const ICONS=[
  [/black friday|sale/i,"\u{1F6CD}\uFE0F"],            // 🛍️
  [/sunday opening|koopzondag/i,"\u{1F6CD}\uFE0F"],    // 🛍️
  [/carnival|karneval|carnaval/i,"\u{1F3AD}"],         // 🎭
+ [/bouwvak|builders/i,"\u{1F6E0}\uFE0F"],             // 🛠️
+ [/autumn|herfst/i,"\u{1F342}"],                      // 🍂
  [/summer/i,"\u2600\uFE0F"],                          // ☀️
 ];
 function iconFor(reason){
@@ -357,15 +508,28 @@ function isoWeek(d){
   const fday=(firstThu.getUTCDay()+6)%7; firstThu.setUTCDate(firstThu.getUTCDate()-fday+3);
   return 1+Math.round((t-firstThu)/(7*DAY));
 }
-/* is this showroom structurally closed on this date (Standaard tab)? */
-function closedStandard(room,d){
-  const pat=STANDARD[room]; if(!pat)return false;
-  const v=(pat[(d.getDay()+6)%7]||"").trim().toLowerCase();
-  if(!v)return false;
-  if(v==="even")return isoWeek(d)%2===0;
-  if(v==="oneven"||v==="odd")return isoWeek(d)%2===1;
-  return true;   // "x", "dicht", "closed", anything else = always closed that weekday
+/* Standard opening for a showroom on a date: {closed:bool, from, until} or null if no pattern. */
+function standardHours(room,d){
+  const pat=STANDARD[room]; if(!pat)return null;
+  let v=(pat[(d.getDay()+6)%7]||"").trim();
+  const lv=v.toLowerCase();
+  if(lv===""||lv==="x"||lv==="dicht"||lv==="closed")return {closed:true};
+  if(lv.indexOf("even")===0||lv.indexOf("oneven")===0||lv.indexOf("odd")===0){
+    const odd=lv.indexOf("oneven")===0||lv.indexOf("odd")===0;
+    const open= odd ? isoWeek(d)%2===1 : isoWeek(d)%2===0;
+    if(!open)return {closed:true,alt:true};
+    const rest=v.replace(/^(oneven|even|odd)/i,"").trim();
+    return parseHours(rest)||parseHours(DEFAULT_HOURS);
+  }
+  const h=parseHours(v); return h||{closed:true};
 }
+function parseHours(s){
+  const m=(s||"").match(/^(\d{1,2}:\d{2})\s*[-\u2013]\s*(\d{1,2}:\d{2})$/);
+  if(!m)return null;
+  return {closed:false,from:fmtTime(m[1]),until:fmtTime(m[2])};
+}
+/* structurally closed today? (used for the chip lock on other views) */
+function closedStandard(room,d){const h=standardHours(room,d);return !!(h&&h.closed);}
 function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
 const DAY=86400000;
 function fmtWhen(d){return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
@@ -504,10 +668,13 @@ function standardSummaryHTML(){
   SHOWROOMS.forEach(s=>{
     const pat=STANDARD[s.name];if(!pat)return;
     const parts=[];
-    pat.forEach((v,i)=>{v=(v||"").trim().toLowerCase();if(!v)return;
-      let lbl=DAYN[i];
-      if(v==="even")lbl+=" (even weeks)";else if(v==="oneven"||v==="odd")lbl+=" (odd weeks)";
-      parts.push(lbl);});
+    pat.forEach((v,i)=>{
+      v=(v||"").trim().toLowerCase();
+      if(v===""||v==="x"||v==="dicht"||v==="closed"){parts.push(DAYN[i]);return;}
+      if(v.indexOf("oneven")===0||v.indexOf("odd")===0){parts.push(DAYN[i]+" (even weeks)");return;}
+      if(v.indexOf("even")===0){parts.push(DAYN[i]+" (odd weeks)");return;}
+      // otherwise: opening hours = open, not a closing day
+    });
     if(parts.length)perRoom.set(s.name,parts.join(" & "));
   });
   if(!perRoom.size)return "";
@@ -602,14 +769,171 @@ function buildHolidays(data){
   html+=standardSummaryHTML();
   return html;
 }
+/* Effective schedule for one showroom on one date: merges standard hours with an exception override.
+   Returns {closed, from, until, crowd, reason, isException}. */
+function effectiveDay(room,country,d,exMap){
+  const key=fcKey(d,room);
+  const ex=exMap[key];
+  if(ex){
+    if(isClosed(ex.Status))return {closed:true,reason:ex.Reason,isException:true};
+    if(isAdjusted(ex.Status)||(ex.OpenFrom&&ex.OpenUntil))
+      return {closed:false,from:ex.OpenFrom,until:ex.OpenUntil,crowd:ex.Crowd,reason:ex.Reason,isException:true};
+    // Normal hours exception: keep standard times, but carry crowd/reason
+    const st=standardHours(room,d)||{closed:false,from:"",until:""};
+    return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,reason:ex.Reason,isException:true};
+  }
+  const st=standardHours(room,d);
+  if(!st)return {closed:false,from:"",until:"",unknown:true};
+  const crowd=FORECAST[key]||"";
+  return {closed:!!st.closed,alt:!!st.alt,from:st.from,until:st.until,crowd:crowd,isException:false};
+}
+function gridCellHTML(cell,isToday){
+  if(cell.unknown)return `<td class="gc gc--muted">&middot;</td>`;
+  if(cell.closed){
+    const tip=cell.reason?cell.reason:(cell.alt?"Open every other week \u2014 closed this week":"Standard closing day");
+    return `<td class="gc gc--closed"${isToday?' data-today="1"':''} data-tip="${String(tip).replace(/"/g,"&quot;")}">${LOCK_SVG}</td>`;
+  }
+  const cw=crowdInfo(cell.crowd);
+  const dot=cw?`<i class="gdot" style="--dot:${cw.color}"></i>`:"";
+  const exc=cell.isException?' gc--exc':'';
+  return `<td class="gc${exc}"${isToday?' data-today="1"':''}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
+}
+function buildGrid(exList,mon,todayD){
+  const exMap={};
+  exList.forEach(it=>{const d=parseDate(it.Date);if(d)exMap[fcKey(d,it.Showroom)]=it;});
+  const DOW=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  let head=`<tr><th class="gh gh--room"></th>`;
+  for(let i=0;i<7;i++){
+    const d=addDays(mon,i);
+    const isToday=todayD&&d.getTime()===todayD.getTime();
+    head+=`<th class="gh${isToday?' gh--today':''}"><span class="gh__d">${DOW[i]}</span><span class="gh__n">${d.getDate()}</span></th>`;
+  }
+  head+=`</tr>`;
+  let body="";
+  SHOWROOMS.forEach(s=>{
+    body+=`<tr><td class="gc gc--room"><span class="gflag">${flagFor(s.country)}</span><span class="grname">${s.name}</span></td>`;
+    for(let i=0;i<7;i++){
+      const d=addDays(mon,i);
+      const isToday=todayD&&d.getTime()===todayD.getTime();
+      body+=gridCellHTML(effectiveDay(s.name,s.country,d,exMap),isToday);
+    }
+    body+=`</tr>`;
+  });
+  return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+}
+/* ---------- month calendar view ---------- */
+let MONTH_OFFSET=0, LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
+function buildMonth(data,anchor){
+  const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+  const last=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
+  const start=mondayOf(first);
+  const weeks=Math.ceil(((last-start)/DAY+1)/7);
+  const today=todayDate();
+  const t0=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+  // exceptions per day
+  const byDay={};
+  data.forEach(it=>{
+    const d=parseDate(it.Date);if(!d)return;
+    const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+    (byDay[k]=byDay[k]||[]).push(it);
+  });
+  const DOW=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  let h=`<table class="mcal"><thead><tr><th class="mch mch--w">Wk</th>`;
+  DOW.forEach(d=>h+=`<th class="mch">${d}</th>`);
+  h+=`</tr></thead><tbody>`;
+  for(let w=0;w<weeks;w++){
+    const wkMon=addDays(start,w*7);
+    h+=`<tr style="height:${(100/weeks).toFixed(2)}%"><td class="mcw">W${isoWeek(wkMon)}</td>`;
+    for(let i=0;i<7;i++){
+      const d=addDays(wkMon,i);
+      const inMonth=d.getMonth()===anchor.getMonth();
+      const isToday=d.getTime()===t0;
+      const past=d.getTime()<t0;
+      const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+      const items=byDay[k]||[];
+      if(!inMonth){h+=`<td class="mcd mcd--out"></td>`;continue;}
+      // group per reason
+      const ev=new Map();
+      items.forEach(it=>{const key=it.Reason||"";
+        if(!ev.has(key))ev.set(key,{reason:key,rows:[]});
+        ev.get(key).rows.push(it);});
+      let cell="";
+      let shown=0;
+      ev.forEach(e=>{
+        if(shown>=2){return;}
+        shown++;
+        const icon=iconFor(e.reason);
+        const closed=e.rows.filter(x=>isClosed(x.Status));
+        const adj=e.rows.filter(x=>!isClosed(x.Status)&&(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil)));
+        let lines="";
+        if(closed.length)lines+=`<div class="mline mline--closed">${LOCK_SVG}<span>${roomList(closed)}</span></div>`;
+        if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
+        cell+=`<div class="mev"><div class="mev__t">${icon?icon+" ":""}${e.reason||"Special day"}</div>${lines}</div>`;
+      });
+      if(ev.size>2)cell+=`<div class="mev__more">+${ev.size-2} more</div>`;
+      h+=`<td class="mcd${past?" mcd--past":""}">`+
+         `<div class="mcd__n${isToday?" mcd__n--today":""}">${d.getDate()}</div>${cell}</td>`;
+    }
+    h+=`</tr>`;
+  }
+  h+=`</tbody></table>`;
+  return h;
+}
+function roomList(rows){
+  // compact: whole-country groups become "DE" / "NL" / "UK", otherwise names
+  const byC={};rows.forEach(r=>{(byC[r.Country||""]=byC[r.Country||""]||[]).push(r.Showroom);});
+  const parts=[];
+  Object.keys(byC).forEach(c=>{
+    const all=SHOWROOMS.filter(s=>s.country===c).map(s=>s.name);
+    const got=byC[c];
+    if(all.length&&got.length>=all.length&&all.every(n=>got.indexOf(n)>=0)){
+      parts.push("All "+countryBadgeTxt(c));
+    }else parts.push(got.join(", "));
+  });
+  return parts.join(" \u00b7 ");
+}
+function countryBadgeTxt(c){c=(c||"").toLowerCase();return c.indexOf("nether")>=0?"NL":c.indexOf("king")>=0?"UK":c.indexOf("germ")>=0?"DE":c;}
+function renderMonth(data,problems){
+  const today=todayDate();
+  const anchor=new Date(today.getFullYear(),today.getMonth()+MONTH_OFFSET,1);
+  document.getElementById("title").textContent="Showroom calendar";
+  document.getElementById("subtitle").textContent="Holidays and open/closed per showroom";
+  document.getElementById("stage").classList.add("stage--compact");
+  document.querySelector(".cols").style.display="none";
+  document.getElementById("holi").style.display="none";
+  document.getElementById("sched").style.display="none";
+  const mv=document.getElementById("monthv");mv.style.display="flex";
+  document.getElementById("month-title").textContent=
+    anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+  document.getElementById("month-grid").innerHTML=buildMonth(data,anchor);
+  document.getElementById("month-std").innerHTML=standardSummaryHTML();
+  const now=new Date();
+  let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  if(problems.length)status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+  document.getElementById("updated").textContent=status;
+}
+function initNav(){
+  try{
+    const p=new URLSearchParams(location.search);
+    if(p.get("nav")==="0"){document.getElementById("tabs").style.display="none";return;}
+    const cur=p.get("view")||"";
+    document.querySelectorAll("#tabs .tab").forEach(a=>{
+      if(a.getAttribute("data-v")===cur)a.classList.add("tab--on");
+    });
+  }catch(e){}
+}
 function render(data,problems){
   problems=problems||[];
+  LAST_RENDER_DATA=data;LAST_PROBLEMS=problems;
+  if(VIEW==="month"){renderMonth(data,problems);return;}
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
   if(VIEW==="holidays"){
     document.getElementById("title").textContent="Coming up";
     document.getElementById("subtitle").innerHTML="Holidays &amp; special days &mdash; next 6 weeks";
     document.querySelector(".cols").style.display="none";
+    document.getElementById("sched").style.display="none";
+    document.getElementById("monthv").style.display="none";
     const holi=document.getElementById("holi");holi.style.display="block";
     const fit=document.getElementById("holi-fit");
     fit.style.gap="14px";
@@ -621,16 +945,36 @@ function render(data,problems){
     document.getElementById("updated").textContent=status;
     return;
   }
-  const monThis=mondayOf(base),monNext=addDays(monThis,7);
-  document.getElementById("range-this").textContent=fmtRange(monThis,addDays(monThis,6));
-  document.getElementById("range-next").textContent=fmtRange(monNext,addDays(monNext,6));
-  document.getElementById("body-this").innerHTML=buildWeek(data,monThis,resolverForDay(base),base);
-  document.getElementById("body-next").innerHTML=buildWeek(data,monNext,resolverForWeek(monNext),null);
-  fitColumns();
+  const monThis=mondayOf(base);
+  const isNext=(VIEW==="next");
+  const mon=isNext?addDays(monThis,7):monThis;
+  document.querySelector(".cols").style.display="none";
+  document.getElementById("holi").style.display="none";
+  document.getElementById("monthv").style.display="none";
+  document.getElementById("stage").classList.add("stage--compact","stage--bare");
+  document.getElementById("title").textContent="Showroom opening hours";
+  document.getElementById("subtitle").innerHTML=(isNext?"Next week":"This week")+" &mdash; "+fmtRange(mon,addDays(mon,6));
+  const sched=document.getElementById("sched");sched.style.display="flex";
+  document.getElementById("gwrap-next").style.display="none";
+  document.getElementById("grid-this-range").textContent="";
+  document.querySelector("#gwrap-this .gwrap__head").style.display="none";
+  document.getElementById("grid-this").innerHTML=buildGrid(data,mon,isNext?null:base);
+  fitSched();
   const now=new Date();
   let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
-  if(problems.length)status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+  if(problems.length){
+    status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+    const f=document.querySelector(".foot");if(f)f.style.display="flex";
+  }
   document.getElementById("updated").textContent=status;
+}
+function fitSched(){
+  const wrap=document.getElementById("sched");if(!wrap||wrap.style.display==="none")return;
+  const inner=document.getElementById("sched-inner");
+  inner.style.transform="none";
+  const avail=wrap.clientHeight,need=inner.scrollHeight;
+  const k=need>avail+1?avail/need:1;
+  inner.style.transform="scale("+k+")";inner.style.transformOrigin="top center";
 }
 function fitColumns(){
   const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
@@ -692,19 +1036,65 @@ async function loadStandard(){
   if(!r.ok)throw new Error("HTTP "+r.status);
   const rows=parseCSV(await r.text());
   if(rows.length<2)return STANDARD_DEFAULT;
-  const head=rows[0].map(h=>h.trim().toLowerCase());
+  const head=rows[0].map(h=>(h||"").trim().toLowerCase());
   const DAYS=[["ma","mon","maandag","monday"],["di","tue","dinsdag","tuesday"],["wo","wed","woensdag","wednesday"],
               ["do","thu","donderdag","thursday"],["vr","fri","vrijdag","friday"],["za","sat","zaterdag","saturday"],
               ["zo","sun","zondag","sunday"]];
   const iRoom=head.findIndex(h=>h==="showroom"||h==="vestiging");
   const dayIdx=DAYS.map(alts=>head.findIndex(h=>alts.indexOf(h)>=0));
-  if(iRoom<0||dayIdx.some(i=>i<0))throw new Error("Standaard CSV mist kolommen Showroom + Ma..Zo");
   const out={};
-  rows.slice(1).forEach(r2=>{
-    const name=(r2[iRoom]||"").trim();if(!name)return;
-    out[name]=dayIdx.map(i=>(r2[i]||"").trim());
-  });
-  return Object.keys(out).length?out:STANDARD_DEFAULT;
+  if(iRoom>=0 && !dayIdx.some(i=>i<0)){
+    // row format: Showroom | Ma..Zo
+    rows.slice(1).forEach(r2=>{
+      const name=(r2[iRoom]||"").trim();if(!name)return;
+      out[name]=dayIdx.map(i=>normStd(r2[i]));
+    });
+  }else{
+    // block format: per showroom three columns (label | van | tot), day names as rows
+    const known={};SHOWROOMS.forEach(s=>known[s.name.toLowerCase()]=s.name);
+    const dayRow={};
+    rows.forEach((r2,ri)=>{
+      const lbl=(r2[0]||"").trim().toLowerCase();
+      DAYS.forEach((alts,di)=>{if(alts.indexOf(lbl)>=0)dayRow[di]=ri;});
+    });
+    // find day rows by scanning all label columns (block labels repeat per block)
+    const labelCols=[];
+    (rows[0]||[]).forEach((cell,ci)=>{
+      const nm=known[(cell||"").trim().toLowerCase()];
+      if(nm)labelCols.push({col:ci,name:nm});
+    });
+    labelCols.forEach(({col,name})=>{
+      const pat=["","","","","","",""];
+      rows.forEach(r2=>{
+        const lbl=(r2[col]||"").trim().toLowerCase();
+        DAYS.forEach((alts,di)=>{
+          if(alts.indexOf(lbl)>=0){
+            const from=(r2[col+1]||"").trim(),until=(r2[col+2]||"").trim();
+            pat[di]=normStdPair(from,until);
+          }
+        });
+      });
+      out[name]=pat;
+    });
+  }
+  if(!Object.keys(out).length)return STANDARD_DEFAULT;
+  // rooms missing from the sheet keep the built-in pattern
+  SHOWROOMS.forEach(s=>{if(!out[s.name])out[s.name]=STANDARD_DEFAULT[s.name]||["","","","","","",""];});
+  return out;
+}
+function normStd(v){
+  v=(v||"").trim();
+  const lv=v.toLowerCase();
+  if(lv==="om de week")return "even";
+  return v;
+}
+function normStdPair(from,until){
+  const lf=from.toLowerCase(),lu=until.toLowerCase();
+  if(lf==="om de week"||lu==="om de week")return "even";
+  if(/^(even|oneven|odd)$/.test(lf))return from;
+  const f=fmtTime(from),u=fmtTime(until);
+  if(/^\d{2}:\d{2}$/.test(f)&&/^\d{2}:\d{2}$/.test(u))return f+"-"+u;
+  return "";   // empty or unparsable = closed
 }
 let retryTimer=null;
 async function refresh(){
@@ -731,7 +1121,14 @@ function fitStage(){
   const s=Math.min((cw-8)/1920,(ch-8)/1080);
   document.getElementById("stage").style.transform="scale("+s+")";
 }
-window.addEventListener("resize",()=>{fitStage();fitColumns();});
+window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();});
+initNav();
+(function(){
+  const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
+  if(pv)pv.onclick=function(){MONTH_OFFSET--;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
+  if(nx)nx.onclick=function(){MONTH_OFFSET++;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
+  if(td)td.onclick=function(){MONTH_OFFSET=0;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
+})();
 fitStage();tick();refresh();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
 setInterval(tick,10000);
