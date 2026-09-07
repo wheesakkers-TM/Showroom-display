@@ -275,7 +275,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
       <div class="head__left">
         <div class="head__eyebrow">Tuinmaximaal</div>
         <h1 class="head__title" id="title">Showroom opening hours</h1>
-        <div class="head__sub" id="subtitle">Special hours &mdash; this week &amp; next week</div>
+        <div class="head__sub" id="subtitle">&nbsp;</div>
       </div>
       <div class="head__right">
         <div class="clock" id="clock">--:--</div>
@@ -290,7 +290,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
       <a class="tab" data-v="holidays" href="?view=holidays">Coming up</a>
     </nav>
 
-    <main class="cols">
+    <main class="cols" style="display:none">
       <section class="col">
         <div class="col__head"><div class="col__label">This week</div><div class="col__range" id="range-this">&nbsp;</div></div>
         <div class="col__body"><div class="fit" id="body-this"></div></div>
@@ -1123,6 +1123,8 @@ function fitStage(){
 }
 window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();});
 initNav();
+/* instant first paint: show the grid with standard hours while the CSVs load */
+if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e);}}
 (function(){
   const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
   if(pv)pv.onclick=function(){MONTH_OFFSET--;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
