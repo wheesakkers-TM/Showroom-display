@@ -132,16 +132,15 @@ th.gh--room{width:23%;}
 /* today: one soft band down the column instead of seven outlines */
 .gc[data-today="1"]{background:rgba(255,255,255,.05);}
 .grid tbody tr:last-child .gc[data-today="1"]{border-radius:0 0 12px 12px;}
-[data-tip]{position:relative;cursor:help;}
+[data-tip]{cursor:help;}
+#tip{position:fixed;z-index:99;max-width:min(460px,92vw);background:#0B1F14;
+  border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:15px;
+  padding:9px 14px;border-radius:10px;white-space:pre-line;line-height:1.5;
+  box-shadow:0 14px 34px rgba(0,0,0,.55);pointer-events:none;display:none;
+  font-family:"Century Gothic","Jost",system-ui,sans-serif;}
+#tip.tip--on{display:block;}
 .gc[data-tip]:hover{background:rgba(255,255,255,.07);}
-[data-tip]:hover::after{
-  content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
-  background:#0B1F14;border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:16px;
-  padding:10px 16px;border-radius:10px;white-space:pre-line;text-align:left;line-height:1.5;max-width:420px;width:max-content;
-  z-index:9;box-shadow:0 12px 30px rgba(0,0,0,.5);pointer-events:none;}
-.mev[data-tip]:hover::after{left:0;transform:none;font-size:18px;padding:12px 18px;}
-.mcd__n[data-tip]:hover::after{left:0;transform:none;}
-.gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
+.mev.mcd__n.gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
 .gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
 .gc--exc .gc__t{color:#FFB469;}
 /* ---------- responsive refinements ---------- */
@@ -261,16 +260,37 @@ th.gh--room{width:23%;}
 .dotc{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--sage);}
 .dotc--NL{background:#FF8000;} .dotc--DE{background:#7FB4E8;} .dotc--UK{background:#C58CE0;}
 .dotc--BE{background:#E8C24A;}
-.mbars{position:absolute;left:10px;right:10px;bottom:7px;display:flex;flex-direction:column;gap:3px;}
-.mbar{height:2px;width:100%;border-radius:2px;background:var(--sage);opacity:.9;}
-.mbar--NL{background:#FF8000;} .mbar--DE{background:#7FB4E8;} .mbar--UK{background:#C58CE0;}
-.mbar--BE{background:#E8C24A;}
-.mbars__n{font-weight:600;font-size:10px;color:var(--sage-dim);align-self:flex-end;line-height:1;}
 .mev__more{cursor:help;}
 .qev--media .qev__t{display:inline-flex;align-items:center;gap:7px;color:#E4EDE0;}
 .qev--media .qev__d{color:var(--sage-dim);width:auto;min-width:74px;}
 .stage--narrow .mediapill b{font-size:15px;}
 .stage--narrow .mediapill em{font-size:13px;}
+/* ---------- media campaign bars ---------- */
+.mbrrow td{padding:0 2px 4px;}
+.mbrlead,.mcw--bar{background:transparent;border:none;}
+.mbrgap{background:transparent;}
+.mbr{position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  height:30px;padding:0 12px;border-radius:8px;cursor:help;
+  background:rgba(255,255,255,.07);border-left:3px solid var(--sage);}
+.mbr__t{font-weight:700;font-size:15px;color:#F2F6EF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1.15;}
+.mbr__s{font-weight:600;font-size:12px;color:var(--sage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1.15;}
+.mbr--contL{border-left:none;border-top-left-radius:0;border-bottom-left-radius:0;}
+.mbr--contR{border-top-right-radius:0;border-bottom-right-radius:0;}
+.mbr--NL{border-left-color:#FF8000;background:rgba(255,128,0,.13);}
+.mbr--DE{border-left-color:#7FB4E8;background:rgba(127,180,232,.13);}
+.mbr--UK{border-left-color:#C58CE0;background:rgba(197,140,224,.13);}
+.mbr--BE{border-left-color:#E8C24A;background:rgba(232,194,74,.13);}
+.mbr--contL.mbr--NL{box-shadow:inset 3px 0 0 rgba(255,128,0,.35);}
+.mbr--contL.mbr--DE{box-shadow:inset 3px 0 0 rgba(127,180,232,.35);}
+.mbr--contL.mbr--UK{box-shadow:inset 3px 0 0 rgba(197,140,224,.35);}
+.mbrmore{font-weight:600;font-size:13px;color:var(--sage-dim);padding-left:12px;}
+/* short bars: the partner name wins, the sub-line is dropped */
+.mbrrow--month .mbr{height:22px;padding:0 9px;}
+.mbrrow--month .mbr__t{font-size:13px;}
+.mbrrow--month .mbr__s{display:none;}
+.mbr[data-span="1"] .mbr__s,.mbr[data-span="2"] .mbr__s{display:none;}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
@@ -389,6 +409,7 @@ td.qcw{padding:0;}
 </style>
 </head>
 <body>
+<div id="tip"></div>
 <div id="viewport">
   <div id="stage">
     <header class="head">
@@ -421,6 +442,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="week-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="week-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
           </div>
@@ -443,6 +465,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="q-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="q-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
           </div>
@@ -462,6 +485,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="month-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="month-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
           </div>
@@ -714,7 +738,7 @@ const MEDIA_DEFAULT = [
 ];
 let MEDIA=MEDIA_DEFAULT;
 /* Agenda filters. Social media planning is added later. */
-const FILTERS={media:true,social:false};
+const FILTERS={media:true,hours:true,social:false};
 function mediaActive(d){
   const t=d.getTime(),out=[];
   MEDIA.forEach(function(r){
@@ -748,6 +772,54 @@ function mediaTip(m){
          m.until.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
 }
 
+/* Clip media flights to [from,to] (7 days) and stack them into lanes.
+   Returns lanes: [[{col,span,m,contL,contR}, ...], ...] */
+function mediaLanes(from,to,maxLanes){
+  const items=[];
+  MEDIA.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b||b<from||a>to)return;
+    const sIdx=Math.max(0,Math.round((a-from)/DAY));
+    const eIdx=Math.min(6,Math.round((b-from)/DAY));
+    items.push({col:sIdx,span:eIdx-sIdx+1,contL:a<from,contR:b>to,
+                m:{from:a,until:b,partner:r[2],land:r[3],kanaal:r[4]}});
+  });
+  items.sort(function(x,y){return (x.col-y.col)||(y.span-x.span);});
+  const lanes=[];
+  items.forEach(function(it){
+    for(let i=0;i<lanes.length;i++){
+      if(!lanes[i].some(function(o){return it.col < o.col+o.span && o.col < it.col+it.span;})){
+        lanes[i].push(it);return;
+      }
+    }
+    lanes.push([it]);
+  });
+  const shown=lanes.slice(0,maxLanes||3);
+  const hidden=lanes.slice(maxLanes||3).reduce(function(n,l){return n+l.length;},0);
+  return {lanes:shown,hidden:hidden};
+}
+/* one <tr> per lane: leading cell + bar cells with colspan, aligned to the day columns */
+function mediaLaneRows(from,to,leadCell,maxLanes,cls){
+  const res=mediaLanes(from,to,maxLanes);
+  let html="";
+  res.lanes.forEach(function(lane){
+    lane.sort(function(a,b){return a.col-b.col;});
+    let row=leadCell,cur=0;
+    lane.forEach(function(it){
+      if(it.col>cur)row+=`<td colspan="${it.col-cur}" class="mbrgap"></td>`;
+      const c=countryBadgeTxt(it.m.land);
+      const edge=(it.contL?" mbr--contL":"")+(it.contR?" mbr--contR":"");
+      row+=`<td colspan="${it.span}" class="mbrcell"><div class="mbr mbr--${c}${edge}" data-span="${it.span}"${tipAttr(mediaTip(it.m))}>`+
+           `<span class="mbr__t">${it.m.partner}</span>`+
+           `<span class="mbr__s">${it.m.kanaal} \u00b7 ${c}</span></div></td>`;
+      cur=it.col+it.span;
+    });
+    if(cur<7)row+=`<td colspan="${7-cur}" class="mbrgap"></td>`;
+    html+=`<tr class="${cls}">${row}</tr>`;
+  });
+  if(res.hidden)html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore">+${res.hidden} more campaigns</td></tr>`;
+  return html;
+}
 /* ---------- product introductions (informational layer) ----------
    [date, product, status]. Source: Productintroductieplanning (Marketing / Marketing-po).
    Shown in all three views; never affects opening hours. */
@@ -930,7 +1002,7 @@ const ICONS=[
  [/ascension|hemelvaart/i,"\u{1F54A}\uFE0F"],        // 🕊️
  [/king'?s day|koningsdag/i,"\u{1F451}"],            // 👑
  [/bank holiday/i,"\u{1F3D6}\uFE0F"],                // 🏖️
- [/unity|einheit/i,"\u{1F1E9}\u{1F1EA}"],            // 🇩🇪
+ [/unity|einheit/i,"__DEFLAG__"],                    // drawn DE flag (emoji flags show as letters on Windows)
  [/assumption|himmelfahrt|corpus christi|fronleichnam|all saints|allerheiligen|reformation/i,"\u26EA"], // ⛪
  [/halloween/i,"\u{1F383}"],                          // 🎃
  [/black friday|sale/i,"\u{1F6CD}\uFE0F"],            // 🛍️
@@ -941,7 +1013,9 @@ const ICONS=[
  [/summer/i,"\u2600\uFE0F"],                          // ☀️
 ];
 function iconFor(reason){
-  for(const [re,ic] of ICONS){if(re.test(reason||""))return ic;}
+  for(const [re,ic] of ICONS){
+    if(re.test(reason||""))return ic==="__DEFLAG__"?flagSVG("DE"):ic;
+  }
   return "";
 }
 const CROWD={
@@ -1306,6 +1380,10 @@ function buildGrid(exList,mon,todayD){
   }
   head+=`</tr>`;
   let body="";
+  if(FILTERS.media){
+    body+=mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',3,"mbrrow");
+  }
+  if(!FILTERS.hours)return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
     body+=`<tr><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
@@ -1325,6 +1403,7 @@ function dayClosedTip(d,exMap){
   const hol=holidaysOnDay(d);
   hol.forEach(function(h){parts.push("Public holiday: "+h);});
   productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
+  if(!FILTERS.hours)return parts.join("\n");
   const closedRows=[];
   SHOWROOMS.forEach(s=>{
     const eff=effectiveDay(s.name,s.country,d,exMap||{});
@@ -1371,7 +1450,7 @@ function buildMonth(data,anchor){
       if(!inMonth){h+=`<td class="mcd mcd--out"></td>`;continue;}
       // group per reason
       const ev=new Map();
-      items.forEach(it=>{const key=it.Reason||"";
+      if(FILTERS.hours)items.forEach(it=>{const key=it.Reason||"";
         if(!ev.has(key))ev.set(key,{reason:key,rows:[]});
         ev.get(key).rows.push(it);});
       let cell="";
@@ -1414,10 +1493,6 @@ function buildMonth(data,anchor){
         if(ma.length){
           const mlines=ma.map(function(m){return "Media: "+m.partner+" ("+m.kanaal+", "+m.land+") "+mediaRangeLabel(m);});
           dtip=(dtip?dtip+"\n":"")+mlines.join("\n");
-          const lands=[];
-          ma.forEach(function(m){const c=countryBadgeTxt(m.land);if(lands.indexOf(c)<0)lands.push(c);});
-          cell+=`<div class="mbars">`+lands.slice(0,3).map(function(c){
-            return `<i class="mbar mbar--${c}"></i>`;}).join("")+`</div>`;
         }
       }
       const isHol=holidaysOnDay(d).length>0;
@@ -1425,6 +1500,7 @@ function buildMonth(data,anchor){
          `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
     }
     h+=`</tr>`;
+    if(FILTERS.media)h+=mediaLaneRows(wkMon,addDays(wkMon,6),'<td class="mcw mcw--bar"></td>',2,"mbrrow mbrrow--month");
   }
   h+=`</tbody></table>`;
   return h;
@@ -1437,7 +1513,7 @@ function roomList(rows,asText){
     const all=SHOWROOMS.filter(s=>s.country===c).map(s=>s.name);
     const got=byC[c];
     if(all.length&&got.length>=all.length&&all.every(n=>got.indexOf(n)>=0)){
-      parts.push(asText?("all "+countryBadgeTxt(c)):('<span class="rl">'+flagSVG(c)+'all</span>'));
+      parts.push(asText?("all "+countryBadgeTxt(c)+" showrooms"):('<span class="rl">'+flagSVG(c)+'all showrooms</span>'));
     }else parts.push(got.join(", "));
   });
   return parts.join(asText?" \u00b7 ":' <span class="rl__sep">\u00b7</span> ');
@@ -1495,8 +1571,8 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const parts=[];
       productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
       holidaysOnDay(d).forEach(function(x){parts.push("Public holiday: "+x);});
-      if(items.length){
-        [...new Set(items.map(x=>x.Reason||"Special day"))].forEach(function(n){parts.push(n);});
+      if(items.length&&FILTERS.hours){
+        [...new Set(items.map(x=>displayReason(x.Reason)||"Special day"))].forEach(function(n){parts.push(n);});
         const closed=items.filter(x=>isClosed(x.Status));
         if(closed.length)parts.push("Closed: "+roomList(closed,true));
       }
@@ -1520,7 +1596,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       ev.get(key).rows.push(it);
     });
   });
-  const evs=[...ev.values()].sort((a,b)=>a.d-b.d);
+  const evs=FILTERS.hours?[...ev.values()].sort((a,b)=>a.d-b.d):[];
   let list="";
   evs.slice(0,7).forEach(e=>{
     const closed=e.rows.filter(x=>isClosed(x.Status));
@@ -1638,16 +1714,9 @@ function render(data,problems){
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
   const pw=productsInWeek(mon), pstrip=document.getElementById("week-prod");
-  let mediaHTML="";
-  if(FILTERS.media){
-    mediaHTML=mediaOverlapping(mon,addDays(mon,6)).map(function(m){
-      return `<span class="mediapill"${tipAttr(mediaTip(m))}><i class="dotc dotc--${countryBadgeTxt(m.land)}"></i>`+
-             `<b>${m.partner}</b><em>${m.kanaal} \u00b7 ${mediaRangeLabel(m)}</em></span>`;
-    }).join("");
-  }
-  if(pw.length||mediaHTML){
+  if(pw.length){
     pstrip.style.display="flex";
-    pstrip.innerHTML=mediaHTML+pw.map(function(p){
+    pstrip.innerHTML=pw.map(function(p){
       const day=p.d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
       const full=p.d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
       return `<span class="prod"${tipAttr("Product launch: "+p.name+"\nLaunch date: "+full)}>`+
@@ -1866,6 +1935,37 @@ function fitStage(){
   st.classList.toggle("stage--tight",h<820);
   st.classList.toggle("stage--phone",w<820);
 }
+/* tooltips: one element, positioned near the target and clamped inside the window */
+(function(){
+  const tip=document.getElementById("tip");
+  let cur=null;
+  function place(el){
+    const txt=el.getAttribute("data-tip");
+    if(!txt){hide();return;}
+    tip.textContent=txt;
+    tip.classList.add("tip--on");
+    const r=el.getBoundingClientRect();
+    const tw=tip.offsetWidth, th=tip.offsetHeight;
+    const vw=document.documentElement.clientWidth, vh=document.documentElement.clientHeight;
+    let x=r.left+r.width/2-tw/2;
+    x=Math.max(8,Math.min(x,vw-tw-8));
+    let y=r.top-th-10;
+    if(y<8)y=Math.min(r.bottom+10,vh-th-8);
+    tip.style.left=Math.round(x)+"px";
+    tip.style.top=Math.round(y)+"px";
+    cur=el;
+  }
+  function hide(){tip.classList.remove("tip--on");cur=null;}
+  document.addEventListener("mouseover",function(e){
+    const el=e.target.closest?e.target.closest("[data-tip]"):null;
+    if(el){if(el!==cur)place(el);}else if(cur)hide();
+  });
+  document.addEventListener("mouseleave",function(e){
+    if(cur&&e.target===cur)hide();
+  },true);
+  window.addEventListener("scroll",hide,true);
+  window.addEventListener("resize",hide);
+})();
 window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();});
 initNav();
 /* instant first paint: show the grid with standard hours while the CSVs load */
@@ -1886,11 +1986,11 @@ if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e)
       inp.onchange=function(){
         FILTERS[inp.getAttribute("data-f")]=inp.checked;
         document.querySelectorAll('.fdrop input[data-f="'+inp.getAttribute("data-f")+'"]').forEach(function(o){o.checked=inp.checked;});
-        document.querySelectorAll(".mbtn--filter").forEach(function(b){b.classList.toggle("mbtn--filter-on",FILTERS.media);});
+        document.querySelectorAll(".mbtn--filter").forEach(function(b){b.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours);});
         rerender();
       };
     });
-    btn.classList.toggle("mbtn--filter-on",FILTERS.media);
+    btn.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours);
   });
   document.addEventListener("click",function(){document.querySelectorAll(".fdrop").forEach(function(d){d.classList.remove("fdrop--open");});});
   const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
