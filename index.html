@@ -28,17 +28,17 @@ html,body{height:100%;background:var(--forest-2);}
 body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe UI,sans-serif;
   color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;}
 .ic{width:22px;height:22px;flex-shrink:0;}
+#stage>*{width:100%;max-width:var(--maxw);margin-left:auto;margin-right:auto;}
 
 #viewport{position:fixed;inset:0;overflow:hidden;background:var(--forest-2);}
-#stage{width:1920px;height:1080px;transform-origin:top left;
+#stage{--maxw:1480px;width:1920px;height:1080px;transform-origin:top left;align-items:center;
   background:radial-gradient(120% 120% at 15% 0%, #013C1E 0%, #00301A 45%, #001A12 100%);
   display:flex;flex-direction:column;padding:50px 60px 30px;}
 
 /* ---------- header ---------- */
 .head{display:flex;justify-content:space-between;align-items:flex-end;
   border-bottom:1px solid var(--hair-soft);padding-bottom:24px;}
-.head__eyebrow{font-weight:700;letter-spacing:.42em;text-transform:uppercase;
-  font-size:20px;color:var(--orange);margin-bottom:9px;}
+.head__eyebrow{display:none;}
 .head__title{font-weight:700;font-size:62px;line-height:.96;letter-spacing:-.01em;color:#fff;}
 .head__sub{font-weight:500;font-size:25px;color:var(--sage);margin-top:13px;}
 .head__right{text-align:right;padding-bottom:2px;}
@@ -87,18 +87,18 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--bare .today{font-size:19px;}
 .stage--bare .foot{display:none;}
 .stage--bare .sched{padding-top:18px;}
-.stage--bare .grid{border-spacing:8px 8px;}
-.stage--bare .gc{border-radius:12px;}
-.stage--bare .gc__t{font-size:24px;}
-.stage--bare .gc .gdot{width:13px;height:13px;margin-left:9px;}
-.stage--bare .gh__d{font-size:17px;}
-.stage--bare .gh__n{font-size:26px;}
-.stage--bare .gh{padding-bottom:6px;}
-.stage--bare .gh--room{width:240px;}
-.stage--bare .gflag .flg{width:32px;height:21px;margin-right:0;}
-.stage--bare .gflag{margin-right:14px;}
-.stage--bare .grname{font-size:28px;}
-.stage--bare .gc--closed svg{width:24px;height:24px;}
+
+
+.stage--bare .gc__t{font-size:21px;}
+.stage--bare .gc .gdot{width:8px;height:8px;margin-left:10px;}
+.stage--bare .gh__d{font-size:14px;}
+.stage--bare .gh__n{font-size:23px;}
+.stage--bare .gh{padding-bottom:14px;}
+
+.stage--bare .gflag .flg{width:28px;height:19px;}
+
+.stage--bare .grname{font-size:24px;}
+.stage--bare .gc--closed svg{width:18px;height:18px;}
 /* ---------- schedule grid (main view) ---------- */
 .sched{flex:1;overflow:hidden;min-height:0;padding-top:16px;display:flex;flex-direction:column;gap:10px;}
 #grid-this{flex:1;min-height:0;}
@@ -106,24 +106,32 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .gwrap__head{display:flex;align-items:baseline;gap:14px;margin-bottom:3px;}
 .gwrap__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:21px;color:#fff;}
 .gwrap__range{font-weight:600;font-size:17px;color:var(--sage);}
-.grid{width:100%;height:100%;border-collapse:separate;border-spacing:5px 4px;table-layout:fixed;}
-.gh{padding:0 4px 2px;text-align:center;vertical-align:bottom;}
-.gh--room{width:200px;}
-.gh__d{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:var(--sage-dim);}
-.gh__n{display:block;font-weight:700;font-size:18px;color:#fff;line-height:1.05;}
-.gh--today .gh__d{color:var(--orange);}
-.gh--today .gh__n{color:var(--orange);}
-.gc{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;
-  height:auto;text-align:center;vertical-align:middle;padding:6px 5px;}
-.gc__t{font-weight:700;font-size:17px;color:#F2F6EF;font-variant-numeric:tabular-nums;white-space:nowrap;}
-.gc .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;
-  background:var(--dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
-.gc--room{background:transparent;border:none;text-align:left;padding-left:2px;}
-.gflag{display:inline-flex;vertical-align:middle;margin-right:11px;}
-.gflag .flg{width:27px;height:18px;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.18);display:block;}
-.grname{font-weight:700;font-size:21px;color:#fff;vertical-align:middle;}
-.gc--closed{background:rgba(255,255,255,.03);}
-.gc--closed svg{width:17px;height:17px;fill:var(--sage-dim);opacity:.6;}
+.grid{width:100%;height:100%;border-collapse:collapse;table-layout:fixed;}
+.gh{padding:0 6px 12px;text-align:center;vertical-align:bottom;width:auto;}
+th.gh--room{width:23%;}
+.gh__d{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:13px;color:var(--sage-dim);}
+.gh__n{display:block;font-weight:700;font-size:20px;color:#EAF2E6;line-height:1.1;margin-top:3px;}
+.gh--today .gh__d,.gh--today .gh__n{color:var(--orange);}
+.gh--today{background:rgba(255,255,255,.05);border-radius:12px 12px 0 0;}
+.grid tbody tr{border-top:1px solid rgba(255,255,255,.06);}
+.grid tbody tr:last-child{border-bottom:1px solid rgba(255,255,255,.07);}
+.gc{position:relative;isolation:isolate;text-align:center;vertical-align:middle;
+  padding:7px 6px;background:transparent;border:none;line-height:1.15;}
+.gc__t{font-weight:600;font-size:17px;color:#DCE7D6;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.gc .gdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:9px;
+  vertical-align:middle;background:var(--dot);}
+.gc--room{text-align:left;padding-left:2px;}
+.gflag{display:inline-flex;vertical-align:middle;margin-right:13px;}
+.gflag .flg{width:24px;height:16px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.16);display:block;}
+.grname{font-weight:600;font-size:20px;color:#fff;vertical-align:middle;}
+.gc--closed svg{width:15px;height:15px;fill:var(--sage-dim);opacity:.42;}
+.gc--muted{color:var(--sage-dim);font-size:17px;}
+.gc--exc .gc__t{color:var(--orange);font-weight:700;}
+.gc--exc::before{content:"";position:absolute;inset:4px 7px;border-radius:8px;
+  background:rgba(255,128,0,.11);z-index:-1;}
+/* today: one soft band down the column instead of seven outlines */
+.gc[data-today="1"]{background:rgba(255,255,255,.05);}
+.grid tbody tr:last-child .gc[data-today="1"]{border-radius:0 0 12px 12px;}
 [data-tip]{position:relative;cursor:help;}
 .gc[data-tip]:hover{background:rgba(255,255,255,.07);}
 [data-tip]:hover::after{
@@ -136,7 +144,6 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
 .gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
 .gc--exc .gc__t{color:#FFB469;}
-.gc[data-today="1"]{outline:2px solid var(--orange);outline-offset:-1px;}
 /* ---------- responsive refinements ---------- */
 .stage--narrow{padding:24px 34px 18px;}
 .stage--narrow .head__title{font-size:34px;}
@@ -144,7 +151,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--narrow .clock{font-size:38px;}
 .stage--narrow .today{font-size:17px;}
 .stage--narrow .tab{font-size:16px;padding:7px 16px;}
-.stage--narrow .gh--room,.stage--narrow .stage--bare .gh--room{width:170px;}
+
 .stage--narrow .grname{font-size:19px;}
 .stage--narrow .gflag .flg{width:25px;height:17px;}
 .stage--narrow .gc__t{font-size:16px;}
@@ -162,7 +169,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--phone .head__right{text-align:left;}
 .stage--phone .clock{font-size:30px;}
 .stage--phone .tabs{flex-wrap:wrap;}
-.stage--phone .gh--room{width:120px;}
+.stage--phone th.gh--room{width:27%;}
 .stage--phone .grname{font-size:15px;}
 .stage--phone .gc__t{font-size:13px;}
 .stage--phone .gflag .flg{width:20px;height:14px;}
@@ -216,6 +223,21 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .mcd__n--hol{border-bottom:1px dotted rgba(255,255,255,.45);padding-bottom:1px;cursor:help;}
 .qcd__n--hol{border-bottom:1px dotted rgba(255,255,255,.4);padding-bottom:1px;}
 .gc--hol{box-shadow:inset 0 -2px 0 rgba(255,255,255,.16);}
+.prodstrip{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;}
+.prod{display:inline-flex;align-items:center;gap:8px;background:rgba(162,186,28,.13);
+  border:1px solid rgba(162,186,28,.35);border-radius:999px;padding:4px 13px;cursor:help;}
+.prod__ic{font-size:17px;line-height:1;}
+.prod b{font-weight:700;font-size:19px;color:#EAF3DE;}
+.prod em{font-style:normal;font-weight:600;font-size:16px;color:var(--sage);}
+.prod--period{background:rgba(162,186,28,.08);}
+.mev--prod .mev__t{color:var(--lime);}
+.mline--prod{color:var(--sage-dim);font-size:12px;}
+.qdot--prod{background:var(--lime);left:calc(50% + 7px);}
+.qev--prod .qev__t{color:#DCEBBF;}
+.qev__sep{font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--sage-dim);margin-top:6px;}
+.stage--narrow .prod b{font-size:16px;}
+.stage--narrow .prod em{font-size:14px;}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
@@ -367,6 +389,7 @@ td.qcw{padding:0;}
           <button class="mbtn" id="week-next" aria-label="Next week">&#8594;</button>
         </div>
       </div>
+      <div class="prodstrip" id="week-prod" style="display:none"></div>
       <div class="sched-inner" id="sched-inner">
         <div id="grid-this"></div>
       </div>
@@ -420,6 +443,8 @@ window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.rea
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
 const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";
 const STANDARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1306704827&single=true&output=csv";
+const PRODUCT_CSV_URL = "";   // optional: published CSV of the product introduction planning
+                              // (columns Date | Product | Status). Empty = built-in list below.
 const HOLIDAY_CSV_URL = "";   // optional: published CSV of the "Feestdagen" tab (Date | Holiday | Group).
                               // Leave empty to use the built-in list (2026-2027) below.
 const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
@@ -495,6 +520,55 @@ const SAMPLE_DATA = [
   {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
   {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
 ];
+
+/* ---------- product introductions (informational layer) ----------
+   [date, product, status]. Source: Productintroductieplanning (Marketing / Marketing-po).
+   Shown in all three views; never affects opening hours. */
+const PRODUCTS_DEFAULT = [
+  // [launch date, product]  — concrete "Livegang" dates
+  ["2026-09-29","Schuifwand slot"],
+  ["2026-09-29","Handgreep paneel"]
+];
+/* Launches with only a target period (Livegang onder voorbehoud). [from, to, product] */
+const PRODUCTS_PERIOD = [
+  ["2027-03-01","2027-03-31","Spie update"],
+  ["2027-04-01","2027-05-31","Pergola vrijstaand 1.5 graad"],
+  ["2027-04-01","2027-05-31","Kunstplanten en potten"],
+  ["2027-04-01","2027-05-31","Zip screens"],
+  ["2027-04-01","2027-05-31","Wall heater"]
+];
+let PRODUCTS=PRODUCTS_DEFAULT, PROD_INDEX=null;
+function prodIndex(){
+  if(PROD_INDEX)return PROD_INDEX;
+  const ix={};
+  PRODUCTS.forEach(function(r){const k=r[0];(ix[k]=ix[k]||[]).push({name:r[1]});});
+  PROD_INDEX=ix;return ix;
+}
+function productsOnDay(d){return (prodIndex()[holKey(d)]||[]);}
+function productsInWeek(mon){
+  const out=[];
+  for(let i=0;i<7;i++){
+    const d=addDays(mon,i);
+    productsOnDay(d).forEach(function(p){out.push({d:d,name:p.name});});
+  }
+  return out;
+}
+/* period launches that overlap the given month */
+function periodLaunches(anchor){
+  const mStart=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+  const mEnd=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
+  const out=[];
+  PRODUCTS_PERIOD.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b||b<mStart||a>mEnd)return;
+    const lbl=(a.getMonth()===b.getMonth())
+      ? a.toLocaleDateString("en-GB",{month:"long",year:"numeric"})
+      : a.toLocaleDateString("en-GB",{month:"long"})+"/"+b.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+    out.push({name:r[2],label:lbl});
+  });
+  return out;
+}
+const ROCKET="\u{1F680}";
 
 /* ---------- public holidays (informational layer) ----------
    Groups: NL / UK / DE (nationwide) / BW / BY / HB (Bremen) / BE (Berlin).
@@ -1023,6 +1097,7 @@ function dayClosedTip(d,exMap){
   const parts=[];
   const hol=holidaysOnDay(d);
   hol.forEach(function(h){parts.push("Public holiday: "+h);});
+  productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
   const closedRows=[];
   SHOWROOMS.forEach(s=>{
     const eff=effectiveDay(s.name,s.country,d,exMap||{});
@@ -1089,6 +1164,11 @@ function buildMonth(data,anchor){
         cell+=`<div class="mev"${tipAttr(tp.join("\n"))}><div class="mev__t">${icon?icon+" ":""}${e.reason||"Special day"}</div>${lines}</div>`;
       });
       if(ev.size>2)cell+=`<div class="mev__more">+${ev.size-2} more</div>`;
+      productsOnDay(d).forEach(function(pr){
+        const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+        cell+=`<div class="mev mev--prod"${tipAttr("Product launch: "+pr.name+"\nLaunch date: "+full)}>`+
+              `<div class="mev__t">${ROCKET} ${pr.name}</div></div>`;
+      });
       const dtip=dayClosedTip(d,exMap);
       const isHol=holidaysOnDay(d).length>0;
       h+=`<td class="mcd${past?" mcd--past":""}">`+
@@ -1126,7 +1206,12 @@ function renderMonth(data,problems){
   document.getElementById("month-title").textContent=
     anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
   document.getElementById("month-grid").innerHTML=buildMonth(data,anchor);
-  document.getElementById("month-std").innerHTML="";
+  const pl=periodLaunches(anchor);
+  document.getElementById("month-std").innerHTML = pl.length
+    ? `<div class="prodstrip">`+pl.map(function(x){
+        return `<span class="prod prod--period"${tipAttr("Product launch: "+x.name+"\nTarget launch: "+x.label+" (provisional)")}>`+
+               `<i class="prod__ic">${ROCKET}</i><b>${x.name}</b><em>${x.label}</em></span>`;}).join("")+`</div>`
+    : "";
   if(problems.length){
     const f=document.querySelector(".foot");if(f)f.style.display="flex";
     document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
@@ -1151,6 +1236,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const isToday=d.getTime()===t0;
       const past=d.getTime()<t0;
       const parts=[];
+      productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
       holidaysOnDay(d).forEach(function(x){parts.push("Public holiday: "+x);});
       if(items.length){
         [...new Set(items.map(x=>x.Reason||"Special day"))].forEach(function(n){parts.push(n);});
@@ -1158,8 +1244,10 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
         if(closed.length)parts.push("Closed: "+roomList(closed,true));
       }
       const isHol=holidaysOnDay(d).length>0;
+      const isProd=productsOnDay(d).length>0;
       h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(parts.join("\n"))}>`+
-         `<span class="qcd__n${isHol?" qcd__n--hol":""}">${d.getDate()}</span>${items.length?`<i class="qdot"></i>`:""}</td>`;
+         `<span class="qcd__n${isHol?" qcd__n--hol":""}">${d.getDate()}</span>`+
+         (items.length?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+`</td>`;
     }
     h+=`</tr>`;
   }
@@ -1186,6 +1274,21 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   });
   if(evs.length>7)list+=`<div class="qev qev--more">+${evs.length-7} more</div>`;
   if(!evs.length)list=`<div class="qev qev--none">No special days</div>`;
+  let plist="";
+  PRODUCTS.forEach(function(r){
+    const d=parseDate(r[0]);
+    if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
+    const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    plist+=`<div class="qev qev--prod"${tipAttr("Product launch: "+r[1]+"\nLaunch date: "+full)}>`+
+           `<span class="qev__d">${d.getDate()} ${d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
+           `<span class="qev__t">${ROCKET} ${r[1]}</span></div>`;
+  });
+  periodLaunches(anchor).forEach(function(pl){
+    plist+=`<div class="qev qev--prod"${tipAttr("Product launch: "+pl.name+"\nTarget launch: "+pl.label+" (provisional)")}>`+
+           `<span class="qev__d">${pl.label.split(" ")[0].slice(0,3)}</span>`+
+           `<span class="qev__t">${ROCKET} ${pl.name}</span></div>`;
+  });
+  if(plist)list+=`<div class="qev__sep">Product launches</div>`+plist;
   return `<div class="qm"><div class="qm__title">${anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</div>${h}<div class="qm__list">${list}</div></div>`;
 }
 function renderQuarter(data,problems){
@@ -1264,6 +1367,16 @@ function render(data,problems){
   const wl=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":"Week "+isoWeek(mon);
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
+  const pw=productsInWeek(mon), pstrip=document.getElementById("week-prod");
+  if(pw.length){
+    pstrip.style.display="flex";
+    pstrip.innerHTML=pw.map(function(p){
+      const day=p.d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+      const full=p.d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+      return `<span class="prod"${tipAttr("Product launch: "+p.name+"\nLaunch date: "+full)}>`+
+             `<i class="prod__ic">${ROCKET}</i><b>${p.name}</b><em>${day}</em></span>`;
+    }).join("");
+  }else{pstrip.style.display="none";pstrip.innerHTML="";}
   fitSched();
   if(problems.length){
     const f=document.querySelector(".foot");if(f)f.style.display="flex";
@@ -1331,6 +1444,25 @@ async function loadExceptions(){
   const objs=rowsToObjects(parseCSV(await res.text()));
   LAST_GOOD_DATA=objs;
   return objs;                                       // empty sheet = everything open (not sample data)
+}
+async function loadProducts(){
+  if(!PRODUCT_CSV_URL)return PRODUCTS_DEFAULT;
+  const r=await fetchTimeout(PRODUCT_CSV_URL,FETCH_TIMEOUT_MS);
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const rows=parseCSV(await r.text());
+  if(rows.length<2)return PRODUCTS_DEFAULT;
+  const head=rows[0].map(h=>(h||"").trim().toLowerCase());
+  const iD=head.findIndex(h=>h==="date"||h==="datum");
+  const iP=head.findIndex(h=>h==="product"||h==="naam"||h==="name");
+  const iS=head.findIndex(h=>h==="status");
+  if(iD<0||iP<0)throw new Error("Product CSV mist kolommen Date/Product");
+  const out=[];
+  rows.slice(1).forEach(function(r2){
+    const d=parseDate(r2[iD]);const n=(r2[iP]||"").trim();
+    if(!d||!n)return;
+    out.push([holKey(d),n,iS>=0?(r2[iS]||"").trim():""]);
+  });
+  return out.length?out:PRODUCTS_DEFAULT;
 }
 async function loadHolidays(){
   if(!HOLIDAY_CSV_URL)return HOLIDAYS_DEFAULT;
@@ -1419,9 +1551,10 @@ function normStdPair(from,until){
 }
 let retryTimer=null;
 async function refresh(){
-  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions()),settle(loadStandard()),settle(loadHolidays())]);
-  const fc=results[0],ex=results[1],st=results[2],hd=results[3];
+  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions()),settle(loadStandard()),settle(loadHolidays()),settle(loadProducts())]);
+  const fc=results[0],ex=results[1],st=results[2],hd=results[3],pr=results[4];
   if(hd.status==="fulfilled"){HOLIDAYS=hd.value;HOL_INDEX=null;}
+  if(pr.status==="fulfilled"){PRODUCTS=pr.value;PROD_INDEX=null;}
   FORECAST = fc.status==="fulfilled" ? fc.value : {};
   STANDARD = st.status==="fulfilled" ? st.value : STANDARD_DEFAULT;
   const data = ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]);
@@ -1430,6 +1563,7 @@ async function refresh(){
   if(CSV_URL && ex.status!=="fulfilled"){problems.push("hours");console.warn("Hours CSV:",ex.reason);}
   if(STANDARD_CSV_URL && st.status!=="fulfilled"){problems.push("standard");console.warn("Standard CSV:",st.reason);}
   if(HOLIDAY_CSV_URL && hd.status!=="fulfilled"){problems.push("holidays");console.warn("Holiday CSV:",hd.reason);}
+  if(PRODUCT_CSV_URL && pr.status!=="fulfilled"){problems.push("products");console.warn("Product CSV:",pr.reason);}
   try{render(data,problems);}catch(err){showErr(err.message||err);throw err;}
   if(problems.length && !retryTimer){retryTimer=setTimeout(function(){retryTimer=null;refresh();},60000);}
 }
