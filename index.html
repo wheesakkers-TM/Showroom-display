@@ -130,6 +130,8 @@ th.gh--room{width:23%;}
 .gc--exc::before{content:"";position:absolute;inset:4px 7px;border-radius:8px;
   background:rgba(255,128,0,.11);z-index:-1;}
 /* today: one soft band down the column instead of seven outlines */
+.grid--media{height:auto;}
+.grid--media .mbrrow td{padding:0 2px 6px;}
 .gc[data-today="1"]{background:rgba(255,255,255,.05);}
 .grid tbody tr:last-child .gc[data-today="1"]{border-radius:0 0 12px 12px;}
 [data-tip]{cursor:help;}
@@ -315,7 +317,7 @@ td.qcw{padding:0;}
 .qcd--past .qcd__n{opacity:.35;}
 .qcd--today .qcd__n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
   border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;}
-.qdot{position:absolute;left:50%;transform:translateX(-50%);bottom:1px;width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.qdot{position:absolute;left:50%;transform:translateX(-50%);bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--orange);}
 .qcd--past .qdot{opacity:.4;}
 .qm__list{margin-top:12px;border-top:1px solid var(--hair-soft);padding-top:10px;display:flex;flex-direction:column;gap:6px;}
 .qev{display:flex;gap:10px;align-items:baseline;font-size:15px;color:#E4EDE0;font-weight:600;line-height:1.3;}
@@ -1406,9 +1408,9 @@ function buildGrid(exList,mon,todayD){
   head+=`</tr>`;
   let body="";
   if(FILTERS.media){
-    body+=mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',3,"mbrrow");
+    body+=mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',FILTERS.hours?3:16,"mbrrow");
   }
-  if(!FILTERS.hours)return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${body}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
     body+=`<tr><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
@@ -1438,6 +1440,15 @@ function dayClosedTip(d,exMap){
   return parts.join("\n");
 }
 const QUIET_REASONS=[/no sunday opening/i];
+const REGION_FULL={BW:"Baden-W\u00fcrttemberg",BY:"Bavaria",HB:"Bremen",BE:"Berlin",NRW:"North Rhine-Westphalia",
+  NI:"Lower Saxony",HH:"Hamburg",SH:"Schleswig-Holstein",RP:"Rhineland-Palatinate",SL:"Saarland",
+  SN:"Saxony",ST:"Saxony-Anhalt",TH:"Thuringia",MV:"Mecklenburg-Vorpommern",HE:"Hesse",BB:"Brandenburg"};
+function fullReason(r){
+  return String(r||"").replace(/\(([^)]+)\)/g,function(m,g){
+    const k=g.trim().toUpperCase();
+    return "("+(REGION_FULL[k]||g.trim())+")";
+  });
+}
 function displayReason(r){
   return String(r||"").replace(/\s*\([^)]*\)\s*$/,"").trim();
 }
@@ -1490,7 +1501,7 @@ function buildMonth(data,anchor){
         if(closed.length)lines+=`<div class="mline mline--closed">${closedLineHTML(closed)}</div>`;
         if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
         // full hover card text
-        const tp=[e.reason||"Special day"];
+        const tp=[fullReason(e.reason)||"Special day"];
         holidaysOnDay(d).forEach(function(x){tp.push("Public holiday: "+x);});
         if(closed.length)tp.push("Closed: "+roomList(closed,true));
         adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
@@ -1580,6 +1591,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   const last=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
   const start=mondayOf(first);
   const weeks=Math.ceil(((last-start)/DAY+1)/7);
+  const PAD=6;   // every mini month renders 6 week rows so the three months line up
   const DOW=["M","T","W","T","F","S","S"];
   let h=`<table class="qcal"><thead><tr><th class="qcw"></th>`;
   DOW.forEach(d=>h+=`<th>${d}</th>`);h+=`</tr></thead><tbody>`;
@@ -1608,7 +1620,11 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
          (items.length?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+`</td>`;
     }
     h+=`</tr>`;
-    if(FILTERS.media)h+=mediaLaneRows(wkMon,addDays(wkMon,6),'<td class="qcw"></td>',2,"mbrrow mbrrow--mini");
+  }
+  for(let w=weeks;w<PAD;w++){
+    h+=`<tr><td class="qcw"></td>`;
+    for(let i=0;i<7;i++)h+=`<td class="qcd qcd--out"></td>`;
+    h+=`</tr>`;
   }
   h+=`</tbody></table>`;
   // event list under the grid
@@ -1628,8 +1644,11 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     const closed=e.rows.filter(x=>isClosed(x.Status));
     const icon=iconFor(e.reason);
     const who=closed.length?` <span class="rl__sep">\u00b7</span> ${closedLineHTML(closed)}`:"";
-    list+=`<div class="qev"><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
-          `<span class="qev__t">${icon?icon+" ":""}${e.reason}${who}</span></div>`;
+    const qtp=[fullReason(e.reason)||"Special day"];
+    if(closed.length)qtp.push("Closed: "+roomList(closed,true));
+    holidaysOnDay(e.d).forEach(function(x){qtp.push("Public holiday: "+x);});
+    list+=`<div class="qev"${tipAttr(qtp.join("\n"))}><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
+          `<span class="qev__t">${icon?icon+" ":""}${displayReason(e.reason)}${who}</span></div>`;
   });
   if(evs.length>7)list+=`<div class="qev qev--more">+${evs.length-7} more</div>`;
   if(!evs.length)list=`<div class="qev qev--none">No special days</div>`;
