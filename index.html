@@ -95,11 +95,12 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--bare .gh__n{font-size:26px;}
 .stage--bare .gh{padding-bottom:6px;}
 .stage--bare .gh--room{width:240px;}
-.stage--bare .gflag{font-size:30px;margin-right:13px;}
+.stage--bare .gflag .flg{width:32px;height:21px;margin-right:0;}
+.stage--bare .gflag{margin-right:14px;}
 .stage--bare .grname{font-size:28px;}
 .stage--bare .gc--closed svg{width:24px;height:24px;}
 /* ---------- schedule grid (main view) ---------- */
-.sched{flex:1;overflow:hidden;min-height:0;padding-top:16px;display:flex;}
+.sched{flex:1;overflow:hidden;min-height:0;padding-top:16px;display:flex;flex-direction:column;gap:10px;}
 .sched-inner{width:100%;display:flex;flex-direction:column;gap:10px;transform-origin:top center;}
 .gwrap__head{display:flex;align-items:baseline;gap:14px;margin-bottom:3px;}
 .gwrap__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:21px;color:#fff;}
@@ -117,16 +118,20 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .gc .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;
   background:var(--dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
 .gc--room{background:transparent;border:none;text-align:left;padding-left:2px;}
-.gflag{font-size:22px;margin-right:9px;vertical-align:middle;}
+.gflag{display:inline-flex;vertical-align:middle;margin-right:11px;}
+.gflag .flg{width:27px;height:18px;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.18);display:block;}
 .grname{font-weight:700;font-size:21px;color:#fff;vertical-align:middle;}
 .gc--closed{background:rgba(255,255,255,.03);}
 .gc--closed svg{width:17px;height:17px;fill:var(--sage-dim);opacity:.6;}
-.gc[data-tip]{position:relative;cursor:help;}
+[data-tip]{position:relative;cursor:help;}
 .gc[data-tip]:hover{background:rgba(255,255,255,.07);}
-.gc[data-tip]:hover::after{
+[data-tip]:hover::after{
   content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
-  background:#0B1F14;border:1px solid rgba(255,255,255,.18);color:#F2F6EF;font-weight:600;font-size:16px;
-  padding:7px 14px;border-radius:9px;white-space:nowrap;z-index:9;box-shadow:0 10px 26px rgba(0,0,0,.45);pointer-events:none;}
+  background:#0B1F14;border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:16px;
+  padding:9px 15px;border-radius:10px;white-space:pre;text-align:left;line-height:1.45;
+  z-index:9;box-shadow:0 12px 30px rgba(0,0,0,.5);pointer-events:none;}
+.mev[data-tip]:hover::after{left:0;transform:none;font-size:17px;}
+.mcd__n[data-tip]:hover::after{left:0;transform:none;}
 .gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
 .gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
 .gc--exc .gc__t{color:#FFB469;}
@@ -153,18 +158,18 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .mch--w{width:52px;}
 .mcw{font-weight:700;font-size:13px;color:var(--sage-dim);vertical-align:top;padding:12px 0 0 2px;text-align:left;
   border-top:1px solid var(--hair-soft);letter-spacing:.08em;}
-.mcd{vertical-align:top;padding:10px 10px 8px;border-top:1px solid var(--hair-soft);overflow:hidden;}
+.mcd{vertical-align:top;padding:10px 10px 8px;border-top:1px solid var(--hair-soft);}
 .mcd__n{font-weight:600;font-size:15px;color:var(--sage-dim);line-height:1;margin-bottom:7px;}
 .mcd__n--today{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-5px 0 3px -6px;
   border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;font-size:15px;}
 .mcd--out{border-top:1px solid var(--hair-soft);}
 .mcd--past{opacity:.38;}
 .mev{margin-bottom:6px;}
-.mev__t{font-weight:700;font-size:16px;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mline{display:flex;align-items:center;gap:6px;margin-top:3px;font-weight:600;font-size:14px;color:var(--sage);
-  white-space:nowrap;overflow:hidden;}
+.mev__t{font-weight:700;font-size:16px;color:#fff;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.mline{display:flex;align-items:flex-start;gap:6px;margin-top:3px;font-weight:600;font-size:14px;color:var(--sage);}
+.mline svg{margin-top:2px;}
 .mline svg{width:13px;height:13px;fill:var(--sage);flex-shrink:0;}
-.mline span{overflow:hidden;text-overflow:ellipsis;}
+.mline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .mline--adj{color:#FFB469;}
 .mline--adj svg{fill:#FFB469;}
 .mev__more{font-weight:600;font-size:13px;color:var(--sage-dim);}
@@ -172,6 +177,26 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .monthv .std__item{font-size:16px;color:var(--sage);}
 .monthv .std__lock svg{width:14px;height:14px;}
 .monthv .sechead{display:none;}
+/* ---------- quarter view ---------- */
+.qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
+#quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
+.qm__title{font-weight:700;font-size:23px;color:#fff;margin-bottom:8px;}
+.qcal{width:100%;border-collapse:collapse;table-layout:fixed;}
+.qcal th{font-weight:700;font-size:12px;letter-spacing:.1em;color:var(--sage-dim);padding:0 0 6px;text-align:center;}
+.qcw{width:34px;font-weight:700;font-size:11px;color:var(--sage-dim);text-align:left;vertical-align:middle;}
+td.qcw{padding:0;}
+.qcd{text-align:center;vertical-align:middle;height:34px;position:relative;}
+.qcd__n{font-weight:600;font-size:14px;color:#D9E4D5;}
+.qcd--past .qcd__n{opacity:.35;}
+.qcd--today .qcd__n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+  border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;}
+.qdot{position:absolute;left:50%;transform:translateX(-50%);bottom:1px;width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.qcd--past .qdot{opacity:.4;}
+.qm__list{margin-top:12px;border-top:1px solid var(--hair-soft);padding-top:10px;display:flex;flex-direction:column;gap:6px;}
+.qev{display:flex;gap:10px;align-items:baseline;font-size:15px;color:#E4EDE0;font-weight:600;line-height:1.3;}
+.qev__d{flex-shrink:0;width:52px;font-weight:700;color:var(--lime);font-size:13px;letter-spacing:.03em;}
+.qev__t svg{width:12px;height:12px;fill:var(--sage);vertical-align:-1px;margin-right:3px;}
+.qev--more,.qev--none{color:var(--sage-dim);font-weight:600;}
 /* ---------- agenda board (holidays view) ---------- */
 .agcols{display:grid;grid-template-columns:1fr 1fr;gap:11px 38px;align-items:start;}
 .agcol{display:flex;flex-direction:column;gap:11px;min-width:0;}
@@ -252,7 +277,8 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .hero__s{font-weight:500;font-size:23px;color:var(--sage);margin-top:5px;}
 
 /* ---------- footer ---------- */
-.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 2px 0;}
+.foot{display:none;justify-content:space-between;align-items:center;padding:18px 2px 0;}
+.foot .legend,.foot .foot__brand{display:none;}
 .foot__note{font-weight:500;font-size:19px;color:var(--sage-dim);display:flex;align-items:center;gap:10px;}
 .pulse{width:10px;height:10px;border-radius:50%;background:var(--lime);animation:pulse 2.6s ease-out infinite;}
 .foot__brand{font-weight:600;font-size:18px;letter-spacing:.08em;color:var(--sage-dim);text-transform:uppercase;}
@@ -284,10 +310,9 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
     </header>
 
     <nav class="tabs" id="tabs">
-      <a class="tab" data-v="" href="?">This week</a>
-      <a class="tab" data-v="next" href="?view=next">Next week</a>
+      <a class="tab" data-v="" href="?">Week</a>
       <a class="tab" data-v="month" href="?view=month">Month</a>
-      <a class="tab" data-v="holidays" href="?view=holidays">Coming up</a>
+      <a class="tab" data-v="quarter" href="?view=quarter">Quarter</a>
     </nav>
 
     <main class="cols" style="display:none">
@@ -306,16 +331,29 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
     </main>
 
     <main class="sched" id="sched" style="display:none">
-      <div class="sched-inner" id="sched-inner">
-        <section class="gwrap" id="gwrap-this">
-          <div class="gwrap__head"><span class="gwrap__label">This week</span><span class="gwrap__range" id="grid-this-range">&nbsp;</span></div>
-          <div id="grid-this"></div>
-        </section>
-        <section class="gwrap" id="gwrap-next">
-          <div class="gwrap__head"><span class="gwrap__label">Next week</span><span class="gwrap__range" id="grid-next-range">&nbsp;</span></div>
-          <div id="grid-next"></div>
-        </section>
+      <div class="monthv__bar">
+        <div class="monthv__title" id="week-title"></div>
+        <div class="monthv__nav">
+          <button class="mbtn" id="week-prev" aria-label="Previous week">&#8592;</button>
+          <button class="mbtn mbtn--today" id="week-today">Today</button>
+          <button class="mbtn" id="week-next" aria-label="Next week">&#8594;</button>
+        </div>
       </div>
+      <div class="sched-inner" id="sched-inner">
+        <div id="grid-this"></div>
+      </div>
+    </main>
+
+    <main class="monthv" id="quarterv" style="display:none">
+      <div class="monthv__bar">
+        <div class="monthv__title" id="q-title"></div>
+        <div class="monthv__nav">
+          <button class="mbtn" id="q-prev" aria-label="Previous months">&#8592;</button>
+          <button class="mbtn mbtn--today" id="q-today">Today</button>
+          <button class="mbtn" id="q-next" aria-label="Next months">&#8594;</button>
+        </div>
+      </div>
+      <div id="q-grid"></div>
     </main>
 
     <main class="monthv" id="monthv" style="display:none">
@@ -385,8 +423,13 @@ const STANDARD_DEFAULT = {
   "Munich":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""]
 };
 let STANDARD = STANDARD_DEFAULT;
-const FLAG={"netherlands":"\u{1F1F3}\u{1F1F1}","united kingdom":"\u{1F1EC}\u{1F1E7}","germany":"\u{1F1E9}\u{1F1EA}"};
-function flagFor(c){return FLAG[(c||"").trim().toLowerCase()]||"";}
+const FLAG_SVG={
+ "NL":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#21468B"/><rect width="24" height="10.7" fill="#fff"/><rect width="24" height="5.3" fill="#AE1C28"/></svg>',
+ "UK":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0L24 16M24 0L0 16" stroke="#fff" stroke-width="3.4"/><path d="M0 0L24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.4"/><path d="M12 0V16M0 8H24" stroke="#fff" stroke-width="5.6"/><path d="M12 0V16M0 8H24" stroke="#C8102E" stroke-width="3.2"/></svg>',
+ "DE":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#FFCE00"/><rect width="24" height="10.7" fill="#DD0000"/><rect width="24" height="5.3" fill="#000"/></svg>'
+};
+function flagSVG(c){return FLAG_SVG[countryBadgeTxt(c)]||"";}
+function tipAttr(s){return s?` data-tip="${String(s).replace(/"/g,"&quot;").replace(/\n/g,"&#10;")}"`:"";}
 
 const SHOWROOMS = [
   {name:"Eindhoven",country:"Netherlands"},
@@ -791,12 +834,15 @@ function gridCellHTML(cell,isToday){
   if(cell.unknown)return `<td class="gc gc--muted">&middot;</td>`;
   if(cell.closed){
     const tip=cell.reason?cell.reason:(cell.alt?"Open every other week \u2014 closed this week":"Standard closing day");
-    return `<td class="gc gc--closed"${isToday?' data-today="1"':''} data-tip="${String(tip).replace(/"/g,"&quot;")}">${LOCK_SVG}</td>`;
+    return `<td class="gc gc--closed"${isToday?' data-today="1"':''}${tipAttr(tip)}>${LOCK_SVG}</td>`;
   }
   const cw=crowdInfo(cell.crowd);
   const dot=cw?`<i class="gdot" style="--dot:${cw.color}"></i>`:"";
   const exc=cell.isException?' gc--exc':'';
-  return `<td class="gc${exc}"${isToday?' data-today="1"':''}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
+  const parts=[];
+  if(cell.isException&&cell.reason)parts.push(cell.reason);
+  if(cw)parts.push("Expected footfall: "+cw.label);
+  return `<td class="gc${exc}"${isToday?' data-today="1"':''}${tipAttr(parts.join("\n"))}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
 }
 function buildGrid(exList,mon,todayD){
   const exMap={};
@@ -811,7 +857,7 @@ function buildGrid(exList,mon,todayD){
   head+=`</tr>`;
   let body="";
   SHOWROOMS.forEach(s=>{
-    body+=`<tr><td class="gc gc--room"><span class="gflag">${flagFor(s.country)}</span><span class="grname">${s.name}</span></td>`;
+    body+=`<tr><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
       const d=addDays(mon,i);
       const isToday=todayD&&d.getTime()===todayD.getTime();
@@ -822,7 +868,17 @@ function buildGrid(exList,mon,todayD){
   return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 /* ---------- month calendar view ---------- */
-let MONTH_OFFSET=0, LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
+let MONTH_OFFSET=0, QUARTER_OFFSET=0, WEEK_OFFSET=(function(){try{return (new URLSearchParams(location.search).get("view")==="next")?1:0;}catch(e){return 0;}})(), LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
+function dayClosedTip(d,exMap){
+  // which showrooms are closed on this date (standard pattern + exceptions)
+  const closedRows=[];
+  SHOWROOMS.forEach(s=>{
+    const eff=effectiveDay(s.name,s.country,d,exMap||{});
+    if(eff.closed)closedRows.push({Showroom:s.name,Country:s.country});
+  });
+  if(!closedRows.length)return "";
+  return "Closed: "+roomList(closedRows);
+}
 function buildMonth(data,anchor){
   const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
   const last=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
@@ -832,10 +888,12 @@ function buildMonth(data,anchor){
   const t0=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
   // exceptions per day
   const byDay={};
+  const exMap={};
   data.forEach(it=>{
     const d=parseDate(it.Date);if(!d)return;
     const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
     (byDay[k]=byDay[k]||[]).push(it);
+    exMap[fcKey(d,it.Showroom)]=it;
   });
   const DOW=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   let h=`<table class="mcal"><thead><tr><th class="mch mch--w">Wk</th>`;
@@ -868,11 +926,19 @@ function buildMonth(data,anchor){
         let lines="";
         if(closed.length)lines+=`<div class="mline mline--closed">${LOCK_SVG}<span>${roomList(closed)}</span></div>`;
         if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
-        cell+=`<div class="mev"><div class="mev__t">${icon?icon+" ":""}${e.reason||"Special day"}</div>${lines}</div>`;
+        // full hover card text
+        const tp=[e.reason||"Special day"];
+        if(closed.length)tp.push("Closed: "+roomList(closed));
+        adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
+        e.rows.filter(x=>!isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil))).forEach(x=>{
+          const cw=crowdInfo(x.Crowd);if(cw)tp.push(`${x.Showroom}: expected footfall ${cw.label}`);
+        });
+        cell+=`<div class="mev"${tipAttr(tp.join("\n"))}><div class="mev__t">${icon?icon+" ":""}${e.reason||"Special day"}</div>${lines}</div>`;
       });
       if(ev.size>2)cell+=`<div class="mev__more">+${ev.size-2} more</div>`;
+      const dtip=dayClosedTip(d,exMap);
       h+=`<td class="mcd${past?" mcd--past":""}">`+
-         `<div class="mcd__n${isToday?" mcd__n--today":""}">${d.getDate()}</div>${cell}</td>`;
+         `<div class="mcd__n${isToday?" mcd__n--today":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
     }
     h+=`</tr>`;
   }
@@ -902,21 +968,109 @@ function renderMonth(data,problems){
   document.querySelector(".cols").style.display="none";
   document.getElementById("holi").style.display="none";
   document.getElementById("sched").style.display="none";
+  document.getElementById("quarterv").style.display="none";
   const mv=document.getElementById("monthv");mv.style.display="flex";
   document.getElementById("month-title").textContent=
     anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
   document.getElementById("month-grid").innerHTML=buildMonth(data,anchor);
-  document.getElementById("month-std").innerHTML=standardSummaryHTML();
-  const now=new Date();
-  let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
-  if(problems.length)status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
-  document.getElementById("updated").textContent=status;
+  document.getElementById("month-std").innerHTML="";
+  if(problems.length){
+    const f=document.querySelector(".foot");if(f)f.style.display="flex";
+    document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+  }
+}
+function buildMiniMonth(data,anchor,exMap,byDay,t0){
+  const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+  const last=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
+  const start=mondayOf(first);
+  const weeks=Math.ceil(((last-start)/DAY+1)/7);
+  const DOW=["M","T","W","T","F","S","S"];
+  let h=`<table class="qcal"><thead><tr><th class="qcw"></th>`;
+  DOW.forEach(d=>h+=`<th>${d}</th>`);h+=`</tr></thead><tbody>`;
+  for(let w=0;w<weeks;w++){
+    const wkMon=addDays(start,w*7);
+    h+=`<tr><td class="qcw">W${isoWeek(wkMon)}</td>`;
+    for(let i=0;i<7;i++){
+      const d=addDays(wkMon,i);
+      if(d.getMonth()!==anchor.getMonth()){h+=`<td class="qcd qcd--out"></td>`;continue;}
+      const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+      const items=byDay[k]||[];
+      const isToday=d.getTime()===t0;
+      const past=d.getTime()<t0;
+      let tip="";
+      if(items.length){
+        const names=[...new Set(items.map(x=>x.Reason||"Special day"))];
+        const parts=[...names];
+        const closed=items.filter(x=>isClosed(x.Status));
+        if(closed.length)parts.push("Closed: "+roomList(closed));
+        tip=parts.join("\n");
+      }
+      h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(tip)}>`+
+         `<span class="qcd__n">${d.getDate()}</span>${items.length?`<i class="qdot"></i>`:""}</td>`;
+    }
+    h+=`</tr>`;
+  }
+  h+=`</tbody></table>`;
+  // event list under the grid
+  const ev=new Map();
+  Object.keys(byDay).forEach(k=>{
+    byDay[k].forEach(it=>{
+      const d=parseDate(it.Date);
+      if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
+      const key=it.Date+"|"+(it.Reason||"");
+      if(!ev.has(key))ev.set(key,{d:d,reason:it.Reason||"Special day",rows:[]});
+      ev.get(key).rows.push(it);
+    });
+  });
+  const evs=[...ev.values()].sort((a,b)=>a.d-b.d);
+  let list="";
+  evs.slice(0,7).forEach(e=>{
+    const closed=e.rows.filter(x=>isClosed(x.Status));
+    const icon=iconFor(e.reason);
+    const who=closed.length?` \u00b7 ${LOCK_SVG}${roomList(closed)}`:"";
+    list+=`<div class="qev"><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
+          `<span class="qev__t">${icon?icon+" ":""}${e.reason}${who}</span></div>`;
+  });
+  if(evs.length>7)list+=`<div class="qev qev--more">+${evs.length-7} more</div>`;
+  if(!evs.length)list=`<div class="qev qev--none">No special days</div>`;
+  return `<div class="qm"><div class="qm__title">${anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</div>${h}<div class="qm__list">${list}</div></div>`;
+}
+function renderQuarter(data,problems){
+  const today=todayDate();
+  const t0=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+  const startM=new Date(today.getFullYear(),today.getMonth()+QUARTER_OFFSET*3,1);
+  document.getElementById("title").textContent="Showroom calendar";
+  document.getElementById("subtitle").textContent="Three months ahead \u2014 holidays and closures";
+  document.getElementById("stage").classList.add("stage--compact");
+  document.querySelector(".cols").style.display="none";
+  document.getElementById("holi").style.display="none";
+  document.getElementById("sched").style.display="none";
+  document.getElementById("monthv").style.display="none";
+  const qv=document.getElementById("quarterv");qv.style.display="flex";
+  const endM=new Date(startM.getFullYear(),startM.getMonth()+2,1);
+  document.getElementById("q-title").textContent=
+    startM.toLocaleDateString("en-GB",{month:"short"})+" \u2013 "+endM.toLocaleDateString("en-GB",{month:"short",year:"numeric"});
+  const byDay={},exMap={};
+  data.forEach(it=>{const d=parseDate(it.Date);if(!d)return;
+    const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+    (byDay[k]=byDay[k]||[]).push(it);exMap[fcKey(d,it.Showroom)]=it;});
+  let h='<div class="qcols">';
+  for(let m=0;m<3;m++){
+    h+=buildMiniMonth(data,new Date(startM.getFullYear(),startM.getMonth()+m,1),exMap,byDay,t0);
+  }
+  h+='</div>';
+  document.getElementById("q-grid").innerHTML=h;
+  if(problems.length){
+    const f=document.querySelector(".foot");if(f)f.style.display="flex";
+    document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
+  }
 }
 function initNav(){
   try{
     const p=new URLSearchParams(location.search);
     if(p.get("nav")==="0"){document.getElementById("tabs").style.display="none";return;}
-    const cur=p.get("view")||"";
+    const cur0=p.get("view")||"";
+    const cur=(cur0==="next")?"":cur0;
     document.querySelectorAll("#tabs .tab").forEach(a=>{
       if(a.getAttribute("data-v")===cur)a.classList.add("tab--on");
     });
@@ -926,6 +1080,7 @@ function render(data,problems){
   problems=problems||[];
   LAST_RENDER_DATA=data;LAST_PROBLEMS=problems;
   if(VIEW==="month"){renderMonth(data,problems);return;}
+  if(VIEW==="quarter"){renderQuarter(data,problems);return;}
   const today=todayDate();
   const base=new Date(today.getFullYear(),today.getMonth(),today.getDate());
   if(VIEW==="holidays"){
@@ -934,6 +1089,7 @@ function render(data,problems){
     document.querySelector(".cols").style.display="none";
     document.getElementById("sched").style.display="none";
     document.getElementById("monthv").style.display="none";
+    document.getElementById("quarterv").style.display="none";
     const holi=document.getElementById("holi");holi.style.display="block";
     const fit=document.getElementById("holi-fit");
     fit.style.gap="14px";
@@ -946,27 +1102,23 @@ function render(data,problems){
     return;
   }
   const monThis=mondayOf(base);
-  const isNext=(VIEW==="next");
-  const mon=isNext?addDays(monThis,7):monThis;
+  const mon=addDays(monThis,7*WEEK_OFFSET);
   document.querySelector(".cols").style.display="none";
   document.getElementById("holi").style.display="none";
   document.getElementById("monthv").style.display="none";
+  document.getElementById("quarterv").style.display="none";
   document.getElementById("stage").classList.add("stage--compact","stage--bare");
   document.getElementById("title").textContent="Showroom opening hours";
-  document.getElementById("subtitle").innerHTML=(isNext?"Next week":"This week")+" &mdash; "+fmtRange(mon,addDays(mon,6));
+  document.getElementById("subtitle").innerHTML="&nbsp;";
   const sched=document.getElementById("sched");sched.style.display="flex";
-  document.getElementById("gwrap-next").style.display="none";
-  document.getElementById("grid-this-range").textContent="";
-  document.querySelector("#gwrap-this .gwrap__head").style.display="none";
-  document.getElementById("grid-this").innerHTML=buildGrid(data,mon,isNext?null:base);
+  const wl=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":"Week "+isoWeek(mon);
+  document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
+  document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
   fitSched();
-  const now=new Date();
-  let status="Auto-updating \u00b7 last checked "+now.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
   if(problems.length){
-    status+=" \u00b7 \u26A0 "+problems.join(" & ")+" data unavailable, retrying";
     const f=document.querySelector(".foot");if(f)f.style.display="flex";
+    document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
   }
-  document.getElementById("updated").textContent=status;
 }
 function fitSched(){
   const wrap=document.getElementById("sched");if(!wrap||wrap.style.display==="none")return;
@@ -1126,10 +1278,19 @@ initNav();
 /* instant first paint: show the grid with standard hours while the CSVs load */
 if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e);}}
 (function(){
+  const rerender=function(){if(LAST_RENDER_DATA)render(LAST_RENDER_DATA,LAST_PROBLEMS);};
   const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
-  if(pv)pv.onclick=function(){MONTH_OFFSET--;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
-  if(nx)nx.onclick=function(){MONTH_OFFSET++;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
-  if(td)td.onclick=function(){MONTH_OFFSET=0;if(LAST_RENDER_DATA)renderMonth(LAST_RENDER_DATA,LAST_PROBLEMS);};
+  if(pv)pv.onclick=function(){MONTH_OFFSET--;rerender();};
+  if(nx)nx.onclick=function(){MONTH_OFFSET++;rerender();};
+  if(td)td.onclick=function(){MONTH_OFFSET=0;rerender();};
+  const wp=document.getElementById("week-prev"),wn=document.getElementById("week-next"),wt=document.getElementById("week-today");
+  if(wp)wp.onclick=function(){WEEK_OFFSET--;rerender();};
+  if(wn)wn.onclick=function(){WEEK_OFFSET++;rerender();};
+  if(wt)wt.onclick=function(){WEEK_OFFSET=0;rerender();};
+  const qp=document.getElementById("q-prev"),qn=document.getElementById("q-next"),qt=document.getElementById("q-today");
+  if(qp)qp.onclick=function(){QUARTER_OFFSET--;rerender();};
+  if(qn)qn.onclick=function(){QUARTER_OFFSET++;rerender();};
+  if(qt)qt.onclick=function(){QUARTER_OFFSET=0;rerender();};
 })();
 fitStage();tick();refresh();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
