@@ -31,7 +31,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 #stage>*{width:100%;max-width:var(--maxw);margin-left:auto;margin-right:auto;}
 
 #viewport{position:fixed;inset:0;overflow:hidden;background:var(--forest-2);}
-#stage{--maxw:1480px;width:1920px;height:1080px;transform-origin:top left;align-items:center;
+#stage{--maxw:1720px;width:1920px;height:1080px;transform-origin:top left;align-items:center;
   background:radial-gradient(120% 120% at 15% 0%, #013C1E 0%, #00301A 45%, #001A12 100%);
   display:flex;flex-direction:column;padding:50px 60px 30px;}
 
@@ -197,7 +197,7 @@ th.gh--room{width:23%;}
 .mch--w{width:52px;}
 .mcw{font-weight:700;font-size:13px;color:var(--sage-dim);vertical-align:top;padding:12px 0 0 2px;text-align:left;
   border-top:1px solid var(--hair-soft);letter-spacing:.08em;}
-.mcd{vertical-align:top;padding:10px 10px 8px;border-top:1px solid var(--hair-soft);}
+.mcd{position:relative;vertical-align:top;padding:10px 10px 18px;border-top:1px solid var(--hair-soft);}
 .mcd__n{font-weight:600;font-size:15px;color:var(--sage-dim);line-height:1;margin-bottom:7px;}
 .mcd__n--today{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-5px 0 3px -6px;
   border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;font-size:15px;}
@@ -238,6 +238,39 @@ th.gh--room{width:23%;}
   color:var(--sage-dim);margin-top:6px;}
 .stage--narrow .prod b{font-size:16px;}
 .stage--narrow .prod em{font-size:14px;}
+/* ---------- media planning + filter ---------- */
+.filterwrap{position:relative;display:inline-block;}
+.mbtn--filter{border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 16px;color:var(--sage);}
+.mbtn--filter-on{color:#1B2B1F;background:var(--orange);border-color:var(--orange);}
+.mbtn--filter-on:hover{background:#ff9326;color:#1B2B1F;}
+.fdrop{position:absolute;top:calc(100% + 8px);right:0;min-width:220px;background:#0B1F14;
+  border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:8px;display:none;z-index:20;
+  box-shadow:0 16px 40px rgba(0,0,0,.5);}
+.fdrop--open{display:block;}
+.fopt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;
+  font-weight:600;font-size:17px;color:#EAF2E6;}
+.fopt:hover{background:rgba(255,255,255,.06);}
+.fopt input{accent-color:var(--orange);width:16px;height:16px;}
+.fopt--off{color:var(--sage-dim);cursor:default;}
+.fopt--off:hover{background:none;}
+.fopt em{font-style:normal;font-size:14px;color:var(--sage-dim);margin-left:4px;}
+.mediapill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:4px 14px;cursor:help;}
+.mediapill b{font-weight:700;font-size:18px;color:#EAF2E6;}
+.mediapill em{font-style:normal;font-weight:600;font-size:15px;color:var(--sage);}
+.dotc{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--sage);}
+.dotc--NL{background:#FF8000;} .dotc--DE{background:#7FB4E8;} .dotc--UK{background:#C58CE0;}
+.dotc--BE{background:#E8C24A;}
+.mbars{position:absolute;left:10px;right:10px;bottom:7px;display:flex;flex-direction:column;gap:3px;}
+.mbar{height:2px;width:100%;border-radius:2px;background:var(--sage);opacity:.9;}
+.mbar--NL{background:#FF8000;} .mbar--DE{background:#7FB4E8;} .mbar--UK{background:#C58CE0;}
+.mbar--BE{background:#E8C24A;}
+.mbars__n{font-weight:600;font-size:10px;color:var(--sage-dim);align-self:flex-end;line-height:1;}
+.mev__more{cursor:help;}
+.qev--media .qev__t{display:inline-flex;align-items:center;gap:7px;color:#E4EDE0;}
+.qev--media .qev__d{color:var(--sage-dim);width:auto;min-width:74px;}
+.stage--narrow .mediapill b{font-size:15px;}
+.stage--narrow .mediapill em{font-size:13px;}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
@@ -384,6 +417,13 @@ td.qcw{padding:0;}
       <div class="monthv__bar">
         <div class="monthv__title" id="week-title"></div>
         <div class="monthv__nav">
+          <div class="filterwrap">
+            <button class="mbtn mbtn--filter" id="week-filter" aria-haspopup="true">Filter</button>
+            <div class="fdrop" id="week-fdrop">
+              <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+            </div>
+          </div>
           <button class="mbtn" id="week-prev" aria-label="Previous week">&#8592;</button>
           <button class="mbtn mbtn--today" id="week-today">Today</button>
           <button class="mbtn" id="week-next" aria-label="Next week">&#8594;</button>
@@ -399,6 +439,13 @@ td.qcw{padding:0;}
       <div class="monthv__bar">
         <div class="monthv__title" id="q-title"></div>
         <div class="monthv__nav">
+          <div class="filterwrap">
+            <button class="mbtn mbtn--filter" id="q-filter" aria-haspopup="true">Filter</button>
+            <div class="fdrop" id="q-fdrop">
+              <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+            </div>
+          </div>
           <button class="mbtn" id="q-prev" aria-label="Previous months">&#8592;</button>
           <button class="mbtn mbtn--today" id="q-today">Today</button>
           <button class="mbtn" id="q-next" aria-label="Next months">&#8594;</button>
@@ -411,6 +458,13 @@ td.qcw{padding:0;}
       <div class="monthv__bar">
         <div class="monthv__title" id="month-title"></div>
         <div class="monthv__nav">
+          <div class="filterwrap">
+            <button class="mbtn mbtn--filter" id="month-filter" aria-haspopup="true">Filter</button>
+            <div class="fdrop" id="month-fdrop">
+              <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+            </div>
+          </div>
           <button class="mbtn" id="month-prev" aria-label="Previous month">&#8592;</button>
           <button class="mbtn mbtn--today" id="month-today">Today</button>
           <button class="mbtn" id="month-next" aria-label="Next month">&#8594;</button>
@@ -520,6 +574,179 @@ const SAMPLE_DATA = [
   {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
   {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
 ];
+
+const MEDIA_DEFAULT = [
+  ["2026-01-21","2026-01-30","STER radio","NL","Radio"],
+  ["2026-01-26","2026-02-21","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-01-27","2026-02-02","Prisma","DE","TV-gids"],
+  ["2026-02-01","2026-04-11","DPG - online advertising","NL","Display advertising"],
+  ["2026-02-02","2026-02-21","Marktguru.de","DE","Digitale folder"],
+  ["2026-02-02","2026-02-27","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-02-04","2026-02-09","STER TV","NL","TV"],
+  ["2026-02-08","2026-02-14","Rendion","DE","Huis-aan-huis"],
+  ["2026-02-08","2026-02-22","Talpa TV","NL","TV"],
+  ["2026-02-09","2026-02-25","STER radio","NL","Radio"],
+  ["2026-02-09","2026-02-28","ARD media","DE","TV"],
+  ["2026-02-10","2026-02-16","Prisma","DE","TV-gids"],
+  ["2026-02-11","2026-03-31","Myshopi.be","BE","Digitale folder"],
+  ["2026-02-17","2026-02-23","Prisma","DE","TV-gids"],
+  ["2026-02-18","2026-03-08","Prospektangebote.de","DE","Digitale folder"],
+  ["2026-02-20","2026-02-26","Spotta","NL","Huis-aan-huis"],
+  ["2026-02-21","2026-02-21","Neue Osnabr. Zeitung","DE","Dagkranten"],
+  ["2026-02-22","2026-02-28","Rendion","DE","Huis-aan-huis"],
+  ["2026-02-22","2026-02-28","Rendion","NL","Huis-aan-huis"],
+  ["2026-02-22","2026-03-08","Marktguru.de","DE","Digitale folder"],
+  ["2026-02-22","2026-03-08","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-02-24","2026-03-02","Prisma","DE","TV-gids"],
+  ["2026-02-27","2026-03-31","Allefolders.nl","NL","Digitale folder"],
+  ["2026-02-27","2026-04-12","Promopromo.be","BE","Digitale folder"],
+  ["2026-03-01","2026-03-07","ARD media","DE","TV"],
+  ["2026-03-01","2026-03-29","STER TV","NL","TV"],
+  ["2026-03-01","2026-03-31","DPG - online advertising","NL","Display advertising"],
+  ["2026-03-03","2026-03-09","Prisma","DE","TV-gids"],
+  ["2026-03-06","2026-04-03","Selber machen","DE","Magazine"],
+  ["2026-03-07","2026-03-21","NOZ Bauberater","DE","Dagkranten"],
+  ["2026-03-09","2026-03-22","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-03-09","2026-03-31","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-03-17","2026-04-13","Das Haus","DE","Magazine"],
+  ["2026-03-21","2026-03-22","Süddeutsche Zeitung","DE","Dagkranten"],
+  ["2026-03-27","2026-04-07","Shopfully","UK","Display advertising"],
+  ["2026-03-29","2026-04-04","Rendion","DE","Huis-aan-huis"],
+  ["2026-03-30","2026-04-12","Fonteyn","NL","Huis-aan-huis"],
+  ["2026-03-30","2026-04-30","Marktguru.de","DE","Digitale folder"],
+  ["2026-04-01","2026-04-30","ARD media","DE","TV"],
+  ["2026-04-01","2026-07-31","DPG - online advertising","NL","Display advertising"],
+  ["2026-04-02","2026-04-05","Rendion","NL","Huis-aan-huis"],
+  ["2026-04-02","2026-04-08","Spotta","NL","Huis-aan-huis"],
+  ["2026-04-02","2026-04-14","Talpa TV","NL","TV"],
+  ["2026-04-07","2026-04-13","Prisma","DE","TV-gids"],
+  ["2026-04-13","2026-04-27","STER TV","NL","TV"],
+  ["2026-04-13","2026-04-30","Myshopi.be","BE","Digitale folder"],
+  ["2026-04-13","2026-04-30","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-04-13","2026-05-10","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-04-13","2026-05-12","Promopromo.be","BE","Digitale folder"],
+  ["2026-04-14","2026-04-19","RTL","DE","TV"],
+  ["2026-04-14","2026-05-13","Freizeit Monat","DE","Magazine"],
+  ["2026-04-14","2026-05-13","Illu der Frau","DE","Magazine"],
+  ["2026-04-15","2026-07-31","DPG - online advertising","NL","Display advertising"],
+  ["2026-04-20","2026-04-26","Fonteyn","NL","Huis-aan-huis"],
+  ["2026-04-21","2026-05-18","Das Haus","DE","Magazine"],
+  ["2026-04-24","2026-04-30","Hohelohe Franken","DE","Weekkranten"],
+  ["2026-04-25","2026-05-01","Niederrhein Nachrichten","DE","Weekkranten"],
+  ["2026-04-26","2026-05-02","Extra Tipp","DE","Weekkranten"],
+  ["2026-04-27","2026-05-26","Freizeit Express","DE","Magazine"],
+  ["2026-04-28","2026-05-04","Prisma","DE","TV-gids"],
+  ["2026-05-01","2026-05-07","Rendion","NL","Huis-aan-huis"],
+  ["2026-05-01","2026-05-07","Spotta","NL","Huis-aan-huis"],
+  ["2026-05-01","2026-05-12","ARD media","DE","TV"],
+  ["2026-05-02","2026-05-10","ITV","UK","TV"],
+  ["2026-05-04","2026-05-31","Marktguru.de","DE","Digitale folder"],
+  ["2026-05-05","2026-05-11","Prisma","DE","TV-gids"],
+  ["2026-05-06","2026-05-31","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-05-09","2026-05-21","RTL","DE","TV"],
+  ["2026-05-11","2026-06-10","Frau zu Frau","DE","Magazine"],
+  ["2026-05-11","2026-06-28","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-05-12","2026-05-18","Prisma","DE","TV-gids"],
+  ["2026-05-18","2026-05-31","ITV","UK","TV"],
+  ["2026-05-18","2026-05-31","STER radio","NL","Radio"],
+  ["2026-05-25","2026-05-31","Badische Anzeigen","DE","Weekkranten"],
+  ["2026-05-25","2026-05-31","Mannheim Extra","DE","Weekkranten"],
+  ["2026-05-25","2026-05-31","Wochenblatt Mannheim","DE","Weekkranten"],
+  ["2026-05-26","2026-06-01","Prisma","DE","TV-gids"],
+  ["2026-05-26","2026-06-25","Freizeit Blitz","DE","Magazine"],
+  ["2026-05-29","2026-06-25","In-Direkt","DE","Weekkranten"],
+  ["2026-05-30","2026-06-05","Ingolstädter Zeitung Extra","DE","Weekkranten"],
+  ["2026-06-01","2026-06-28","Marktguru.de","DE","Digitale folder"],
+  ["2026-06-01","2026-06-30","Myshopi.be","BE","Digitale folder"],
+  ["2026-06-01","2026-06-30","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-06-02","2026-06-08","Prisma","DE","TV-gids"],
+  ["2026-06-03","2026-07-12","Promopromo.be","BE","Digitale folder"],
+  ["2026-06-06","2026-06-12","DPG krant","NL","Dagkranten"],
+  ["2026-06-08","2026-06-21","Talpa TV","NL","TV"],
+  ["2026-06-08","2026-06-22","STER TV","NL","TV"],
+  ["2026-06-09","2026-06-15","Prisma","DE","TV-gids"],
+  ["2026-06-13","2026-06-19","DPG krant","NL","Dagkranten"],
+  ["2026-06-20","2026-06-26","DPG krant","NL","Dagkranten"],
+  ["2026-06-24","2026-07-14","ARD media","DE","TV"],
+  ["2026-06-27","2026-07-03","DPG krant","NL","Dagkranten"],
+  ["2026-06-29","2026-07-27","Marktguru.de","DE","Digitale folder"],
+  ["2026-06-30","2026-07-06","Prisma","DE","TV-gids"],
+  ["2026-07-01","2026-07-20","STER TV","NL","TV"],
+  ["2026-07-01","2026-07-31","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-07-02","2026-07-10","Nussbaum","DE","Weekkranten"],
+  ["2026-07-08","2026-07-27","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-07-09","2026-08-05","Das Haus","DE","Magazine"],
+  ["2026-07-14","2026-07-20","Prisma","DE","TV-gids"],
+  ["2026-07-16","2026-07-24","Nussbaum","DE","Weekkranten"],
+  ["2026-07-24","2026-07-30","Mannheim Extra","DE","Weekkranten"],
+  ["2026-07-25","2026-07-31","Niederrhein Nachrichten","DE","Weekkranten"],
+  ["2026-07-26","2026-08-01","Extra Tipp","DE","Weekkranten"],
+  ["2026-07-28","2026-08-02","Marktguru.de","DE","Digitale folder"],
+  ["2026-07-28","2026-08-16","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-07-28","2026-08-16","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-07-28","2026-08-25","Frau zu Frau","DE","Magazine"],
+  ["2026-07-30","2026-08-05","Hohelohe Franken","DE","Weekkranten"],
+  ["2026-07-30","2026-08-05","Sonntagsreport","DE","Weekkranten"],
+  ["2026-08-01","2026-08-14","Prospektangebote.de","DE","Digitale folder"],
+  ["2026-08-01","2026-08-14","STER TV","NL","TV"],
+  ["2026-08-01","2026-09-13","DPG - online advertising","NL","Display advertising"],
+  ["2026-08-03","2026-08-27","ARD media","DE","TV"],
+  ["2026-08-04","2026-08-10","Prisma","DE","TV-gids"],
+  ["2026-08-11","2026-08-17","Prisma","DE","TV-gids"],
+  ["2026-08-15","2026-08-21","Sonntagsreport","DE","Weekkranten"],
+  ["2026-08-17","2026-08-30","Talpa TV","NL","TV"],
+  ["2026-08-17","2026-08-31","Allefolders.nl","NL","Digitale folder"],
+  ["2026-08-17","2026-08-31","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-08-17","2026-08-31","Myshopi.be","BE","Digitale folder"],
+  ["2026-08-17","2026-08-31","Promopromo.be","BE","Digitale folder"],
+  ["2026-08-17","2026-08-31","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-08-22","2026-08-28","Extra Tipp","DE","Weekkranten"],
+  ["2026-08-22","2026-08-28","Niederrhein Nachrichten","DE","Weekkranten"],
+  ["2026-08-22","2026-08-28","Prospektangebote.de","DE","Digitale folder"],
+  ["2026-08-24","2026-08-30","Mediawerk Südwest","DE","Weekkranten"],
+  ["2026-09-04","2026-10-02","Selber machen","DE","Magazine"],
+  ["2026-09-08","2026-09-28","Meinprospekt + Kaufda","DE","Digitale folder"],
+  ["2026-09-08","2026-09-28","Reclamefolder.nl","NL","Digitale folder"],
+  ["2026-09-20","2026-09-26","Extra Tipp","DE","Weekkranten"],
+  ["2026-09-20","2026-09-26","Niederrhein Nachrichten","DE","Weekkranten"],
+  ["2026-09-21","2026-09-27","Prisma","DE","TV-gids"],
+  ["2026-09-29","2026-10-07","Reclamefolder.nl","NL","Digitale folder"],
+];
+let MEDIA=MEDIA_DEFAULT;
+/* Agenda filters. Social media planning is added later. */
+const FILTERS={media:true,social:false};
+function mediaActive(d){
+  const t=d.getTime(),out=[];
+  MEDIA.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b)return;
+    if(t>=a.getTime()&&t<=b.getTime())out.push({from:a,until:b,partner:r[2],land:r[3],kanaal:r[4]});
+  });
+  return out;
+}
+function mediaOverlapping(from,to){
+  const seen={},out=[];
+  MEDIA.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b||b<from||a>to)return;
+    const k=r[2]+"|"+r[0]+"|"+r[1];
+    if(seen[k])return;seen[k]=1;
+    out.push({from:a,until:b,partner:r[2],land:r[3],kanaal:r[4]});
+  });
+  out.sort(function(x,y){return x.from-y.from;});
+  return out;
+}
+function mediaRangeLabel(m){
+  const sameMonth=m.from.getMonth()===m.until.getMonth();
+  const l=m.from.toLocaleDateString("en-GB",{day:"numeric",month:sameMonth?undefined:"short"});
+  const r=m.until.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  return l+"\u2013"+r;
+}
+function mediaTip(m){
+  return "Media: "+m.partner+"\n"+m.kanaal+" \u00b7 "+m.land+"\nRuns "+
+         m.from.toLocaleDateString("en-GB",{day:"numeric",month:"long"})+" \u2013 "+
+         m.until.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+}
 
 /* ---------- product introductions (informational layer) ----------
    [date, product, status]. Source: Productintroductieplanning (Marketing / Marketing-po).
@@ -1106,6 +1333,11 @@ function dayClosedTip(d,exMap){
   if(closedRows.length)parts.push("Closed: "+roomList(closedRows,true));
   return parts.join("\n");
 }
+const QUIET_REASONS=[/no sunday opening/i];
+function displayReason(r){
+  return String(r||"").replace(/\s*\([^)]*\)\s*$/,"").trim();
+}
+function isQuietReason(r){return QUIET_REASONS.some(function(re){return re.test(r||"");});}
 function buildMonth(data,anchor){
   const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
   const last=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
@@ -1161,15 +1393,33 @@ function buildMonth(data,anchor){
         e.rows.filter(x=>!isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil))).forEach(x=>{
           const cw=crowdInfo(x.Crowd);if(cw)tp.push(`${x.Showroom}: expected footfall ${cw.label}`);
         });
-        cell+=`<div class="mev"${tipAttr(tp.join("\n"))}><div class="mev__t">${icon?icon+" ":""}${e.reason||"Special day"}</div>${lines}</div>`;
+        const shownTitle=isQuietReason(e.reason)?"":`<div class="mev__t">${icon?icon+" ":""}${displayReason(e.reason)||"Special day"}</div>`;
+        cell+=`<div class="mev"${tipAttr(tp.join("\n"))}>${shownTitle}${lines}</div>`;
       });
-      if(ev.size>2)cell+=`<div class="mev__more">+${ev.size-2} more</div>`;
+      if(ev.size>2){
+        const hidden=[...ev.values()].slice(2).map(function(x){
+          const cl=x.rows.filter(function(y){return isClosed(y.Status);});
+          return displayReason(x.reason)+(cl.length?" \u2014 closed: "+roomList(cl,true):"");
+        });
+        cell+=`<div class="mev__more"${tipAttr(hidden.join("\n"))}>+${ev.size-2} more</div>`;
+      }
       productsOnDay(d).forEach(function(pr){
         const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
         cell+=`<div class="mev mev--prod"${tipAttr("Product launch: "+pr.name+"\nLaunch date: "+full)}>`+
               `<div class="mev__t">${ROCKET} ${pr.name}</div></div>`;
       });
-      const dtip=dayClosedTip(d,exMap);
+      let dtip=dayClosedTip(d,exMap);
+      if(FILTERS.media){
+        const ma=mediaActive(d);
+        if(ma.length){
+          const mlines=ma.map(function(m){return "Media: "+m.partner+" ("+m.kanaal+", "+m.land+") "+mediaRangeLabel(m);});
+          dtip=(dtip?dtip+"\n":"")+mlines.join("\n");
+          const lands=[];
+          ma.forEach(function(m){const c=countryBadgeTxt(m.land);if(lands.indexOf(c)<0)lands.push(c);});
+          cell+=`<div class="mbars">`+lands.slice(0,3).map(function(c){
+            return `<i class="mbar mbar--${c}"></i>`;}).join("")+`</div>`;
+        }
+      }
       const isHol=holidaysOnDay(d).length>0;
       h+=`<td class="mcd${past?" mcd--past":""}">`+
          `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
@@ -1192,7 +1442,14 @@ function roomList(rows,asText){
   });
   return parts.join(asText?" \u00b7 ":' <span class="rl__sep">\u00b7</span> ');
 }
-function countryBadgeTxt(c){c=(c||"").toLowerCase();return c.indexOf("nether")>=0?"NL":c.indexOf("king")>=0?"UK":c.indexOf("germ")>=0?"DE":c;}
+function countryBadgeTxt(c){
+  c=(c||"").trim();const l=c.toLowerCase();
+  if(l.indexOf("nether")>=0||l==="nl")return "NL";
+  if(l.indexOf("king")>=0||l==="uk"||l==="gb")return "UK";
+  if(l.indexOf("germ")>=0||l==="de")return "DE";
+  if(l.indexOf("belg")>=0||l==="be")return "BE";
+  return c.toUpperCase();
+}
 function renderMonth(data,problems){
   const today=todayDate();
   const anchor=new Date(today.getFullYear(),today.getMonth()+MONTH_OFFSET,1);
@@ -1289,6 +1546,19 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
            `<span class="qev__t">${ROCKET} ${pl.name}</span></div>`;
   });
   if(plist)list+=`<div class="qev__sep">Product launches</div>`+plist;
+  if(FILTERS.media){
+    const mstart=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+    const mend=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
+    const ml=mediaOverlapping(mstart,mend);
+    let mhtml="";
+    ml.slice(0,6).forEach(function(m){
+      mhtml+=`<div class="qev qev--media"${tipAttr(mediaTip(m))}>`+
+             `<span class="qev__d">${mediaRangeLabel(m)}</span>`+
+             `<span class="qev__t"><i class="dotc dotc--${countryBadgeTxt(m.land)}"></i>${m.partner}</span></div>`;
+    });
+    if(ml.length>6)mhtml+=`<div class="qev qev--more">+${ml.length-6} more</div>`;
+    if(mhtml)list+=`<div class="qev__sep">Media planning</div>`+mhtml;
+  }
   return `<div class="qm"><div class="qm__title">${anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</div>${h}<div class="qm__list">${list}</div></div>`;
 }
 function renderQuarter(data,problems){
@@ -1368,9 +1638,16 @@ function render(data,problems){
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
   const pw=productsInWeek(mon), pstrip=document.getElementById("week-prod");
-  if(pw.length){
+  let mediaHTML="";
+  if(FILTERS.media){
+    mediaHTML=mediaOverlapping(mon,addDays(mon,6)).map(function(m){
+      return `<span class="mediapill"${tipAttr(mediaTip(m))}><i class="dotc dotc--${countryBadgeTxt(m.land)}"></i>`+
+             `<b>${m.partner}</b><em>${m.kanaal} \u00b7 ${mediaRangeLabel(m)}</em></span>`;
+    }).join("");
+  }
+  if(pw.length||mediaHTML){
     pstrip.style.display="flex";
-    pstrip.innerHTML=pw.map(function(p){
+    pstrip.innerHTML=mediaHTML+pw.map(function(p){
       const day=p.d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
       const full=p.d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
       return `<span class="prod"${tipAttr("Product launch: "+p.name+"\nLaunch date: "+full)}>`+
@@ -1595,6 +1872,27 @@ initNav();
 if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e);}}
 (function(){
   const rerender=function(){if(LAST_RENDER_DATA)render(LAST_RENDER_DATA,LAST_PROBLEMS);};
+  // filter dropdowns (one per view bar)
+  document.querySelectorAll(".mbtn--filter").forEach(function(btn){
+    const drop=btn.parentElement.querySelector(".fdrop");
+    btn.onclick=function(e){
+      e.stopPropagation();
+      const open=drop.classList.contains("fdrop--open");
+      document.querySelectorAll(".fdrop").forEach(function(d){d.classList.remove("fdrop--open");});
+      if(!open)drop.classList.add("fdrop--open");
+    };
+    drop.onclick=function(e){e.stopPropagation();};
+    drop.querySelectorAll("input[data-f]").forEach(function(inp){
+      inp.onchange=function(){
+        FILTERS[inp.getAttribute("data-f")]=inp.checked;
+        document.querySelectorAll('.fdrop input[data-f="'+inp.getAttribute("data-f")+'"]').forEach(function(o){o.checked=inp.checked;});
+        document.querySelectorAll(".mbtn--filter").forEach(function(b){b.classList.toggle("mbtn--filter-on",FILTERS.media);});
+        rerender();
+      };
+    });
+    btn.classList.toggle("mbtn--filter-on",FILTERS.media);
+  });
+  document.addEventListener("click",function(){document.querySelectorAll(".fdrop").forEach(function(d){d.classList.remove("fdrop--open");});});
   const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
   if(pv)pv.onclick=function(){MONTH_OFFSET--;rerender();};
   if(nx)nx.onclick=function(){MONTH_OFFSET++;rerender();};
