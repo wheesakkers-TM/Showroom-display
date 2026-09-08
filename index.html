@@ -29,8 +29,8 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
   color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden;}
 .ic{width:22px;height:22px;flex-shrink:0;}
 
-#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--forest-2);}
-#stage{width:1920px;height:1080px;transform-origin:center center;
+#viewport{position:fixed;inset:0;overflow:hidden;background:var(--forest-2);}
+#stage{width:1920px;height:1080px;transform-origin:top left;
   background:radial-gradient(120% 120% at 15% 0%, #013C1E 0%, #00301A 45%, #001A12 100%);
   display:flex;flex-direction:column;padding:50px 60px 30px;}
 
@@ -88,7 +88,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--bare .foot{display:none;}
 .stage--bare .sched{padding-top:18px;}
 .stage--bare .grid{border-spacing:8px 8px;}
-.stage--bare .gc{height:64px;border-radius:12px;}
+.stage--bare .gc{border-radius:12px;}
 .stage--bare .gc__t{font-size:24px;}
 .stage--bare .gc .gdot{width:13px;height:13px;margin-left:9px;}
 .stage--bare .gh__d{font-size:17px;}
@@ -101,11 +101,12 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--bare .gc--closed svg{width:24px;height:24px;}
 /* ---------- schedule grid (main view) ---------- */
 .sched{flex:1;overflow:hidden;min-height:0;padding-top:16px;display:flex;flex-direction:column;gap:10px;}
-.sched-inner{width:100%;display:flex;flex-direction:column;gap:10px;transform-origin:top center;}
+#grid-this{flex:1;min-height:0;}
+.sched-inner{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;transform-origin:top center;}
 .gwrap__head{display:flex;align-items:baseline;gap:14px;margin-bottom:3px;}
 .gwrap__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:21px;color:#fff;}
 .gwrap__range{font-weight:600;font-size:17px;color:var(--sage);}
-.grid{width:100%;border-collapse:separate;border-spacing:5px 4px;table-layout:fixed;}
+.grid{width:100%;height:100%;border-collapse:separate;border-spacing:5px 4px;table-layout:fixed;}
 .gh{padding:0 4px 2px;text-align:center;vertical-align:bottom;}
 .gh--room{width:200px;}
 .gh__d{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:var(--sage-dim);}
@@ -113,7 +114,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .gh--today .gh__d{color:var(--orange);}
 .gh--today .gh__n{color:var(--orange);}
 .gc{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;
-  height:37px;text-align:center;vertical-align:middle;padding:2px 5px;}
+  height:auto;text-align:center;vertical-align:middle;padding:6px 5px;}
 .gc__t{font-weight:700;font-size:17px;color:#F2F6EF;font-variant-numeric:tabular-nums;white-space:nowrap;}
 .gc .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;
   background:var(--dot);box-shadow:0 0 0 3px color-mix(in srgb,var(--dot) 24%,transparent);}
@@ -128,14 +129,45 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 [data-tip]:hover::after{
   content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
   background:#0B1F14;border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:16px;
-  padding:9px 15px;border-radius:10px;white-space:pre;text-align:left;line-height:1.45;
+  padding:10px 16px;border-radius:10px;white-space:pre-line;text-align:left;line-height:1.5;max-width:420px;width:max-content;
   z-index:9;box-shadow:0 12px 30px rgba(0,0,0,.5);pointer-events:none;}
-.mev[data-tip]:hover::after{left:0;transform:none;font-size:17px;}
+.mev[data-tip]:hover::after{left:0;transform:none;font-size:18px;padding:12px 18px;}
 .mcd__n[data-tip]:hover::after{left:0;transform:none;}
 .gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
 .gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
 .gc--exc .gc__t{color:#FFB469;}
 .gc[data-today="1"]{outline:2px solid var(--orange);outline-offset:-1px;}
+/* ---------- responsive refinements ---------- */
+.stage--narrow{padding:24px 34px 18px;}
+.stage--narrow .head__title{font-size:34px;}
+.stage--narrow .head__sub{font-size:19px;}
+.stage--narrow .clock{font-size:38px;}
+.stage--narrow .today{font-size:17px;}
+.stage--narrow .tab{font-size:16px;padding:7px 16px;}
+.stage--narrow .gh--room,.stage--narrow .stage--bare .gh--room{width:170px;}
+.stage--narrow .grname{font-size:19px;}
+.stage--narrow .gflag .flg{width:25px;height:17px;}
+.stage--narrow .gc__t{font-size:16px;}
+.stage--narrow .monthv__title,.stage--narrow #q-title{font-size:26px;}
+.stage--narrow .qcols{gap:24px;}
+.stage--narrow .mev__t{font-size:14px;}
+.stage--narrow .qev{font-size:13px;}
+.stage--tight .head{padding-bottom:10px;}
+.stage--tight .tabs{padding-top:10px;}
+.stage--tight .sched{padding-top:8px;gap:6px;}
+.stage--tight .monthv,.stage--tight #quarterv{padding-top:8px;gap:6px;}
+.stage--tight .mcd{padding:6px 8px 5px;}
+.stage--phone{padding:18px 16px 14px;}
+.stage--phone .head{flex-direction:column;align-items:flex-start;gap:6px;}
+.stage--phone .head__right{text-align:left;}
+.stage--phone .clock{font-size:30px;}
+.stage--phone .tabs{flex-wrap:wrap;}
+.stage--phone .gh--room{width:120px;}
+.stage--phone .grname{font-size:15px;}
+.stage--phone .gc__t{font-size:13px;}
+.stage--phone .gflag .flg{width:20px;height:14px;}
+.stage--phone .qcols{grid-template-columns:1fr;gap:18px;}
+.stage--phone .monthv__title,.stage--phone #q-title{font-size:22px;}
 /* ---------- nav tabs ---------- */
 .tabs{display:flex;gap:10px;padding:14px 0 0;}
 .tab{display:inline-flex;align-items:center;padding:9px 20px;border-radius:999px;border:1px solid var(--panel-border);
@@ -164,12 +196,13 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
   border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;font-size:15px;}
 .mcd--out{border-top:1px solid var(--hair-soft);}
 .mcd--past{opacity:.38;}
-.mev{margin-bottom:6px;}
-.mev__t{font-weight:700;font-size:16px;color:#fff;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.mline{display:flex;align-items:flex-start;gap:6px;margin-top:3px;font-weight:600;font-size:14px;color:var(--sage);}
+.mev{margin-bottom:7px;}
+.mev[data-tip]{cursor:help;}
+.mev__t{font-weight:700;font-size:15px;color:#fff;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+.mline{display:flex;align-items:flex-start;gap:5px;margin-top:2px;font-weight:600;font-size:13px;color:var(--sage);}
 .mline svg{margin-top:2px;}
 .mline svg{width:13px;height:13px;fill:var(--sage);flex-shrink:0;}
-.mline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.mline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;line-height:1.25;}
 .mline--adj{color:#FFB469;}
 .mline--adj svg{fill:#FFB469;}
 .mev__more{font-weight:600;font-size:13px;color:var(--sage-dim);}
@@ -177,6 +210,12 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .monthv .std__item{font-size:16px;color:var(--sage);}
 .monthv .std__lock svg{width:14px;height:14px;}
 .monthv .sechead{display:none;}
+.rl{white-space:nowrap;}
+.rl .flg{width:19px;height:13px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.2);display:inline-block;vertical-align:-2px;margin-right:4px;}
+.rl__sep{opacity:.5;margin:0 2px;}
+.mcd__n--hol{border-bottom:1px dotted rgba(255,255,255,.45);padding-bottom:1px;cursor:help;}
+.qcd__n--hol{border-bottom:1px dotted rgba(255,255,255,.4);padding-bottom:1px;}
+.gc--hol{box-shadow:inset 0 -2px 0 rgba(255,255,255,.16);}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
@@ -315,17 +354,6 @@ td.qcw{padding:0;}
       <a class="tab" data-v="quarter" href="?view=quarter">Quarter</a>
     </nav>
 
-    <main class="cols" style="display:none">
-      <section class="col">
-        <div class="col__head"><div class="col__label">This week</div><div class="col__range" id="range-this">&nbsp;</div></div>
-        <div class="col__body"><div class="fit" id="body-this"></div></div>
-      </section>
-      <section class="col">
-        <div class="col__head"><div class="col__label">Next week</div><div class="col__range" id="range-next">&nbsp;</div></div>
-        <div class="col__body"><div class="fit" id="body-next"></div></div>
-      </section>
-    </main>
-
     <main class="holi" id="holi" style="display:none">
       <div class="fit" id="holi-fit"></div>
     </main>
@@ -370,14 +398,7 @@ td.qcw{padding:0;}
     </main>
 
     <footer class="foot">
-      <div class="foot__note"><span class="pulse"></span><span id="updated">Loading&hellip;</span></div>
-      <div class="legend">
-        <span class="lg lg--label">Expected footfall</span>
-        <span class="lg"><i style="--dot:var(--dot-quiet)"></i>Low</span>
-        <span class="lg"><i style="--dot:var(--dot-moderate)"></i>Moderate</span>
-        <span class="lg"><i style="--dot:var(--dot-busy)"></i>High</span>
-      </div>
-      <div class="foot__brand">Forecast based on showroom visitor data</div>
+      <div class="foot__note"><span class="pulse"></span><span id="updated"></span></div>
     </footer>
     <div class="brandbar"></div>
   </div>
@@ -399,6 +420,8 @@ window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.rea
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
 const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";
 const STANDARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1306704827&single=true&output=csv";
+const HOLIDAY_CSV_URL = "";   // optional: published CSV of the "Feestdagen" tab (Date | Holiday | Group).
+                              // Leave empty to use the built-in list (2026-2027) below.
 const DEMO_TODAY = null;            // live date; for a preview set e.g. "2026-12-22"
 const REFRESH_MINUTES = 15;
 /* View: default = this week & next week. Add ?view=holidays to the URL for the outlook slide. */
@@ -472,6 +495,120 @@ const SAMPLE_DATA = [
   {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
   {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
 ];
+
+/* ---------- public holidays (informational layer) ----------
+   Groups: NL / UK / DE (nationwide) / BW / BY / HB (Bremen) / BE (Berlin).
+   Shown on hover in every view. A holiday does not close a showroom by itself:
+   closures come from the exceptions tab, the holiday explains why. */
+const HOLIDAY_GROUPS={
+  NL:["Eindhoven","Venlo","Uddel"],
+  UK:["Leicester","London"],
+  DE:["Crailsheim","Ingolstadt","Heidelberg","Bremen","Berlin","Munich"],
+  BW:["Crailsheim","Heidelberg"],
+  BY:["Ingolstadt","Munich"],
+  HB:["Bremen"],
+  BE:["Berlin"]
+};
+const HOLIDAY_LABEL={NL:"NL",UK:"UK",DE:"DE",BW:"DE Baden-W\u00fcrttemberg",BY:"DE Bavaria",HB:"DE Bremen",BE:"DE Berlin"};
+const HOLIDAYS_DEFAULT = [
+  ["2026-01-01","Neujahr","DE"],
+  ["2026-01-01","New Year's Day","NL"],
+  ["2026-01-01","New Year's Day","UK"],
+  ["2026-01-06","Heilige Drei Konige","BW"],
+  ["2026-01-06","Heilige Drei Konige","BY"],
+  ["2026-03-08","Internationaler Frauentag","BE"],
+  ["2026-04-03","Good Friday","NL"],
+  ["2026-04-03","Good Friday","UK"],
+  ["2026-04-03","Karfreitag","DE"],
+  ["2026-04-05","Easter Sunday","NL"],
+  ["2026-04-06","Easter Monday","NL"],
+  ["2026-04-06","Easter Monday","UK"],
+  ["2026-04-06","Ostermontag","DE"],
+  ["2026-04-27","King's Day","NL"],
+  ["2026-05-01","Tag der Arbeit","DE"],
+  ["2026-05-04","Early May bank holiday","UK"],
+  ["2026-05-05","Liberation Day","NL"],
+  ["2026-05-14","Ascension Day","NL"],
+  ["2026-05-14","Christi Himmelfahrt","DE"],
+  ["2026-05-24","Whit Sunday","NL"],
+  ["2026-05-25","Pfingstmontag","DE"],
+  ["2026-05-25","Spring bank holiday","UK"],
+  ["2026-05-25","Whit Monday","NL"],
+  ["2026-06-04","Fronleichnam","BW"],
+  ["2026-06-04","Fronleichnam","BY"],
+  ["2026-08-15","Maria Himmelfahrt","BY"],
+  ["2026-08-31","Summer bank holiday","UK"],
+  ["2026-10-03","Tag der Deutschen Einheit","DE"],
+  ["2026-10-31","Reformationstag","HB"],
+  ["2026-11-01","Allerheiligen","BW"],
+  ["2026-11-01","Allerheiligen","BY"],
+  ["2026-12-25","1. Weihnachtstag","DE"],
+  ["2026-12-25","Christmas Day","NL"],
+  ["2026-12-25","Christmas Day","UK"],
+  ["2026-12-26","2. Weihnachtstag","DE"],
+  ["2026-12-26","Boxing Day","NL"],
+  ["2026-12-28","Boxing Day","UK"],
+  ["2027-01-01","Neujahr","DE"],
+  ["2027-01-01","New Year's Day","NL"],
+  ["2027-01-01","New Year's Day","UK"],
+  ["2027-01-06","Heilige Drei Konige","BW"],
+  ["2027-01-06","Heilige Drei Konige","BY"],
+  ["2027-03-08","Internationaler Frauentag","BE"],
+  ["2027-03-26","Good Friday","NL"],
+  ["2027-03-26","Good Friday","UK"],
+  ["2027-03-26","Karfreitag","DE"],
+  ["2027-03-28","Easter Sunday","NL"],
+  ["2027-03-29","Easter Monday","NL"],
+  ["2027-03-29","Easter Monday","UK"],
+  ["2027-03-29","Ostermontag","DE"],
+  ["2027-04-27","King's Day","NL"],
+  ["2027-05-01","Tag der Arbeit","DE"],
+  ["2027-05-03","Early May bank holiday","UK"],
+  ["2027-05-05","Liberation Day","NL"],
+  ["2027-05-06","Ascension Day","NL"],
+  ["2027-05-06","Christi Himmelfahrt","DE"],
+  ["2027-05-16","Whit Sunday","NL"],
+  ["2027-05-17","Pfingstmontag","DE"],
+  ["2027-05-17","Whit Monday","NL"],
+  ["2027-05-27","Fronleichnam","BW"],
+  ["2027-05-27","Fronleichnam","BY"],
+  ["2027-05-31","Spring bank holiday","UK"],
+  ["2027-08-15","Maria Himmelfahrt","BY"],
+  ["2027-08-30","Summer bank holiday","UK"],
+  ["2027-10-03","Tag der Deutschen Einheit","DE"],
+  ["2027-10-31","Reformationstag","HB"],
+  ["2027-11-01","Allerheiligen","BW"],
+  ["2027-11-01","Allerheiligen","BY"],
+  ["2027-12-25","1. Weihnachtstag","DE"],
+  ["2027-12-25","Christmas Day","NL"],
+  ["2027-12-26","2. Weihnachtstag","DE"],
+  ["2027-12-26","Boxing Day","NL"],
+  ["2027-12-27","Christmas Day","UK"],
+  ["2027-12-28","Boxing Day","UK"],
+];
+let HOLIDAYS=HOLIDAYS_DEFAULT;
+let HOL_INDEX=null;
+function holKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function holIndex(){
+  if(HOL_INDEX)return HOL_INDEX;
+  const ix={};
+  HOLIDAYS.forEach(function(r){const k=r[0];(ix[k]=ix[k]||[]).push({name:r[1],grp:r[2]});});
+  HOL_INDEX=ix;return ix;
+}
+function holidaysForRoom(d,room){
+  const list=holIndex()[holKey(d)]||[];
+  return list.filter(function(h){const g=HOLIDAY_GROUPS[h.grp];return g&&g.indexOf(room)>=0;})
+             .map(function(h){return h.name;});
+}
+function holidaysOnDay(d){
+  const list=holIndex()[holKey(d)]||[];
+  const seen={},out=[];
+  list.forEach(function(h){
+    const key=h.name+"|"+h.grp;if(seen[key])return;seen[key]=1;
+    out.push(h.name+" ("+(HOLIDAY_LABEL[h.grp]||h.grp)+")");
+  });
+  return out;
+}
 
 /* ============================================================
    HELPERS
@@ -818,31 +955,43 @@ function effectiveDay(room,country,d,exMap){
   const key=fcKey(d,room);
   const ex=exMap[key];
   if(ex){
-    if(isClosed(ex.Status))return {closed:true,reason:ex.Reason,isException:true};
+    const hl=holidaysForRoom(d,room);
+    if(isClosed(ex.Status))return {closed:true,reason:ex.Reason,isException:true,holidays:hl};
     if(isAdjusted(ex.Status)||(ex.OpenFrom&&ex.OpenUntil))
-      return {closed:false,from:ex.OpenFrom,until:ex.OpenUntil,crowd:ex.Crowd,reason:ex.Reason,isException:true};
+      return {closed:false,from:ex.OpenFrom,until:ex.OpenUntil,crowd:ex.Crowd,reason:ex.Reason,isException:true,holidays:hl};
     // Normal hours exception: keep standard times, but carry crowd/reason
     const st=standardHours(room,d)||{closed:false,from:"",until:""};
-    return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,reason:ex.Reason,isException:true};
+    return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,reason:ex.Reason,isException:true,holidays:hl};
   }
   const st=standardHours(room,d);
   if(!st)return {closed:false,from:"",until:"",unknown:true};
   const crowd=FORECAST[key]||"";
-  return {closed:!!st.closed,alt:!!st.alt,from:st.from,until:st.until,crowd:crowd,isException:false};
+  return {closed:!!st.closed,alt:!!st.alt,from:st.from,until:st.until,crowd:crowd,isException:false,holidays:holidaysForRoom(d,room)};
 }
 function gridCellHTML(cell,isToday){
   if(cell.unknown)return `<td class="gc gc--muted">&middot;</td>`;
+  const hol=cell.holidays&&cell.holidays.length?cell.holidays:null;
+  const parts=[];
   if(cell.closed){
-    const tip=cell.reason?cell.reason:(cell.alt?"Open every other week \u2014 closed this week":"Standard closing day");
-    return `<td class="gc gc--closed"${isToday?' data-today="1"':''}${tipAttr(tip)}>${LOCK_SVG}</td>`;
+    let why;
+    if(cell.reason)why="Closed: "+cell.reason;
+    else if(cell.alt)why="Open every other week \u2014 closed this week";
+    else why="Closed: standard closing day";
+    if(hol){
+      // don't repeat the same text twice when the exception is named after the holiday
+      const dup=hol.some(function(n){return cell.reason&&cell.reason.toLowerCase().indexOf(n.toLowerCase())>=0;});
+      if(!dup)parts.push("Public holiday: "+hol.join(", "));
+    }
+    parts.push(why);
+    return `<td class="gc gc--closed${hol?" gc--hol":""}"${isToday?' data-today="1"':''}${tipAttr(parts.join("\n"))}>${LOCK_SVG}</td>`;
   }
   const cw=crowdInfo(cell.crowd);
   const dot=cw?`<i class="gdot" style="--dot:${cw.color}"></i>`:"";
   const exc=cell.isException?' gc--exc':'';
-  const parts=[];
+  if(hol)parts.push("Public holiday: "+hol.join(", ")+" \u2014 open as shown");
   if(cell.isException&&cell.reason)parts.push(cell.reason);
   if(cw)parts.push("Expected footfall: "+cw.label);
-  return `<td class="gc${exc}"${isToday?' data-today="1"':''}${tipAttr(parts.join("\n"))}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
+  return `<td class="gc${exc}${hol?" gc--hol":""}"${isToday?' data-today="1"':''}${tipAttr(parts.join("\n"))}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
 }
 function buildGrid(exList,mon,todayD){
   const exMap={};
@@ -870,14 +1019,17 @@ function buildGrid(exList,mon,todayD){
 /* ---------- month calendar view ---------- */
 let MONTH_OFFSET=0, QUARTER_OFFSET=0, WEEK_OFFSET=(function(){try{return (new URLSearchParams(location.search).get("view")==="next")?1:0;}catch(e){return 0;}})(), LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
 function dayClosedTip(d,exMap){
-  // which showrooms are closed on this date (standard pattern + exceptions)
+  // holidays (all countries) + which showrooms are closed on this date
+  const parts=[];
+  const hol=holidaysOnDay(d);
+  hol.forEach(function(h){parts.push("Public holiday: "+h);});
   const closedRows=[];
   SHOWROOMS.forEach(s=>{
     const eff=effectiveDay(s.name,s.country,d,exMap||{});
     if(eff.closed)closedRows.push({Showroom:s.name,Country:s.country});
   });
-  if(!closedRows.length)return "";
-  return "Closed: "+roomList(closedRows);
+  if(closedRows.length)parts.push("Closed: "+roomList(closedRows,true));
+  return parts.join("\n");
 }
 function buildMonth(data,anchor){
   const first=new Date(anchor.getFullYear(),anchor.getMonth(),1);
@@ -928,7 +1080,8 @@ function buildMonth(data,anchor){
         if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
         // full hover card text
         const tp=[e.reason||"Special day"];
-        if(closed.length)tp.push("Closed: "+roomList(closed));
+        holidaysOnDay(d).forEach(function(x){tp.push("Public holiday: "+x);});
+        if(closed.length)tp.push("Closed: "+roomList(closed,true));
         adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
         e.rows.filter(x=>!isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil))).forEach(x=>{
           const cw=crowdInfo(x.Crowd);if(cw)tp.push(`${x.Showroom}: expected footfall ${cw.label}`);
@@ -937,26 +1090,27 @@ function buildMonth(data,anchor){
       });
       if(ev.size>2)cell+=`<div class="mev__more">+${ev.size-2} more</div>`;
       const dtip=dayClosedTip(d,exMap);
+      const isHol=holidaysOnDay(d).length>0;
       h+=`<td class="mcd${past?" mcd--past":""}">`+
-         `<div class="mcd__n${isToday?" mcd__n--today":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
+         `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
     }
     h+=`</tr>`;
   }
   h+=`</tbody></table>`;
   return h;
 }
-function roomList(rows){
-  // compact: whole-country groups become "DE" / "NL" / "UK", otherwise names
+function roomList(rows,asText){
+  // compact: whole-country groups become a flag (or NL/DE/UK in plain-text tooltips)
   const byC={};rows.forEach(r=>{(byC[r.Country||""]=byC[r.Country||""]||[]).push(r.Showroom);});
   const parts=[];
   Object.keys(byC).forEach(c=>{
     const all=SHOWROOMS.filter(s=>s.country===c).map(s=>s.name);
     const got=byC[c];
     if(all.length&&got.length>=all.length&&all.every(n=>got.indexOf(n)>=0)){
-      parts.push("All "+countryBadgeTxt(c));
+      parts.push(asText?("all "+countryBadgeTxt(c)):('<span class="rl">'+flagSVG(c)+'all</span>'));
     }else parts.push(got.join(", "));
   });
-  return parts.join(" \u00b7 ");
+  return parts.join(asText?" \u00b7 ":' <span class="rl__sep">\u00b7</span> ');
 }
 function countryBadgeTxt(c){c=(c||"").toLowerCase();return c.indexOf("nether")>=0?"NL":c.indexOf("king")>=0?"UK":c.indexOf("germ")>=0?"DE":c;}
 function renderMonth(data,problems){
@@ -965,7 +1119,6 @@ function renderMonth(data,problems){
   document.getElementById("title").textContent="Showroom calendar";
   document.getElementById("subtitle").textContent="Holidays and open/closed per showroom";
   document.getElementById("stage").classList.add("stage--compact");
-  document.querySelector(".cols").style.display="none";
   document.getElementById("holi").style.display="none";
   document.getElementById("sched").style.display="none";
   document.getElementById("quarterv").style.display="none";
@@ -997,16 +1150,16 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const items=byDay[k]||[];
       const isToday=d.getTime()===t0;
       const past=d.getTime()<t0;
-      let tip="";
+      const parts=[];
+      holidaysOnDay(d).forEach(function(x){parts.push("Public holiday: "+x);});
       if(items.length){
-        const names=[...new Set(items.map(x=>x.Reason||"Special day"))];
-        const parts=[...names];
+        [...new Set(items.map(x=>x.Reason||"Special day"))].forEach(function(n){parts.push(n);});
         const closed=items.filter(x=>isClosed(x.Status));
-        if(closed.length)parts.push("Closed: "+roomList(closed));
-        tip=parts.join("\n");
+        if(closed.length)parts.push("Closed: "+roomList(closed,true));
       }
-      h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(tip)}>`+
-         `<span class="qcd__n">${d.getDate()}</span>${items.length?`<i class="qdot"></i>`:""}</td>`;
+      const isHol=holidaysOnDay(d).length>0;
+      h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(parts.join("\n"))}>`+
+         `<span class="qcd__n${isHol?" qcd__n--hol":""}">${d.getDate()}</span>${items.length?`<i class="qdot"></i>`:""}</td>`;
     }
     h+=`</tr>`;
   }
@@ -1042,7 +1195,6 @@ function renderQuarter(data,problems){
   document.getElementById("title").textContent="Showroom calendar";
   document.getElementById("subtitle").textContent="Three months ahead \u2014 holidays and closures";
   document.getElementById("stage").classList.add("stage--compact");
-  document.querySelector(".cols").style.display="none";
   document.getElementById("holi").style.display="none";
   document.getElementById("sched").style.display="none";
   document.getElementById("monthv").style.display="none";
@@ -1086,8 +1238,7 @@ function render(data,problems){
   if(VIEW==="holidays"){
     document.getElementById("title").textContent="Coming up";
     document.getElementById("subtitle").innerHTML="Holidays &amp; special days &mdash; next 6 weeks";
-    document.querySelector(".cols").style.display="none";
-    document.getElementById("sched").style.display="none";
+      document.getElementById("sched").style.display="none";
     document.getElementById("monthv").style.display="none";
     document.getElementById("quarterv").style.display="none";
     const holi=document.getElementById("holi");holi.style.display="block";
@@ -1103,7 +1254,6 @@ function render(data,problems){
   }
   const monThis=mondayOf(base);
   const mon=addDays(monThis,7*WEEK_OFFSET);
-  document.querySelector(".cols").style.display="none";
   document.getElementById("holi").style.display="none";
   document.getElementById("monthv").style.display="none";
   document.getElementById("quarterv").style.display="none";
@@ -1182,6 +1332,25 @@ async function loadExceptions(){
   LAST_GOOD_DATA=objs;
   return objs;                                       // empty sheet = everything open (not sample data)
 }
+async function loadHolidays(){
+  if(!HOLIDAY_CSV_URL)return HOLIDAYS_DEFAULT;
+  const r=await fetchTimeout(HOLIDAY_CSV_URL,FETCH_TIMEOUT_MS);
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const rows=parseCSV(await r.text());
+  if(rows.length<2)return HOLIDAYS_DEFAULT;
+  const head=rows[0].map(h=>(h||"").trim().toLowerCase());
+  const iD=head.findIndex(h=>h==="date"||h==="datum");
+  const iN=head.findIndex(h=>h==="holiday"||h==="feestdag"||h==="naam"||h==="name");
+  const iG=head.findIndex(h=>h==="group"||h==="groep"||h==="regio"||h==="region"||h==="scope");
+  if(iD<0||iN<0||iG<0)throw new Error("Feestdagen CSV mist kolommen Date/Holiday/Group");
+  const out=[];
+  rows.slice(1).forEach(function(r2){
+    const d=parseDate(r2[iD]);const n=(r2[iN]||"").trim();const g=(r2[iG]||"").trim().toUpperCase();
+    if(!d||!n||!HOLIDAY_GROUPS[g])return;
+    out.push([holKey(d),n,g]);
+  });
+  return out.length?out:HOLIDAYS_DEFAULT;
+}
 async function loadStandard(){
   if(!STANDARD_CSV_URL)return STANDARD_DEFAULT;
   const r=await fetchTimeout(STANDARD_CSV_URL,FETCH_TIMEOUT_MS);
@@ -1250,8 +1419,9 @@ function normStdPair(from,until){
 }
 let retryTimer=null;
 async function refresh(){
-  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions()),settle(loadStandard())]);
-  const fc=results[0],ex=results[1],st=results[2];
+  const results=await Promise.all([settle(loadForecast()),settle(loadExceptions()),settle(loadStandard()),settle(loadHolidays())]);
+  const fc=results[0],ex=results[1],st=results[2],hd=results[3];
+  if(hd.status==="fulfilled"){HOLIDAYS=hd.value;HOL_INDEX=null;}
   FORECAST = fc.status==="fulfilled" ? fc.value : {};
   STANDARD = st.status==="fulfilled" ? st.value : STANDARD_DEFAULT;
   const data = ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]);
@@ -1259,6 +1429,7 @@ async function refresh(){
   if(FORECAST_CSV_URL && fc.status!=="fulfilled"){problems.push("forecast");console.warn("Forecast CSV:",fc.reason);}
   if(CSV_URL && ex.status!=="fulfilled"){problems.push("hours");console.warn("Hours CSV:",ex.reason);}
   if(STANDARD_CSV_URL && st.status!=="fulfilled"){problems.push("standard");console.warn("Standard CSV:",st.reason);}
+  if(HOLIDAY_CSV_URL && hd.status!=="fulfilled"){problems.push("holidays");console.warn("Holiday CSV:",hd.reason);}
   try{render(data,problems);}catch(err){showErr(err.message||err);throw err;}
   if(problems.length && !retryTimer){retryTimer=setTimeout(function(){retryTimer=null;refresh();},60000);}
 }
@@ -1268,10 +1439,21 @@ function tick(){
   document.getElementById("today").textContent=now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
 }
 function fitStage(){
+  /* Responsive canvas: the stage always fills the viewport exactly (no black bars at any
+     aspect ratio). Typography stays legible because the scale factor has a floor; below
+     that the canvas simply gets more logical pixels and the layout reflows. */
   const cw=document.documentElement.clientWidth||window.innerWidth;
   const ch=document.documentElement.clientHeight||window.innerHeight;
-  const s=Math.min((cw-8)/1920,(ch-8)/1080);
-  document.getElementById("stage").style.transform="scale("+s+")";
+  const raw=Math.min(cw/1920,ch/1080);
+  const k=Math.min(1,Math.max(0.62,raw));
+  const st=document.getElementById("stage");
+  const w=Math.round(cw/k), h=Math.round(ch/k);
+  st.style.width=w+"px";
+  st.style.height=h+"px";
+  st.style.transform="scale("+k+")";
+  st.classList.toggle("stage--narrow",w<1500);
+  st.classList.toggle("stage--tight",h<820);
+  st.classList.toggle("stage--phone",w<820);
 }
 window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();});
 initNav();
@@ -1293,7 +1475,9 @@ if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e)
   if(qt)qt.onclick=function(){QUARTER_OFFSET=0;rerender();};
 })();
 fitStage();tick();refresh();
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitColumns);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){fitColumns();fitSched();});
+setTimeout(function(){fitColumns();fitSched();},400);
+setTimeout(function(){fitColumns();fitSched();},1200);
 setInterval(tick,10000);
 setInterval(refresh,REFRESH_MINUTES*60000);
 </script>
