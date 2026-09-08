@@ -133,9 +133,10 @@ th.gh--room{width:23%;}
 .gc[data-today="1"]{background:rgba(255,255,255,.05);}
 .grid tbody tr:last-child .gc[data-today="1"]{border-radius:0 0 12px 12px;}
 [data-tip]{cursor:help;}
+#tip b{font-weight:700;color:#fff;}
 #tip{position:fixed;z-index:99;max-width:min(460px,92vw);background:#0B1F14;
   border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:15px;
-  padding:9px 14px;border-radius:10px;white-space:pre-line;line-height:1.5;
+  padding:10px 15px;border-radius:10px;line-height:1.55;font-weight:500;
   box-shadow:0 14px 34px rgba(0,0,0,.55);pointer-events:none;display:none;
   font-family:"Century Gothic","Jost",system-ui,sans-serif;}
 #tip.tip--on{display:block;}
@@ -291,6 +292,16 @@ th.gh--room{width:23%;}
 .mbrrow--month .mbr__t{font-size:13px;}
 .mbrrow--month .mbr__s{display:none;}
 .mbr[data-span="1"] .mbr__s,.mbr[data-span="2"] .mbr__s{display:none;}
+.clg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.clg .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);}
+.clg svg.ic{width:12px;height:12px;fill:currentColor;}
+.mline--closed .clg>span{white-space:normal;}
+.mbrrow--mini td{padding:0 1px 2px;}
+.mbrrow--mini .mbr{height:6px;padding:0;border-radius:3px;border-left-width:0;}
+.mbrrow--mini .mbr__t,.mbrrow--mini .mbr__s{display:none;}
+.mbrrow--mini .mbr--NL{background:#FF8000;} .mbrrow--mini .mbr--DE{background:#7FB4E8;}
+.mbrrow--mini .mbr--UK{background:#C58CE0;} .mbrrow--mini .mbr--BE{background:#E8C24A;}
+.mbrrow--mini .mbrmore{font-size:10px;padding-left:2px;}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
@@ -795,8 +806,13 @@ function mediaLanes(from,to,maxLanes){
     lanes.push([it]);
   });
   const shown=lanes.slice(0,maxLanes||3);
-  const hidden=lanes.slice(maxLanes||3).reduce(function(n,l){return n+l.length;},0);
-  return {lanes:shown,hidden:hidden};
+  const rest=[];
+  lanes.slice(maxLanes||3).forEach(function(l){l.forEach(function(o){rest.push(o);});});
+  rest.sort(function(a,b){return a.col-b.col;});
+  return {lanes:shown,hidden:rest.length,
+          hiddenTip:rest.map(function(o){
+            return o.m.partner+": "+o.m.kanaal+" \u00b7 "+countryBadgeTxt(o.m.land)+" \u00b7 "+mediaRangeLabel(o.m);
+          }).join("\n")};
 }
 /* one <tr> per lane: leading cell + bar cells with colspan, aligned to the day columns */
 function mediaLaneRows(from,to,leadCell,maxLanes,cls){
@@ -817,7 +833,7 @@ function mediaLaneRows(from,to,leadCell,maxLanes,cls){
     if(cur<7)row+=`<td colspan="${7-cur}" class="mbrgap"></td>`;
     html+=`<tr class="${cls}">${row}</tr>`;
   });
-  if(res.hidden)html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore">+${res.hidden} more campaigns</td></tr>`;
+  if(res.hidden)html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore"${tipAttr(res.hiddenTip)}>+${res.hidden} more campaigns</td></tr>`;
   return html;
 }
 /* ---------- product introductions (informational layer) ----------
@@ -1002,7 +1018,6 @@ const ICONS=[
  [/ascension|hemelvaart/i,"\u{1F54A}\uFE0F"],        // 🕊️
  [/king'?s day|koningsdag/i,"\u{1F451}"],            // 👑
  [/bank holiday/i,"\u{1F3D6}\uFE0F"],                // 🏖️
- [/unity|einheit/i,"__DEFLAG__"],                    // drawn DE flag (emoji flags show as letters on Windows)
  [/assumption|himmelfahrt|corpus christi|fronleichnam|all saints|allerheiligen|reformation/i,"\u26EA"], // ⛪
  [/halloween/i,"\u{1F383}"],                          // 🎃
  [/black friday|sale/i,"\u{1F6CD}\uFE0F"],            // 🛍️
@@ -1013,10 +1028,20 @@ const ICONS=[
  [/summer/i,"\u2600\uFE0F"],                          // ☀️
 ];
 function iconFor(reason){
-  for(const [re,ic] of ICONS){
-    if(re.test(reason||""))return ic==="__DEFLAG__"?flagSVG("DE"):ic;
-  }
+  for(const [re,ic] of ICONS){if(re.test(reason||""))return ic;}
   return "";
+}
+/* closed line: country flag, then the lock, then the showrooms */
+function closedLineHTML(rows){
+  const byC={};rows.forEach(function(r){(byC[r.Country||""]=byC[r.Country||""]||[]).push(r.Showroom);});
+  const parts=[];
+  Object.keys(byC).forEach(function(c){
+    const all=SHOWROOMS.filter(function(s){return s.country===c;}).map(function(s){return s.name;});
+    const got=byC[c];
+    const whole=all.length&&got.length>=all.length&&all.every(function(n){return got.indexOf(n)>=0;});
+    parts.push(`<span class="clg">${flagSVG(c)}${LOCK_SVG}<span>${whole?"all showrooms":got.join(", ")}</span></span>`);
+  });
+  return parts.join('<span class="rl__sep">\u00b7</span>');
 }
 const CROWD={
   quiet:{color:"var(--dot-quiet)",label:"Low"},low:{color:"var(--dot-quiet)",label:"Low"},rustig:{color:"var(--dot-quiet)",label:"Low"},
@@ -1462,7 +1487,7 @@ function buildMonth(data,anchor){
         const closed=e.rows.filter(x=>isClosed(x.Status));
         const adj=e.rows.filter(x=>!isClosed(x.Status)&&(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil)));
         let lines="";
-        if(closed.length)lines+=`<div class="mline mline--closed">${LOCK_SVG}<span>${roomList(closed)}</span></div>`;
+        if(closed.length)lines+=`<div class="mline mline--closed">${closedLineHTML(closed)}</div>`;
         if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
         // full hover card text
         const tp=[e.reason||"Special day"];
@@ -1583,6 +1608,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
          (items.length?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+`</td>`;
     }
     h+=`</tr>`;
+    if(FILTERS.media)h+=mediaLaneRows(wkMon,addDays(wkMon,6),'<td class="qcw"></td>',2,"mbrrow mbrrow--mini");
   }
   h+=`</tbody></table>`;
   // event list under the grid
@@ -1601,7 +1627,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   evs.slice(0,7).forEach(e=>{
     const closed=e.rows.filter(x=>isClosed(x.Status));
     const icon=iconFor(e.reason);
-    const who=closed.length?` \u00b7 ${LOCK_SVG}${roomList(closed)}`:"";
+    const who=closed.length?` <span class="rl__sep">\u00b7</span> ${closedLineHTML(closed)}`:"";
     list+=`<div class="qev"><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
           `<span class="qev__t">${icon?icon+" ":""}${e.reason}${who}</span></div>`;
   });
@@ -1942,7 +1968,12 @@ function fitStage(){
   function place(el){
     const txt=el.getAttribute("data-tip");
     if(!txt){hide();return;}
-    tip.textContent=txt;
+    tip.innerHTML=String(txt).split("\n").map(function(line){
+      const i=line.indexOf(": ");
+      const esc=function(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+      if(i>0)return "<b>"+esc(line.slice(0,i+1))+"</b> "+esc(line.slice(i+2));
+      return esc(line);
+    }).join("<br>");
     tip.classList.add("tip--on");
     const r=el.getBoundingClientRect();
     const tw=tip.offsetWidth, th=tip.offsetHeight;
