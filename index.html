@@ -140,6 +140,9 @@ th.gh--room{width:23%;}
 .grid tbody tr:last-child .gc[data-today="1"]{border-radius:0 0 12px 12px;}
 [data-tip]{cursor:help;}
 #tip b{font-weight:700;color:#fff;}
+#tip .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);
+  display:inline-block;vertical-align:-1px;margin-right:2px;}
+#tip .flg--txt{width:auto;height:auto;box-shadow:none;vertical-align:0;font-size:10px;}
 #tip{position:fixed;z-index:99;max-width:min(460px,92vw);background:#0B1F14;
   border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:15px;
   padding:10px 15px;border-radius:10px;line-height:1.55;font-weight:500;
@@ -616,6 +619,12 @@ function flagSVG(c){
   if(!k)return "";
   return '<span class="flg flg--txt">'+k+'</span>';   // unknown country: show the code, never nothing
 }
+/* Tooltips are plain text (data-tip), so a flag travels as the token [[flag:XX]] and the
+   tooltip renderer swaps it for the drawn SVG. Empty country: no token, so no stray badge. */
+function flagTok(c){
+  const k=countryBadgeTxt(c).replace(/[\[\]]/g,"");
+  return k?"[[flag:"+k+"]] ":"";
+}
 function tipAttr(s){return s?` data-tip="${String(s).replace(/"/g,"&quot;").replace(/\n/g,"&#10;")}"`:"";}
 
 const SHOWROOMS = [
@@ -841,7 +850,8 @@ function mediaRangeLabel(m){
   return l+"\u2013"+r;
 }
 function mediaTip(m){
-  return "Media: "+m.partner+"\n"+m.kanaal+" \u00b7 "+m.land+"\nRuns "+
+  return "Media: "+flagTok(m.land)+m.partner+"\n"+
+         (m.kanaal||"Channel unknown")+" \u00b7 "+(countryBadgeTxt(m.land)||"Country unknown")+"\nRuns "+
          m.from.toLocaleDateString("en-GB",{day:"numeric",month:"long"})+" \u2013 "+
          m.until.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
 }
@@ -899,7 +909,7 @@ function mediaLanes(from,to,maxLanes){
   rest.sort(function(a,b){return a.col-b.col;});
   return {lanes:shown,hidden:rest.length,
           hiddenTip:rest.map(function(o){
-            return o.m.partner+": "+o.m.kanaal+" \u00b7 "+countryBadgeTxt(o.m.land)+" \u00b7 "+mediaRangeLabel(o.m);
+            return flagTok(o.m.land)+o.m.partner+": "+(o.m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(o.m);
           }).join("\n")};
 }
 /* week view: one row per campaign, label in the left column, bar in the day columns.
@@ -935,7 +945,7 @@ function mediaGanttRows(from,to,maxRows,cls){
     html+=`<tr class="${cls}">${row}</tr>`;
   });
   if(rest.length){
-    const tip=rest.map(function(o){return o.m.partner+": "+(o.m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(o.m);}).join("\n");
+    const tip=rest.map(function(o){return flagTok(o.m.land)+o.m.partner+": "+(o.m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(o.m);}).join("\n");
     html+=`<tr class="${cls}"><td class="gc gc--room mbrmore"${tipAttr(tip)}>+${rest.length} more campaigns</td><td colspan="7"></td></tr>`;
   }
   return html;
@@ -1681,7 +1691,7 @@ function buildMonth(data,anchor){
       if(FILTERS.media){
         const ma=mediaActive(d);
         if(ma.length){
-          const mlines=ma.map(function(m){return "Media: "+m.partner+" ("+m.kanaal+", "+m.land+") "+mediaRangeLabel(m);});
+          const mlines=ma.map(function(m){return "Media: "+flagTok(m.land)+m.partner+" ("+(m.kanaal||"channel unknown")+") "+mediaRangeLabel(m);});
           dtip=(dtip?dtip+"\n":"")+mlines.join("\n");
         }
       }
@@ -1780,7 +1790,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
             segs+=`<i class="mseg${isStart?" mseg--s":""}${isEnd?" mseg--e":""}" `+
                   `style="--mc:${channelColor(m.kanaal)};--lane:${li}"></i>`;
           });
-          const mtips=act.map(function(m){return m.partner+": "+m.kanaal+" \u00b7 "+mediaRangeLabel(m);});
+          const mtips=act.map(function(m){return flagTok(m.land)+m.partner+": "+(m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(m);});
           parts.push.apply(parts,mtips.map(function(x){return "Media: "+x;}));
         }
       }
@@ -2202,11 +2212,16 @@ function fitStage(){
   function place(el){
     const txt=el.getAttribute("data-tip");
     if(!txt){hide();return;}
+    const esc=function(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+    /* [[flag:XX]] -> drawn flag. Only the whitelisted codes become an SVG; anything else
+       becomes a code badge, so an unknown country still shows something. */
+    const flags=function(x){return x.replace(/\[\[flag:([^\]]{1,24})\]\]/g,function(_,c){
+      return FLAG_SVG[c]||'<span class="flg flg--txt">'+c+'</span>';
+    });};
     tip.innerHTML=String(txt).split("\n").map(function(line){
       const i=line.indexOf(": ");
-      const esc=function(x){return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
-      if(i>0)return "<b>"+esc(line.slice(0,i+1))+"</b> "+esc(line.slice(i+2));
-      return esc(line);
+      if(i>0)return "<b>"+flags(esc(line.slice(0,i+1)))+"</b> "+flags(esc(line.slice(i+2)));
+      return flags(esc(line));
     }).join("<br>");
     tip.classList.add("tip--on");
     const r=el.getBoundingClientRect();
