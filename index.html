@@ -110,7 +110,11 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .gwrap__head{display:flex;align-items:baseline;gap:14px;margin-bottom:3px;}
 .gwrap__label{font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:21px;color:#fff;}
 .gwrap__range{font-weight:600;font-size:17px;color:var(--sage);}
-.grid{width:100%;height:100%;border-collapse:collapse;table-layout:fixed;}
+/* height:auto, not 100%: a full-height table would spread leftover space over the eleven
+   showroom rows, so every week with a different number of campaign rows got its own row
+   height. Fixed row heights plus reserved space below keep the grid identical each week. */
+.grid{width:100%;height:auto;border-collapse:collapse;table-layout:fixed;}
+.grid tbody tr.growrow{height:43px;}
 .gh{padding:0 6px 12px;text-align:center;vertical-align:bottom;width:auto;}
 th.gh--room{width:23%;}
 .gh__d{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:13px;color:var(--sage-dim);}
@@ -244,6 +248,13 @@ th.gh--room{width:23%;}
 .qcd__n--hol{border-bottom:1px dotted rgba(255,255,255,.4);padding-bottom:1px;}
 .gc--hol{box-shadow:inset 0 -2px 0 rgba(255,255,255,.16);}
 .prodstrip{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;}
+/* labelled strip above the grid; the row keeps its height on a week without launches so
+   the grid below it stays put */
+.wprod{display:flex;align-items:center;gap:18px;height:40px;}
+.wprod .prodstrip{flex-wrap:nowrap;min-width:0;}
+.wprod__h{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:14px;
+  color:var(--sage-dim);white-space:nowrap;}
+.prodstrip--none{color:var(--sage-dim);font-weight:600;font-size:15px;}
 .prod{display:inline-flex;align-items:center;gap:8px;background:rgba(162,186,28,.13);
   border:1px solid rgba(162,186,28,.35);border-radius:999px;padding:4px 13px;cursor:help;}
 .prod__ic{font-size:17px;line-height:1;}
@@ -288,9 +299,13 @@ th.gh--room{width:23%;}
 .stage--narrow .mediapill b{font-size:15px;}
 .stage--narrow .mediapill em{font-size:13px;}
 /* ---------- media campaign bars ---------- */
-.mbrname{vertical-align:middle;}
-.mbrname__x{display:inline-flex;align-items:baseline;gap:10px;vertical-align:middle;line-height:1.2;min-width:0;}
-.mbrname .grname{font-size:17px;font-weight:700;}
+/* one line, always: the flag and the label sit next to each other as inline boxes, so
+   without nowrap a long partner name pushed the label to a second line and made that
+   media row taller than the others */
+.mbrname{vertical-align:middle;white-space:nowrap;}
+.mbrname__x{display:inline-flex;align-items:baseline;gap:10px;vertical-align:middle;line-height:1.2;min-width:0;
+  flex-wrap:nowrap;max-width:calc(100% - 42px);}
+.mbrname .grname{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mbrsub{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--sage);white-space:nowrap;}
 .mbrsub .cdot{width:7px;height:7px;border-radius:50%;background:var(--mc);flex-shrink:0;}
 .mbrsub svg.flg{width:15px;height:10px;border-radius:2px;}
@@ -301,6 +316,12 @@ th.gh--room{width:23%;}
 .mbrname .gflag .flg{width:22px;height:15px;}
 tr.mbrrow .mbrmore{color:var(--sage-dim);font-weight:600;font-size:14px;padding-left:2px;}
 .mbrrow td{padding:0 2px 4px;}
+/* the media section always occupies the same number of rows, so stepping through weeks
+   never moves the grid above it: empty rows fill the remainder, and a week without
+   campaigns says so instead of collapsing */
+tr.mbrrow{height:34px;}
+tr.mbrrow--pad td{padding:0;}
+tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left:2px;}
 .mbrspacer td{height:12px;border:none;padding:0;}
 .mbrhead td{border-top:1px solid rgba(255,255,255,.10);padding:9px 0 7px;}
 .mbrhead span{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:14px;color:var(--sage-dim);}
@@ -507,7 +528,10 @@ td.qcw{padding:0;}
           <button class="mbtn" id="week-next" aria-label="Next week">&#8594;</button>
         </div>
       </div>
-      <div class="prodstrip" id="week-prod" style="display:none"></div>
+      <section class="wprod" id="week-prodsec">
+        <div class="wprod__h">Product introductions</div>
+        <div class="prodstrip" id="week-prod"></div>
+      </section>
       <div class="sched-inner" id="sched-inner">
         <div id="grid-this"></div>
       </div>
@@ -915,7 +939,7 @@ function mediaLanes(from,to,maxLanes){
 /* week view: one row per campaign, label in the left column, bar in the day columns.
    Every campaign renders the same structure, so a new partner needs no special handling:
    a missing channel or country simply shows a neutral placeholder. */
-function mediaGanttRows(from,to,maxRows,cls){
+function mediaGanttRows(from,to,maxRows,cls,pad){
   const items=[];
   MEDIA.forEach(function(r){
     const a=parseDate(r[0]),b=parseDate(r[1]);
@@ -926,7 +950,10 @@ function mediaGanttRows(from,to,maxRows,cls){
                 m:{from:a,until:b,partner:(r[2]||"Unnamed campaign"),land:(r[3]||""),kanaal:(r[4]||"")}});
   });
   items.sort(function(x,y){return (x.col-y.col)||x.m.partner.localeCompare(y.m.partner);});
-  const shown=items.slice(0,maxRows),rest=items.slice(maxRows);
+  /* With pad on, the section is always maxRows tall: one row goes to "+N more" when there
+     are too many campaigns, and the remainder is filled with empty rows. */
+  const cap=(pad&&items.length>maxRows)?maxRows-1:maxRows;
+  const shown=items.slice(0,cap),rest=items.slice(cap);
   let html="";
   shown.forEach(function(it){
     const col=channelColor(it.m.kanaal);
@@ -947,6 +974,11 @@ function mediaGanttRows(from,to,maxRows,cls){
   if(rest.length){
     const tip=rest.map(function(o){return flagTok(o.m.land)+o.m.partner+": "+(o.m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(o.m);}).join("\n");
     html+=`<tr class="${cls}"><td class="gc gc--room mbrmore"${tipAttr(tip)}>+${rest.length} more campaigns</td><td colspan="7"></td></tr>`;
+  }
+  if(pad){
+    let used=shown.length+(rest.length?1:0);
+    if(!used){html+=`<tr class="${cls} mbrempty"><td colspan="8">No campaigns this week</td></tr>`;used=1;}
+    for(let i=used;i<maxRows;i++)html+=`<tr class="${cls} mbrrow--pad"><td colspan="8"></td></tr>`;
   }
   return html;
 }
@@ -1557,11 +1589,11 @@ function buildGrid(exList,mon,todayD){
   head+=`</tr>`;
   let body="";
   const bars=FILTERS.media
-    ? mediaGanttRows(mon,addDays(mon,6),FILTERS.hours?4:18,"mbrrow")
+    ? mediaGanttRows(mon,addDays(mon,6),FILTERS.hours?4:18,"mbrrow",FILTERS.hours)
     : "";
   if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${bars}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
-    body+=`<tr><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
+    body+=`<tr class="growrow"><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
       const d=addDays(mon,i);
       const isToday=todayD&&d.getTime()===todayD.getTime();
@@ -1983,15 +2015,27 @@ function render(data,problems){
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
   const pw=FILTERS.products?productsInWeek(mon):[], pstrip=document.getElementById("week-prod");
+  const psec=document.getElementById("week-prodsec");
+  /* The whole section only disappears when the filter is off; a week without launches
+     keeps the row and says so, so the grid below never shifts. */
+  psec.style.display=FILTERS.products?"flex":"none";
   if(pw.length){
-    pstrip.style.display="flex";
-    pstrip.innerHTML=pw.map(function(p){
+    pstrip.className="prodstrip";
+    /* the strip stays one line high, so anything beyond four launches moves into a
+       "+N more" chip with the rest in its hover instead of wrapping the row */
+    const pshow=pw.length>4?pw.slice(0,3):pw, prest=pw.length>4?pw.slice(3):[];
+    pstrip.innerHTML=pshow.map(function(p){
       const day=p.d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
       const full=p.d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
       return `<span class="prod"${tipAttr("Product launch: "+p.name+"\nLaunch date: "+full)}>`+
              `<i class="prod__ic">${ROCKET}</i><b>${p.name}</b><em>${day}</em></span>`;
-    }).join("");
-  }else{pstrip.style.display="none";pstrip.innerHTML="";}
+    }).join("")+(prest.length?`<span class="prod prod--period"${tipAttr(prest.map(function(p){
+      return p.name+": "+p.d.toLocaleDateString("en-GB",{day:"numeric",month:"long"});}).join("\n"))}>`+
+      `<b>+${prest.length} more</b></span>`:"");
+  }else{
+    pstrip.className="prodstrip prodstrip--none";
+    pstrip.textContent="No launches this week";
+  }
   fitSched();
   if(problems.length){
     const f=document.querySelector(".foot");if(f)f.style.display="flex";
