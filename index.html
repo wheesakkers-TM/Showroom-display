@@ -213,6 +213,11 @@ th.gh--room{width:23%;}
 .mline svg{width:13px;height:13px;fill:var(--sage);flex-shrink:0;}
 .mline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;line-height:1.25;}
 .mline--adj{color:#FFB469;}
+.mline--busy{color:var(--sage);align-items:center;}
+.mline--busy b{color:#EAF2E6;font-weight:700;}
+.bdot{width:7px;height:7px;border-radius:50%;background:var(--dot);flex-shrink:0;display:inline-block;}
+.qbusy{display:inline-flex;align-items:center;gap:6px;color:var(--sage);font-weight:600;}
+.qbusy svg.ic{width:12px;height:12px;fill:currentColor;}
 .mline--adj svg{fill:#FFB469;}
 .mev__more{font-weight:600;font-size:13px;color:var(--sage-dim);}
 .monthv .std{background:transparent;border:none;padding:6px 0 0;gap:8px 34px;border-top:1px solid var(--hair-soft);border-radius:0;}
@@ -270,25 +275,22 @@ th.gh--room{width:23%;}
 .stage--narrow .mediapill em{font-size:13px;}
 /* ---------- media campaign bars ---------- */
 .mbrrow td{padding:0 2px 4px;}
+.mbrspacer td{height:14px;border:none;padding:0;}
+.grid tbody tr.mbrrow,.grid tbody tr.mbrspacer{border-top:none;}
 .mbrlead,.mcw--bar{background:transparent;border:none;}
 .mbrgap{background:transparent;}
 .mbr{position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
   height:30px;padding:0 12px;border-radius:8px;cursor:help;
-  background:rgba(255,255,255,.07);border-left:3px solid var(--sage);}
+  background:color-mix(in srgb,var(--mc,#8FA37E) 20%,transparent);
+  border-left:3px solid var(--mc,#8FA37E);}
 .mbr__t{font-weight:700;font-size:15px;color:#F2F6EF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   line-height:1.15;}
 .mbr__s{font-weight:600;font-size:12px;color:var(--sage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   line-height:1.15;}
-.mbr--contL{border-left:none;border-top-left-radius:0;border-bottom-left-radius:0;}
+.mbr--contL{border-left:none;border-top-left-radius:0;border-bottom-left-radius:0;
+  box-shadow:inset 3px 0 0 color-mix(in srgb,var(--mc,#8FA37E) 45%,transparent);}
 .mbr--contR{border-top-right-radius:0;border-bottom-right-radius:0;}
-.mbr--NL{border-left-color:#FF8000;background:rgba(255,128,0,.13);}
-.mbr--DE{border-left-color:#7FB4E8;background:rgba(127,180,232,.13);}
-.mbr--UK{border-left-color:#C58CE0;background:rgba(197,140,224,.13);}
-.mbr--BE{border-left-color:#E8C24A;background:rgba(232,194,74,.13);}
-.mbr--contL.mbr--NL{box-shadow:inset 3px 0 0 rgba(255,128,0,.35);}
-.mbr--contL.mbr--DE{box-shadow:inset 3px 0 0 rgba(127,180,232,.35);}
-.mbr--contL.mbr--UK{box-shadow:inset 3px 0 0 rgba(197,140,224,.35);}
-.mbrmore{font-weight:600;font-size:13px;color:var(--sage-dim);padding-left:12px;}
+.mbr--contL.mbr--contL.mbr--contL.mbrmore{font-weight:600;font-size:13px;color:var(--sage-dim);padding-left:12px;}
 /* short bars: the partner name wins, the sub-line is dropped */
 .mbrrow--month .mbr{height:22px;padding:0 9px;}
 .mbrrow--month .mbr__t{font-size:13px;}
@@ -301,22 +303,30 @@ th.gh--room{width:23%;}
 .mbrrow--mini td{padding:0 1px 2px;}
 .mbrrow--mini .mbr{height:6px;padding:0;border-radius:3px;border-left-width:0;}
 .mbrrow--mini .mbr__t,.mbrrow--mini .mbr__s{display:none;}
-.mbrrow--mini .mbr--NL{background:#FF8000;} .mbrrow--mini .mbr--DE{background:#7FB4E8;}
-.mbrrow--mini .mbr--UK{background:#C58CE0;} .mbrrow--mini .mbr--BE{background:#E8C24A;}
-.mbrrow--mini .mbrmore{font-size:10px;padding-left:2px;}
+.mbrrow--mini .mbr--NL{background:#FF8000;} .mbrrow--mini .mbrrow--mini .mbr--UK{background:#C58CE0;} .mbrrow--mini .mbrrow--mini .mbrmore{font-size:10px;padding-left:2px;}
+.mseg{position:absolute;left:0;right:0;height:2px;background:var(--mc);
+  bottom:calc(3px + var(--lane) * 4px);opacity:.9;}
+.mseg--s{left:2px;border-top-left-radius:2px;border-bottom-left-radius:2px;}
+.mseg--e{right:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;}
+.mseg--s::before,.mseg--e::after{content:"";position:absolute;top:-2px;width:6px;height:6px;
+  border-radius:50%;background:var(--mc);}
+.mseg--s::before{left:-2px;}
+.mseg--e::after{right:-2px;}
+.qcd{padding-bottom:13px;}
 /* ---------- quarter view ---------- */
 .qcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start;}
 #quarterv>#q-grid{flex:1;min-height:0;overflow:hidden;}
 .qm__title{font-weight:700;font-size:23px;color:#fff;margin-bottom:8px;}
 .qcal{width:100%;border-collapse:collapse;table-layout:fixed;}
 .qcal th{font-weight:700;font-size:12px;letter-spacing:.1em;color:var(--sage-dim);padding:0 0 6px;text-align:center;}
-.qcw{width:34px;font-weight:700;font-size:11px;color:var(--sage-dim);text-align:left;vertical-align:middle;}
+.qcw{width:34px;font-weight:700;font-size:11px;line-height:1;color:var(--sage-dim);text-align:left;vertical-align:middle;}
 td.qcw{padding:0;}
-.qcd{text-align:center;vertical-align:middle;height:34px;position:relative;}
-.qcd__n{font-weight:600;font-size:14px;color:#D9E4D5;}
+.qcd{text-align:center;vertical-align:middle;height:36px;position:relative;}
+.qcal tbody tr{height:36px;}
+.qcd__n{font-weight:600;font-size:14px;line-height:1;color:#D9E4D5;}
 .qcd--past .qcd__n{opacity:.35;}
-.qcd--today .qcd__n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
-  border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;}
+.qcd--today .qcd__n{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;
+  line-height:1;border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;}
 .qdot{position:absolute;left:50%;transform:translateX(-50%);bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--orange);}
 .qcd--past .qdot{opacity:.4;}
 .qm__list{margin-top:12px;border-top:1px solid var(--hair-soft);padding-top:10px;display:flex;flex-direction:column;gap:6px;}
@@ -455,6 +465,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="week-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="week-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
@@ -478,6 +489,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="q-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="q-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
@@ -498,6 +510,7 @@ td.qcw{padding:0;}
             <button class="mbtn mbtn--filter" id="month-filter" aria-haspopup="true">Filter</button>
             <div class="fdrop" id="month-fdrop">
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
+              <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
               <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
             </div>
@@ -553,13 +566,13 @@ const STANDARD_DEFAULT = {
   "Venlo":      ["09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-21:00","09:00-18:00","09:00-18:00"],
   "Uddel":      ["08:00-18:00","08:00-18:00","08:00-18:00","08:00-18:00","08:00-18:00","08:00-17:00","even"],
   "Leicester":  ["10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-17:00","11:00-17:00"],
-  "London":     ["10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-18:30","10:00-17:00",""],
+  "London":     ["09:30-17:00","09:30-17:00","09:30-17:00","09:30-17:00","09:30-17:00","09:30-17:00",""],
   "Crailsheim": ["09:00-16:30","09:00-16:30","09:00-16:30","","09:00-16:30","09:00-16:30",""],
   "Ingolstadt": ["09:00-16:30","09:00-16:30","","09:00-16:30","09:00-16:30","09:00-16:30",""],
   "Heidelberg": ["09:00-16:30","","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
-  "Bremen":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
-  "Berlin":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""],
-  "Munich":     ["09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30","09:00-16:30",""]
+  "Bremen":     ["08:00-16:30","08:00-16:30","08:00-16:30","08:00-16:30","08:00-12:30","",""],
+  "Berlin":     ["","10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00",""],
+  "Munich":     ["","10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00","10:00-18:00",""]
 };
 let STANDARD = STANDARD_DEFAULT;
 const FLAG_SVG={
@@ -751,7 +764,20 @@ const MEDIA_DEFAULT = [
 ];
 let MEDIA=MEDIA_DEFAULT;
 /* Agenda filters. Social media planning is added later. */
-const FILTERS={media:true,hours:true,social:false};
+const FILTERS={media:true,hours:true,products:true,social:false};
+/* channel colours copied from the Mediainzet workbook */
+const CHANNEL_COLORS={
+  "digitale folder":"#E8467C",
+  "display advertising":"#ED7D31",
+  "tv-gids":"#9DC3E6",
+  "tv":"#C55A5A",
+  "magazine":"#ED8A6B",
+  "weekkranten":"#A6A6A6",
+  "dagkranten":"#4A4A4A",
+  "huis-aan-huis":"#44546A",
+  "radio":"#2E75B6"
+};
+function channelColor(k){return CHANNEL_COLORS[String(k||"").trim().toLowerCase()]||"#8FA37E";}
 function mediaActive(d){
   const t=d.getTime(),out=[];
   MEDIA.forEach(function(r){
@@ -826,8 +852,9 @@ function mediaLaneRows(from,to,leadCell,maxLanes,cls){
     lane.forEach(function(it){
       if(it.col>cur)row+=`<td colspan="${it.col-cur}" class="mbrgap"></td>`;
       const c=countryBadgeTxt(it.m.land);
+      const col=channelColor(it.m.kanaal);
       const edge=(it.contL?" mbr--contL":"")+(it.contR?" mbr--contR":"");
-      row+=`<td colspan="${it.span}" class="mbrcell"><div class="mbr mbr--${c}${edge}" data-span="${it.span}"${tipAttr(mediaTip(it.m))}>`+
+      row+=`<td colspan="${it.span}" class="mbrcell"><div class="mbr${edge}" data-span="${it.span}" style="--mc:${col}"${tipAttr(mediaTip(it.m))}>`+
            `<span class="mbr__t">${it.m.partner}</span>`+
            `<span class="mbr__s">${it.m.kanaal} \u00b7 ${c}</span></div></td>`;
       cur=it.col+it.span;
@@ -1051,6 +1078,15 @@ const CROWD={
   busy:{color:"var(--dot-busy)",label:"High"},high:{color:"var(--dot-busy)",label:"High"},druk:{color:"var(--dot-busy)",label:"High"}
 };
 function crowdInfo(c){return CROWD[(c||"").trim().toLowerCase()]||null;}
+/* A row only earns a place on the board when it changes something:
+   closed, adjusted hours, or footfall that differs from normal (High or Low).
+   Normal hours with normal footfall = a normal day, so nothing is shown. */
+function rowHasImpact(r){
+  if(isClosed(r.Status))return true;
+  if(isAdjusted(r.Status)||(r.OpenFrom&&r.OpenUntil))return true;
+  const cw=crowdInfo(r.Crowd);
+  return !!(cw&&(cw.label==="High"||cw.label==="Low"));
+}
 function isClosed(s){const k=(s||"").trim().toLowerCase();return k==="closed"||k==="gesloten";}
 function isAdjusted(s){const k=(s||"").trim().toLowerCase();return k==="adjusted hours"||k==="aangepaste tijden";}
 
@@ -1134,8 +1170,10 @@ function parseCSV(text){
 function rowsToObjects(rows){
   if(!rows.length)return[];
   const head=rows[0].map(h=>h.trim().toLowerCase());const idx=n=>head.indexOf(n);
-  const iD=idx("date"),iS=idx("showroom"),iC=idx("country"),iSt=idx("status"),
-        iF=idx("open from"),iU=idx("open until"),iR=idx("reason"),iCr=idx("crowd");
+  const pick=function(){for(var i=0;i<arguments.length;i++){const j=head.indexOf(arguments[i]);if(j>=0)return j;}return -1;};
+  const iD=pick("date","datum"),iS=pick("showroom","vestiging"),iC=pick("country","land"),
+        iSt=pick("status"),iF=pick("open from","van"),iU=pick("open until","tot"),
+        iR=pick("reason","reden"),iCr=pick("crowd","drukte");
   return rows.slice(1).map(r=>({
     Date:(r[iD]||"").trim(),Showroom:(r[iS]||"").trim(),Country:(r[iC]||"").trim(),
     Status:(r[iSt]||"").trim(),OpenFrom:fmtTime(r[iF]),OpenUntil:fmtTime(r[iU]),
@@ -1361,9 +1399,11 @@ function effectiveDay(room,country,d,exMap){
     if(isClosed(ex.Status))return {closed:true,reason:ex.Reason,isException:true,holidays:hl};
     if(isAdjusted(ex.Status)||(ex.OpenFrom&&ex.OpenUntil))
       return {closed:false,from:ex.OpenFrom,until:ex.OpenUntil,crowd:ex.Crowd,reason:ex.Reason,isException:true,holidays:hl};
-    // Normal hours exception: keep standard times, but carry crowd/reason
+    // Normal hours row: only an exception when the expected footfall differs from normal
     const st=standardHours(room,d)||{closed:false,from:"",until:""};
-    return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,reason:ex.Reason,isException:true,holidays:hl};
+    const impact=rowHasImpact(ex);
+    return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,
+            reason:impact?ex.Reason:"",isException:impact,holidays:hl};
   }
   const st=standardHours(room,d);
   if(!st)return {closed:false,from:"",until:"",unknown:true};
@@ -1407,10 +1447,10 @@ function buildGrid(exList,mon,todayD){
   }
   head+=`</tr>`;
   let body="";
-  if(FILTERS.media){
-    body+=mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',FILTERS.hours?3:16,"mbrrow");
-  }
-  if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  const bars=FILTERS.media
+    ? mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',FILTERS.hours?3:16,"mbrrow")
+    : "";
+  if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${bars}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
     body+=`<tr><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
@@ -1420,6 +1460,7 @@ function buildGrid(exList,mon,todayD){
     }
     body+=`</tr>`;
   });
+  if(bars)body+=`<tr class="mbrspacer"><td colspan="8"></td></tr>`+bars;
   return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 /* ---------- month calendar view ---------- */
@@ -1429,7 +1470,7 @@ function dayClosedTip(d,exMap){
   const parts=[];
   const hol=holidaysOnDay(d);
   hol.forEach(function(h){parts.push("Public holiday: "+h);});
-  productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
+  (FILTERS.products?productsOnDay(d):[]).forEach(function(pr){parts.push("Product launch: "+pr.name);});
   if(!FILTERS.hours)return parts.join("\n");
   const closedRows=[];
   SHOWROOMS.forEach(s=>{
@@ -1486,8 +1527,8 @@ function buildMonth(data,anchor){
       if(!inMonth){h+=`<td class="mcd mcd--out"></td>`;continue;}
       // group per reason
       const ev=new Map();
-      if(FILTERS.hours)items.forEach(it=>{const key=it.Reason||"";
-        if(!ev.has(key))ev.set(key,{reason:key,rows:[]});
+      if(FILTERS.hours)items.filter(rowHasImpact).forEach(it=>{const key=displayReason(it.Reason)||"";
+        if(!ev.has(key))ev.set(key,{reason:it.Reason||"",rows:[]});
         ev.get(key).rows.push(it);});
       let cell="";
       let shown=0;
@@ -1500,13 +1541,26 @@ function buildMonth(data,anchor){
         let lines="";
         if(closed.length)lines+=`<div class="mline mline--closed">${closedLineHTML(closed)}</div>`;
         if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
+        // why is this on the board? show the expected consequence
+        const busy={};
+        e.rows.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));})
+          .forEach(function(x){
+            const cw=crowdInfo(x.Crowd);if(!cw)return;
+            (busy[cw.label]=busy[cw.label]||{color:cw.color,rows:[]}).rows.push(x);
+          });
+        Object.keys(busy).forEach(function(lbl){
+          const g=busy[lbl];
+          lines+=`<div class="mline mline--busy"><i class="bdot" style="--dot:${g.color}"></i>`+
+                 `<span><b>${lbl==="High"?"Busier than usual":lbl+" footfall"}</b> \u2014 ${roomList(g.rows)}</span></div>`;
+        });
         // full hover card text
         const tp=[fullReason(e.reason)||"Special day"];
         holidaysOnDay(d).forEach(function(x){tp.push("Public holiday: "+x);});
         if(closed.length)tp.push("Closed: "+roomList(closed,true));
         adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
         e.rows.filter(x=>!isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil))).forEach(x=>{
-          const cw=crowdInfo(x.Crowd);if(cw)tp.push(`${x.Showroom}: expected footfall ${cw.label}`);
+          const cw=crowdInfo(x.Crowd);
+          if(cw)tp.push(`${x.Showroom}: open as usual, expected footfall ${cw.label}`);
         });
         const shownTitle=isQuietReason(e.reason)?"":`<div class="mev__t">${icon?icon+" ":""}${displayReason(e.reason)||"Special day"}</div>`;
         cell+=`<div class="mev"${tipAttr(tp.join("\n"))}>${shownTitle}${lines}</div>`;
@@ -1518,7 +1572,7 @@ function buildMonth(data,anchor){
         });
         cell+=`<div class="mev__more"${tipAttr(hidden.join("\n"))}>+${ev.size-2} more</div>`;
       }
-      productsOnDay(d).forEach(function(pr){
+      (FILTERS.products?productsOnDay(d):[]).forEach(function(pr){
         const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
         cell+=`<div class="mev mev--prod"${tipAttr("Product launch: "+pr.name+"\nLaunch date: "+full)}>`+
               `<div class="mev__t">${ROCKET} ${pr.name}</div></div>`;
@@ -1575,7 +1629,7 @@ function renderMonth(data,problems){
   document.getElementById("month-title").textContent=
     anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
   document.getElementById("month-grid").innerHTML=buildMonth(data,anchor);
-  const pl=periodLaunches(anchor);
+  const pl=FILTERS.products?periodLaunches(anchor):[];
   document.getElementById("month-std").innerHTML = pl.length
     ? `<div class="prodstrip">`+pl.map(function(x){
         return `<span class="prod prod--period"${tipAttr("Product launch: "+x.name+"\nTarget launch: "+x.label+" (provisional)")}>`+
@@ -1606,18 +1660,33 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const isToday=d.getTime()===t0;
       const past=d.getTime()<t0;
       const parts=[];
-      productsOnDay(d).forEach(function(pr){parts.push("Product launch: "+pr.name);});
+      (FILTERS.products?productsOnDay(d):[]).forEach(function(pr){parts.push("Product launch: "+pr.name);});
       holidaysOnDay(d).forEach(function(x){parts.push("Public holiday: "+x);});
-      if(items.length&&FILTERS.hours){
-        [...new Set(items.map(x=>displayReason(x.Reason)||"Special day"))].forEach(function(n){parts.push(n);});
-        const closed=items.filter(x=>isClosed(x.Status));
+      const impact=items.filter(rowHasImpact);
+      if(impact.length&&FILTERS.hours){
+        [...new Set(impact.map(x=>displayReason(x.Reason)||"Special day"))].forEach(function(n){parts.push(n);});
+        const closed=impact.filter(x=>isClosed(x.Status));
         if(closed.length)parts.push("Closed: "+roomList(closed,true));
       }
       const isHol=holidaysOnDay(d).length>0;
-      const isProd=productsOnDay(d).length>0;
+      const isProd=FILTERS.products&&productsOnDay(d).length>0;
+      let segs="";
+      if(FILTERS.media){
+        const act=mediaActive(d);
+        if(act.length){
+          act.slice(0,3).forEach(function(m,li){
+            const isStart=m.from.getTime()===d.getTime();
+            const isEnd=m.until.getTime()===d.getTime();
+            segs+=`<i class="mseg${isStart?" mseg--s":""}${isEnd?" mseg--e":""}" `+
+                  `style="--mc:${channelColor(m.kanaal)};--lane:${li}"></i>`;
+          });
+          const mtips=act.map(function(m){return m.partner+": "+m.kanaal+" \u00b7 "+mediaRangeLabel(m);});
+          parts.push.apply(parts,mtips.map(function(x){return "Media: "+x;}));
+        }
+      }
       h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(parts.join("\n"))}>`+
          `<span class="qcd__n${isHol?" qcd__n--hol":""}">${d.getDate()}</span>`+
-         (items.length?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+`</td>`;
+         (impact.length&&FILTERS.hours?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+segs+`</td>`;
     }
     h+=`</tr>`;
   }
@@ -1633,7 +1702,8 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     byDay[k].forEach(it=>{
       const d=parseDate(it.Date);
       if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
-      const key=it.Date+"|"+(it.Reason||"");
+      if(!rowHasImpact(it))return;
+      const key=it.Date+"|"+(displayReason(it.Reason)||"");
       if(!ev.has(key))ev.set(key,{d:d,reason:it.Reason||"Special day",rows:[]});
       ev.get(key).rows.push(it);
     });
@@ -1643,9 +1713,28 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   evs.slice(0,7).forEach(e=>{
     const closed=e.rows.filter(x=>isClosed(x.Status));
     const icon=iconFor(e.reason);
-    const who=closed.length?` <span class="rl__sep">\u00b7</span> ${closedLineHTML(closed)}`:"";
+    let who=closed.length?` <span class="rl__sep">\u00b7</span> ${closedLineHTML(closed)}`:"";
+    const adjr=e.rows.filter(function(x){return !isClosed(x.Status)&&(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));});
+    adjr.forEach(function(x){
+      who+=` <span class="rl__sep">\u00b7</span> <span class="qbusy">${CLOCK_SVG}${x.OpenFrom}\u2013${x.OpenUntil} ${x.Showroom}</span>`;
+    });
+    if(!closed.length&&!adjr.length){
+      const bz={};
+      e.rows.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));})
+        .forEach(function(x){const cw=crowdInfo(x.Crowd);if(!cw)return;
+          (bz[cw.label]=bz[cw.label]||{color:cw.color,rows:[]}).rows.push(x);});
+      Object.keys(bz).forEach(function(lbl){
+        const g=bz[lbl];
+        who+=` <span class="rl__sep">\u00b7</span> <span class="qbusy"><i class="bdot" style="--dot:${g.color}"></i>`+
+             `${lbl==="High"?"busier than usual":lbl.toLowerCase()+" footfall"} \u2014 ${roomList(g.rows)}</span>`;
+      });
+    }
     const qtp=[fullReason(e.reason)||"Special day"];
     if(closed.length)qtp.push("Closed: "+roomList(closed,true));
+    e.rows.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));}).forEach(function(x){
+      const cw=crowdInfo(x.Crowd);
+      if(cw)qtp.push(x.Showroom+": open as usual, expected footfall "+cw.label);
+    });
     holidaysOnDay(e.d).forEach(function(x){qtp.push("Public holiday: "+x);});
     list+=`<div class="qev"${tipAttr(qtp.join("\n"))}><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
           `<span class="qev__t">${icon?icon+" ":""}${displayReason(e.reason)}${who}</span></div>`;
@@ -1653,7 +1742,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   if(evs.length>7)list+=`<div class="qev qev--more">+${evs.length-7} more</div>`;
   if(!evs.length)list=`<div class="qev qev--none">No special days</div>`;
   let plist="";
-  PRODUCTS.forEach(function(r){
+  if(FILTERS.products)PRODUCTS.forEach(function(r){
     const d=parseDate(r[0]);
     if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
     const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
@@ -1661,7 +1750,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
            `<span class="qev__d">${d.getDate()} ${d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
            `<span class="qev__t">${ROCKET} ${r[1]}</span></div>`;
   });
-  periodLaunches(anchor).forEach(function(pl){
+  (FILTERS.products?periodLaunches(anchor):[]).forEach(function(pl){
     plist+=`<div class="qev qev--prod"${tipAttr("Product launch: "+pl.name+"\nTarget launch: "+pl.label+" (provisional)")}>`+
            `<span class="qev__d">${pl.label.split(" ")[0].slice(0,3)}</span>`+
            `<span class="qev__t">${ROCKET} ${pl.name}</span></div>`;
@@ -1675,7 +1764,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     ml.slice(0,6).forEach(function(m){
       mhtml+=`<div class="qev qev--media"${tipAttr(mediaTip(m))}>`+
              `<span class="qev__d">${mediaRangeLabel(m)}</span>`+
-             `<span class="qev__t"><i class="dotc dotc--${countryBadgeTxt(m.land)}"></i>${m.partner}</span></div>`;
+             `<span class="qev__t"><i class="dotc" style="background:${channelColor(m.kanaal)}"></i>${m.partner}</span></div>`;
     });
     if(ml.length>6)mhtml+=`<div class="qev qev--more">+${ml.length-6} more</div>`;
     if(mhtml)list+=`<div class="qev__sep">Media planning</div>`+mhtml;
@@ -1711,9 +1800,34 @@ function renderQuarter(data,problems){
     document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
   }
 }
+function filterQuery(){
+  const on=[];["media","hours","products"].forEach(function(k){if(FILTERS[k])on.push(k);});
+  return "f="+on.join("-");
+}
+function syncFilterURL(){
+  try{
+    const p=new URLSearchParams(location.search);
+    p.set("f",filterQuery().slice(2));
+    history.replaceState(null,"","?"+p.toString());
+    document.querySelectorAll("#tabs .tab").forEach(function(a){
+      const v=a.getAttribute("data-v");
+      a.setAttribute("href","?"+(v?"view="+v+"&":"")+filterQuery());
+    });
+  }catch(e){}
+}
 function initNav(){
   try{
     const p=new URLSearchParams(location.search);
+    const f=p.get("f");
+    if(f!==null){
+      const on=f.split("-");
+      ["media","hours","products"].forEach(function(k){FILTERS[k]=on.indexOf(k)>=0;});
+      document.querySelectorAll('.fdrop input[data-f]').forEach(function(i){
+        const k=i.getAttribute("data-f");
+        if(FILTERS.hasOwnProperty(k))i.checked=!!FILTERS[k];
+      });
+    }
+    syncFilterURL();
     if(p.get("nav")==="0"){document.getElementById("tabs").style.display="none";return;}
     const cur0=p.get("view")||"";
     const cur=(cur0==="next")?"":cur0;
@@ -1758,7 +1872,7 @@ function render(data,problems){
   const wl=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":"Week "+isoWeek(mon);
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
-  const pw=productsInWeek(mon), pstrip=document.getElementById("week-prod");
+  const pw=FILTERS.products?productsInWeek(mon):[], pstrip=document.getElementById("week-prod");
   if(pw.length){
     pstrip.style.display="flex";
     pstrip.innerHTML=pw.map(function(p){
@@ -1984,6 +2098,7 @@ function fitStage(){
 (function(){
   const tip=document.getElementById("tip");
   let cur=null;
+  let mx=0,my=0;
   function place(el){
     const txt=el.getAttribute("data-tip");
     if(!txt){hide();return;}
@@ -1997,18 +2112,24 @@ function fitStage(){
     const r=el.getBoundingClientRect();
     const tw=tip.offsetWidth, th=tip.offsetHeight;
     const vw=document.documentElement.clientWidth, vh=document.documentElement.clientHeight;
-    let x=r.left+r.width/2-tw/2;
+    /* wide targets (campaign bars, week rows): follow the cursor, else centre on the element */
+    const wide=r.width>320;
+    let x=wide?(mx-tw/2):(r.left+r.width/2-tw/2);
     x=Math.max(8,Math.min(x,vw-tw-8));
-    let y=r.top-th-10;
-    if(y<8)y=Math.min(r.bottom+10,vh-th-8);
+    let y=(wide?my:r.top)-th-12;
+    if(y<8)y=Math.min((wide?my:r.bottom)+14,vh-th-8);
     tip.style.left=Math.round(x)+"px";
     tip.style.top=Math.round(y)+"px";
     cur=el;
   }
   function hide(){tip.classList.remove("tip--on");cur=null;}
-  document.addEventListener("mouseover",function(e){
+  document.addEventListener("mousemove",function(e){
+    mx=e.clientX;my=e.clientY;
     const el=e.target.closest?e.target.closest("[data-tip]"):null;
-    if(el){if(el!==cur)place(el);}else if(cur)hide();
+    if(el){
+      const r=el.getBoundingClientRect();
+      if(el!==cur||r.width>320)place(el);
+    }else if(cur)hide();
   });
   document.addEventListener("mouseleave",function(e){
     if(cur&&e.target===cur)hide();
@@ -2035,12 +2156,13 @@ if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e)
     drop.querySelectorAll("input[data-f]").forEach(function(inp){
       inp.onchange=function(){
         FILTERS[inp.getAttribute("data-f")]=inp.checked;
+        syncFilterURL();
         document.querySelectorAll('.fdrop input[data-f="'+inp.getAttribute("data-f")+'"]').forEach(function(o){o.checked=inp.checked;});
-        document.querySelectorAll(".mbtn--filter").forEach(function(b){b.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours);});
+        document.querySelectorAll(".mbtn--filter").forEach(function(b){b.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours&&FILTERS.products);});
         rerender();
       };
     });
-    btn.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours);
+    btn.classList.toggle("mbtn--filter-on",FILTERS.media&&FILTERS.hours&&FILTERS.products);
   });
   document.addEventListener("click",function(){document.querySelectorAll(".fdrop").forEach(function(d){d.classList.remove("fdrop--open");});});
   const pv=document.getElementById("month-prev"),nx=document.getElementById("month-next"),td=document.getElementById("month-today");
