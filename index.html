@@ -41,6 +41,10 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .head__eyebrow{display:none;}
 .head__title{font-weight:700;font-size:62px;line-height:.96;letter-spacing:-.01em;color:#fff;}
 .head__sub{font-weight:500;font-size:25px;color:var(--sage);margin-top:13px;}
+.head__left--inline{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;min-width:0;}
+.head__left--inline .head__sub{margin-top:0;position:relative;padding-left:17px;}
+.head__left--inline .head__sub::before{content:"";position:absolute;left:0;top:.42em;
+  width:5px;height:5px;border-radius:50%;background:var(--sage-dim);}
 .head__right{text-align:right;padding-bottom:2px;}
 .clock{font-weight:700;font-size:64px;line-height:1;color:#fff;font-variant-numeric:tabular-nums;}
 .today{font-weight:500;font-size:24px;color:var(--sage);margin-top:7px;}
@@ -71,7 +75,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--compact .head{padding-bottom:14px;}
 .stage--compact .head__eyebrow{font-size:17px;margin-bottom:5px;}
 .stage--compact .head__title{font-size:44px;}
-.stage--compact .head__sub{font-size:20px;margin-top:7px;}
+.stage--compact .head__sub{font-size:19px;}
 .stage--compact .clock{font-size:48px;}
 .stage--compact .today{font-size:20px;margin-top:4px;}
 .stage--compact .sched{padding-top:12px;}
@@ -82,7 +86,7 @@ body{font-family:"Century Gothic","Jost","Poppins",system-ui,-apple-system,Segoe
 .stage--bare .head__eyebrow{display:none;}
 .stage--bare .head{padding-bottom:16px;}
 .stage--bare .head__title{font-size:38px;}
-.stage--bare .head__sub{font-size:22px;margin-top:6px;color:var(--sage);}
+.stage--bare .head__sub{font-size:19px;color:var(--sage);}
 .stage--bare .clock{font-size:46px;}
 .stage--bare .today{font-size:19px;}
 .stage--bare .foot{display:none;}
@@ -149,7 +153,7 @@ th.gh--room{width:23%;}
 /* ---------- responsive refinements ---------- */
 .stage--narrow{padding:24px 34px 18px;}
 .stage--narrow .head__title{font-size:34px;}
-.stage--narrow .head__sub{font-size:19px;}
+.stage--narrow .head__sub{font-size:16px;}
 .stage--narrow .clock{font-size:38px;}
 .stage--narrow .today{font-size:17px;}
 .stage--narrow .tab{font-size:16px;padding:7px 16px;}
@@ -168,6 +172,9 @@ th.gh--room{width:23%;}
 .stage--tight .mcd{padding:6px 8px 5px;}
 .stage--phone{padding:18px 16px 14px;}
 .stage--phone .head{flex-direction:column;align-items:flex-start;gap:6px;}
+.stage--phone .head__left--inline{flex-direction:column;gap:2px;}
+.stage--phone .head__left--inline .head__sub{padding-left:0;}
+.stage--phone .head__left--inline .head__sub::before{display:none;}
 .stage--phone .head__right{text-align:left;}
 .stage--phone .clock{font-size:30px;}
 .stage--phone .tabs{flex-wrap:wrap;}
@@ -176,6 +183,8 @@ th.gh--room{width:23%;}
 .stage--phone .gc__t{font-size:13px;}
 .stage--phone .gflag .flg{width:20px;height:14px;}
 .stage--phone .qcols{grid-template-columns:1fr;gap:18px;}
+.stage--phone #quarterv{overflow-y:auto;min-height:0;}
+.stage--phone #q-grid{overflow:visible;}
 .stage--phone .monthv__title,.stage--phone #q-title{font-size:22px;}
 /* ---------- nav tabs ---------- */
 .tabs{display:flex;gap:10px;padding:14px 0 0;}
@@ -183,8 +192,9 @@ th.gh--room{width:23%;}
   background:var(--panel);color:var(--sage);font-weight:700;font-size:18px;text-decoration:none;letter-spacing:.02em;}
 .tab--on{background:var(--orange);border-color:var(--orange);color:#1B2B1F;}
 /* ---------- month calendar (minimal) ---------- */
-.monthv{flex:1;overflow:hidden;min-height:0;padding-top:12px;display:flex;flex-direction:column;gap:8px;}
+.monthv{flex:1;overflow:hidden;min-height:0;padding-top:8px;display:flex;flex-direction:column;gap:6px;}
 .monthv>#month-grid{flex:1;min-height:0;}
+.stage--phone #quarterv>#q-grid{flex:none;}
 #month-grid .mcal{height:100%;}
 .monthv__bar{display:flex;align-items:baseline;justify-content:space-between;}
 .monthv__title{font-weight:700;font-size:34px;color:#fff;letter-spacing:.01em;}
@@ -199,7 +209,7 @@ th.gh--room{width:23%;}
 .mch--w{width:52px;}
 .mcw{font-weight:700;font-size:13px;color:var(--sage-dim);vertical-align:top;padding:12px 0 0 2px;text-align:left;
   border-top:1px solid var(--hair-soft);letter-spacing:.08em;}
-.mcd{position:relative;vertical-align:top;padding:10px 10px 18px;border-top:1px solid var(--hair-soft);}
+.mcd{position:relative;vertical-align:top;padding:8px 10px 14px;border-top:1px solid var(--hair-soft);}
 .mcd__n{font-weight:600;font-size:15px;color:var(--sage-dim);line-height:1;margin-bottom:7px;}
 .mcd__n--today{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-5px 0 3px -6px;
   border-radius:50%;background:var(--orange);color:#1B2B1F;font-weight:700;font-size:15px;}
@@ -254,10 +264,11 @@ th.gh--room{width:23%;}
   border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:8px;display:none;z-index:20;
   box-shadow:0 16px 40px rgba(0,0,0,.5);}
 .fdrop--open{display:block;}
-.fopt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;
-  font-weight:600;font-size:17px;color:#EAF2E6;}
+.fopt{display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;cursor:pointer;
+  font-weight:600;font-size:17px;color:#EAF2E6;line-height:1.25;}
+.fopt>span{flex:1;min-width:0;}
 .fopt:hover{background:rgba(255,255,255,.06);}
-.fopt input{accent-color:var(--orange);width:16px;height:16px;}
+.fopt input{accent-color:var(--orange);width:17px;height:17px;flex:0 0 17px;align-self:center;margin:0;}
 .fopt--off{color:var(--sage-dim);cursor:default;}
 .fopt--off:hover{background:none;}
 .fopt em{font-style:normal;font-size:14px;color:var(--sage-dim);margin-left:4px;}
@@ -274,8 +285,23 @@ th.gh--room{width:23%;}
 .stage--narrow .mediapill b{font-size:15px;}
 .stage--narrow .mediapill em{font-size:13px;}
 /* ---------- media campaign bars ---------- */
+.mbrname{vertical-align:middle;}
+.mbrname__x{display:inline-flex;align-items:baseline;gap:10px;vertical-align:middle;line-height:1.2;min-width:0;}
+.mbrname .grname{font-size:17px;font-weight:700;}
+.mbrsub{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--sage);white-space:nowrap;}
+.mbrsub .cdot{width:7px;height:7px;border-radius:50%;background:var(--mc);flex-shrink:0;}
+.mbrsub svg.flg{width:15px;height:10px;border-radius:2px;}
+.mbr--plain{height:20px;padding:0 10px;justify-content:center;
+  background:color-mix(in srgb,var(--mc) 26%,transparent);border-left:none;}
+.mbr__d{font-weight:600;font-size:12px;color:#EAF2E6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mbrname .gflag{vertical-align:middle;}
+.mbrname .gflag .flg{width:22px;height:15px;}
+tr.mbrrow .mbrmore{color:var(--sage-dim);font-weight:600;font-size:14px;padding-left:2px;}
 .mbrrow td{padding:0 2px 4px;}
-.mbrspacer td{height:14px;border:none;padding:0;}
+.mbrspacer td{height:12px;border:none;padding:0;}
+.mbrhead td{border-top:1px solid rgba(255,255,255,.10);padding:9px 0 7px;}
+.mbrhead span{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:14px;color:var(--sage-dim);}
+.grid tbody tr.mbrhead{border-top:none;}
 .grid tbody tr.mbrrow,.grid tbody tr.mbrspacer{border-top:none;}
 .mbrlead,.mcw--bar{background:transparent;border:none;}
 .mbrgap{background:transparent;}
@@ -285,8 +311,9 @@ th.gh--room{width:23%;}
   border-left:3px solid var(--mc,#8FA37E);}
 .mbr__t{font-weight:700;font-size:15px;color:#F2F6EF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   line-height:1.15;}
-.mbr__s{font-weight:600;font-size:12px;color:var(--sage);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  line-height:1.15;}
+.mbr__s{display:flex;align-items:center;gap:5px;font-weight:600;font-size:12px;color:var(--sage);
+  white-space:nowrap;overflow:hidden;line-height:1.15;}
+.mbr__s svg.flg{width:14px;height:10px;border-radius:2px;}
 .mbr--contL{border-left:none;border-top-left-radius:0;border-bottom-left-radius:0;
   box-shadow:inset 3px 0 0 color-mix(in srgb,var(--mc,#8FA37E) 45%,transparent);}
 .mbr--contR{border-top-right-radius:0;border-bottom-right-radius:0;}
@@ -298,6 +325,8 @@ th.gh--room{width:23%;}
 .mbr[data-span="1"] .mbr__s,.mbr[data-span="2"] .mbr__s{display:none;}
 .clg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .clg .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);}
+.flg--txt{display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;
+  letter-spacing:.04em;color:#0F241A;background:var(--sage);border-radius:2px;padding:0 3px;min-width:20px;}
 .clg svg.ic{width:12px;height:12px;fill:currentColor;}
 .mline--closed .clg>span{white-space:normal;}
 .mbrrow--mini td{padding:0 1px 2px;}
@@ -436,7 +465,7 @@ td.qcw{padding:0;}
 <div id="viewport">
   <div id="stage">
     <header class="head">
-      <div class="head__left">
+      <div class="head__left head__left--inline">
         <div class="head__eyebrow">Tuinmaximaal</div>
         <h1 class="head__title" id="title">Showroom opening hours</h1>
         <div class="head__sub" id="subtitle">&nbsp;</div>
@@ -578,9 +607,15 @@ let STANDARD = STANDARD_DEFAULT;
 const FLAG_SVG={
  "NL":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#21468B"/><rect width="24" height="10.7" fill="#fff"/><rect width="24" height="5.3" fill="#AE1C28"/></svg>',
  "UK":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0L24 16M24 0L0 16" stroke="#fff" stroke-width="3.4"/><path d="M0 0L24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.4"/><path d="M12 0V16M0 8H24" stroke="#fff" stroke-width="5.6"/><path d="M12 0V16M0 8H24" stroke="#C8102E" stroke-width="3.2"/></svg>',
- "DE":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#FFCE00"/><rect width="24" height="10.7" fill="#DD0000"/><rect width="24" height="5.3" fill="#000"/></svg>'
+ "DE":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#FFCE00"/><rect width="24" height="10.7" fill="#DD0000"/><rect width="24" height="5.3" fill="#000"/></svg>',
+ "BE":'<svg class="flg" viewBox="0 0 24 16"><rect width="8" height="16" fill="#000"/><rect x="8" width="8" height="16" fill="#FDDA24"/><rect x="16" width="8" height="16" fill="#EF3340"/></svg>'
 };
-function flagSVG(c){return FLAG_SVG[countryBadgeTxt(c)]||"";}
+function flagSVG(c){
+  const k=countryBadgeTxt(c);
+  if(FLAG_SVG[k])return FLAG_SVG[k];
+  if(!k)return "";
+  return '<span class="flg flg--txt">'+k+'</span>';   // unknown country: show the code, never nothing
+}
 function tipAttr(s){return s?` data-tip="${String(s).replace(/"/g,"&quot;").replace(/\n/g,"&#10;")}"`:"";}
 
 const SHOWROOMS = [
@@ -811,6 +846,31 @@ function mediaTip(m){
          m.until.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
 }
 
+const FORECAST_WEEK_DEFAULT = {
+  "Eindhoven":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"M",8:"H",9:"H",10:"H",11:"H",12:"H",13:"H",14:"H",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"M",31:"H",32:"M",33:"M",34:"M",35:"M",36:"Q",37:"Q",38:"M",39:"Q",40:"M",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Venlo":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"M",10:"H",11:"H",12:"M",13:"H",14:"H",15:"H",16:"M",17:"H",18:"H",19:"H",20:"H",21:"M",22:"H",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"M",40:"H",41:"Q",42:"M",43:"M",44:"M",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Uddel":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"H",20:"H",21:"Q",22:"H",23:"M",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"H",31:"H",32:"H",33:"H",34:"H",35:"M",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Leicester":{1:"M",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"Q",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"M",24:"H",25:"Q",26:"M",27:"M",28:"Q",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"Q",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "London":{1:"M",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"Q",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"M",24:"H",25:"Q",26:"M",27:"M",28:"Q",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"Q",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Crailsheim":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Ingolstadt":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"Q",17:"Q",18:"M",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"H",30:"M",31:"Q",32:"M",33:"Q",34:"M",35:"H",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Heidelberg":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"H",17:"H",18:"Q",19:"Q",20:"Q",21:"M",22:"H",23:"H",24:"H",25:"H",26:"M",27:"M",28:"M",29:"M",30:"M",31:"H",32:"M",33:"Q",34:"M",35:"M",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Bremen":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Berlin":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Munich":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"Q",17:"Q",18:"M",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"H",30:"M",31:"Q",32:"M",33:"Q",34:"M",35:"H",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+};
+const FC_LETTER={H:"Busy",M:"Moderate",Q:"Quiet"};
+/* Weekly footfall level per showroom, derived from the Dashboard CS ticket data.
+   Measured for 2026 weeks 1-36; later weeks use last year's same week, otherwise the
+   seasonal curve. Rooms without their own ticket data borrow the nearest comparable
+   showroom (London<-Leicester, Bremen/Berlin<-Crailsheim, Munich<-Ingolstadt).
+   A daily row in the forecast tab always wins over this weekly fallback. */
+function forecastWeekLevel(d,room){
+  const t=FORECAST_WEEK_DEFAULT[room];if(!t)return "";
+  const l=t[isoWeek(d)];
+  return l?FC_LETTER[l]:"";
+}
+
 /* Clip media flights to [from,to] (7 days) and stack them into lanes.
    Returns lanes: [[{col,span,m,contL,contR}, ...], ...] */
 function mediaLanes(from,to,maxLanes){
@@ -841,6 +901,44 @@ function mediaLanes(from,to,maxLanes){
           hiddenTip:rest.map(function(o){
             return o.m.partner+": "+o.m.kanaal+" \u00b7 "+countryBadgeTxt(o.m.land)+" \u00b7 "+mediaRangeLabel(o.m);
           }).join("\n")};
+}
+/* week view: one row per campaign, label in the left column, bar in the day columns.
+   Every campaign renders the same structure, so a new partner needs no special handling:
+   a missing channel or country simply shows a neutral placeholder. */
+function mediaGanttRows(from,to,maxRows,cls){
+  const items=[];
+  MEDIA.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b||b<from||a>to)return;
+    items.push({col:Math.max(0,Math.round((a-from)/DAY)),
+                span:Math.min(6,Math.round((b-from)/DAY))-Math.max(0,Math.round((a-from)/DAY))+1,
+                contL:a<from,contR:b>to,
+                m:{from:a,until:b,partner:(r[2]||"Unnamed campaign"),land:(r[3]||""),kanaal:(r[4]||"")}});
+  });
+  items.sort(function(x,y){return (x.col-y.col)||x.m.partner.localeCompare(y.m.partner);});
+  const shown=items.slice(0,maxRows),rest=items.slice(maxRows);
+  let html="";
+  shown.forEach(function(it){
+    const col=channelColor(it.m.kanaal);
+    const flag=it.m.land?flagSVG(it.m.land):"";
+    const sub=[it.m.kanaal||"Channel unknown"].join("");
+    let row=`<td class="gc gc--room mbrname"${tipAttr(mediaTip(it.m))}>`+
+            `<span class="gflag">${flag}</span>`+
+            `<span class="mbrname__x"><span class="grname">${it.m.partner}</span>`+
+            `<span class="mbrsub" style="--mc:${col}"><i class="cdot"></i>${sub}</span></span></td>`;
+    if(it.col>0)row+=`<td colspan="${it.col}" class="mbrgap"></td>`;
+    const edge=(it.contL?" mbr--contL":"")+(it.contR?" mbr--contR":"");
+    row+=`<td colspan="${it.span}" class="mbrcell"><div class="mbr mbr--plain${edge}" style="--mc:${col}"${tipAttr(mediaTip(it.m))}>`+
+         `<span class="mbr__d">${mediaRangeLabel(it.m)}</span></div></td>`;
+    const after=7-(it.col+it.span);
+    if(after>0)row+=`<td colspan="${after}" class="mbrgap"></td>`;
+    html+=`<tr class="${cls}">${row}</tr>`;
+  });
+  if(rest.length){
+    const tip=rest.map(function(o){return o.m.partner+": "+(o.m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(o.m);}).join("\n");
+    html+=`<tr class="${cls}"><td class="gc gc--room mbrmore"${tipAttr(tip)}>+${rest.length} more campaigns</td><td colspan="7"></td></tr>`;
+  }
+  return html;
 }
 /* one <tr> per lane: leading cell + bar cells with colspan, aligned to the day columns */
 function mediaLaneRows(from,to,leadCell,maxLanes,cls){
@@ -913,6 +1011,7 @@ function periodLaunches(anchor){
   return out;
 }
 const ROCKET="\u{1F680}";
+const CAL_SUB="Showroom hours, holidays, product launches and media planning \u2014 filter what you want to see";
 
 /* ---------- public holidays (informational layer) ----------
    Groups: NL / UK / DE (nationwide) / BW / BY / HB (Bremen) / BE (Berlin).
@@ -1407,7 +1506,7 @@ function effectiveDay(room,country,d,exMap){
   }
   const st=standardHours(room,d);
   if(!st)return {closed:false,from:"",until:"",unknown:true};
-  const crowd=FORECAST[key]||"";
+  const crowd=FORECAST[key]||forecastWeekLevel(d,room)||"";
   return {closed:!!st.closed,alt:!!st.alt,from:st.from,until:st.until,crowd:crowd,isException:false,holidays:holidaysForRoom(d,room)};
 }
 function gridCellHTML(cell,isToday){
@@ -1448,7 +1547,7 @@ function buildGrid(exList,mon,todayD){
   head+=`</tr>`;
   let body="";
   const bars=FILTERS.media
-    ? mediaLaneRows(mon,addDays(mon,6),'<td class="mbrlead"></td>',FILTERS.hours?3:16,"mbrrow")
+    ? mediaGanttRows(mon,addDays(mon,6),FILTERS.hours?4:18,"mbrrow")
     : "";
   if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${bars}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
@@ -1460,7 +1559,8 @@ function buildGrid(exList,mon,todayD){
     }
     body+=`</tr>`;
   });
-  if(bars)body+=`<tr class="mbrspacer"><td colspan="8"></td></tr>`+bars;
+  if(bars)body+=`<tr class="mbrspacer"><td colspan="8"></td></tr>`+
+    `<tr class="mbrhead"><td colspan="8"><span>Media planning</span></td></tr>`+bars;
   return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
 }
 /* ---------- month calendar view ---------- */
@@ -1619,8 +1719,8 @@ function countryBadgeTxt(c){
 function renderMonth(data,problems){
   const today=todayDate();
   const anchor=new Date(today.getFullYear(),today.getMonth()+MONTH_OFFSET,1);
-  document.getElementById("title").textContent="Showroom calendar";
-  document.getElementById("subtitle").textContent="Holidays and open/closed per showroom";
+  document.getElementById("title").textContent="Tuinmaximaal calendar";
+  document.getElementById("subtitle").textContent=CAL_SUB;
   document.getElementById("stage").classList.add("stage--compact");
   document.getElementById("holi").style.display="none";
   document.getElementById("sched").style.display="none";
@@ -1775,8 +1875,8 @@ function renderQuarter(data,problems){
   const today=todayDate();
   const t0=new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
   const startM=new Date(today.getFullYear(),today.getMonth()+QUARTER_OFFSET*3,1);
-  document.getElementById("title").textContent="Showroom calendar";
-  document.getElementById("subtitle").textContent="Three months ahead \u2014 holidays and closures";
+  document.getElementById("title").textContent="Tuinmaximaal calendar";
+  document.getElementById("subtitle").textContent=CAL_SUB;
   document.getElementById("stage").classList.add("stage--compact");
   document.getElementById("holi").style.display="none";
   document.getElementById("sched").style.display="none";
@@ -1866,8 +1966,8 @@ function render(data,problems){
   document.getElementById("monthv").style.display="none";
   document.getElementById("quarterv").style.display="none";
   document.getElementById("stage").classList.add("stage--compact","stage--bare");
-  document.getElementById("title").textContent="Showroom opening hours";
-  document.getElementById("subtitle").innerHTML="&nbsp;";
+  document.getElementById("title").textContent="Tuinmaximaal calendar";
+  document.getElementById("subtitle").textContent=CAL_SUB;
   const sched=document.getElementById("sched");sched.style.display="flex";
   const wl=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":"Week "+isoWeek(mon);
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
