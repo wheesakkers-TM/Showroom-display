@@ -147,12 +147,16 @@ th.gh--room{width:23%;}
 #tip .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);
   display:inline-block;vertical-align:-1px;margin-right:2px;}
 #tip .flg--txt{width:auto;height:auto;box-shadow:none;vertical-align:0;font-size:10px;}
-#tip{position:fixed;z-index:99;max-width:min(460px,92vw);background:#0B1F14;
+/* wide enough for "DPG - online advertising: Display advertising · 1 Aug–13 Sept" on one
+   line; a line that still wraps gets a hanging indent so it stays readable as one item */
+#tip{position:fixed;z-index:99;max-width:min(760px,94vw);background:#0B1F14;
   border:1px solid rgba(255,255,255,.22);color:#F2F6EF;font-weight:600;font-size:15px;
   padding:10px 15px;border-radius:10px;line-height:1.55;font-weight:500;
   box-shadow:0 14px 34px rgba(0,0,0,.55);pointer-events:none;display:none;
   font-family:"Century Gothic","Jost",system-ui,sans-serif;}
 #tip.tip--on{display:block;}
+#tip .tl{display:block;padding-left:15px;text-indent:-15px;}
+#tip .tl:empty{height:8px;}
 .gc[data-tip]:hover{background:rgba(255,255,255,.07);}
 .mev.mcd__n.gc--muted{color:var(--sage-dim);font-size:17px;background:transparent;border:none;}
 .gc--exc{background:rgba(255,128,0,.12);border-color:rgba(255,128,0,.32);}
@@ -2691,9 +2695,9 @@ function fitStage(){
     });};
     tip.innerHTML=String(txt).split("\n").map(function(line){
       const i=line.indexOf(": ");
-      if(i>0)return "<b>"+flags(esc(line.slice(0,i+1)))+"</b> "+flags(esc(line.slice(i+2)));
-      return flags(esc(line));
-    }).join("<br>");
+      const body=i>0?("<b>"+flags(esc(line.slice(0,i+1)))+"</b> "+flags(esc(line.slice(i+2)))):flags(esc(line));
+      return '<span class="tl">'+body+'</span>';
+    }).join("");
     tip.classList.add("tip--on");
     const r=el.getBoundingClientRect();
     const tw=tip.offsetWidth, th=tip.offsetHeight;
