@@ -264,6 +264,14 @@ th.gh--room{width:23%;}
 .mev--prod .mev__t{color:var(--lime);}
 .mline--prod{color:var(--sage-dim);font-size:12px;}
 .qdot--prod{background:var(--lime);left:calc(50% + 7px);}
+.qdot--social{background:#35B79A;left:calc(50% + 14px);}
+.ndot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-left:6px;vertical-align:middle;}
+.ndot--social{background:#35B79A;}
+.mev--social .mev__t{color:#BFE7DC;font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mev--social .sflags{display:inline-flex;gap:2px;vertical-align:-1px;margin-right:5px;}
+.mev--social .sflags svg.flg{width:11px;height:8px;border-radius:1px;}
+.mev__more--social{color:#8FBDB0;}
+.qev--promo .qev__t{color:#F0DCA8;}
 .qev--prod .qev__t{color:#DCEBBF;}
 .qev__sep{font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--sage-dim);margin-top:6px;}
@@ -309,7 +317,7 @@ th.gh--room{width:23%;}
 .mbrsub{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--sage);white-space:nowrap;}
 .mbrsub .cdot{width:7px;height:7px;border-radius:50%;background:var(--mc);flex-shrink:0;}
 .mbrsub svg.flg{width:15px;height:10px;border-radius:2px;}
-.mbr--plain{height:20px;padding:0 10px;justify-content:center;
+.mbr--plain{height:17px;padding:0 10px;justify-content:center;
   background:color-mix(in srgb,var(--mc) 26%,transparent);border-left:none;}
 .mbr__d{font-weight:600;font-size:12px;color:#EAF2E6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mbrname .gflag{vertical-align:middle;}
@@ -319,18 +327,18 @@ tr.mbrrow .mbrmore{color:var(--sage-dim);font-weight:600;font-size:14px;padding-
 /* the media section always occupies the same number of rows, so stepping through weeks
    never moves the grid above it: empty rows fill the remainder, and a week without
    campaigns says so instead of collapsing */
-tr.mbrrow{height:34px;}
+tr.mbrrow{height:27px;}
 tr.mbrrow--pad td{padding:0;}
 tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left:2px;}
-.mbrspacer td{height:12px;border:none;padding:0;}
-.mbrhead td{border-top:1px solid rgba(255,255,255,.10);padding:9px 0 7px;}
-.mbrhead span{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:14px;color:var(--sage-dim);}
+.mbrspacer td{height:8px;border:none;padding:0;}
+.mbrhead td{border-top:1px solid rgba(255,255,255,.10);padding:7px 0 3px;}
+.mbrhead span{font-weight:700;text-transform:uppercase;letter-spacing:.15em;font-size:13px;color:var(--sage-dim);}
 .grid tbody tr.mbrhead{border-top:none;}
 .grid tbody tr.mbrrow,.grid tbody tr.mbrspacer{border-top:none;}
 .mbrlead,.mcw--bar{background:transparent;border:none;}
 .mbrgap{background:transparent;}
 .mbr{position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
-  height:30px;padding:0 12px;border-radius:8px;cursor:help;
+  height:23px;padding:0 12px;border-radius:8px;cursor:help;
   background:color-mix(in srgb,var(--mc,#8FA37E) 20%,transparent);
   border-left:3px solid var(--mc,#8FA37E);}
 .mbr__t{font-weight:700;font-size:15px;color:#F2F6EF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -347,6 +355,20 @@ tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left
 .mbrrow--month .mbr__t{font-size:13px;}
 .mbrrow--month .mbr__s{display:none;}
 .mbr[data-span="1"] .mbr__s,.mbr[data-span="2"] .mbr__s{display:none;}
+/* a social post is one day wide, so its sub-line drops the words and keeps the signals:
+   a flag per market and a dot per channel */
+.mbr--social[data-span="1"] .mbr__s,.mbr--social[data-span="2"] .mbr__s{display:flex;}
+.mbr--social{padding:0 8px;}
+.mbr--social .mbr__t{font-size:12px;}
+.mbr--social .mbr__s{gap:3px;margin-top:1px;}
+.mbr--social .mbr__s svg.flg{width:11px;height:7px;}
+.mbr--social .mbr__s .flg--txt{font-size:8px;min-width:14px;}
+.mbr--social .cdot{width:6px;height:6px;border-radius:50%;background:var(--mc);flex-shrink:0;}
+.mbr--social .cdot--none{background:var(--sage-dim);}
+.mbr--promo .mbr__t{letter-spacing:.01em;}
+.mbr--promo .mbr__s{display:none;}
+.mbr--social{height:25px;}
+.mbrlead{}
 .clg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .clg .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);}
 .flg--txt{display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;
@@ -520,7 +542,8 @@ td.qcw{padding:0;}
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
               <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
-              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+              <label class="fopt"><input type="checkbox" data-f="promos" checked><span>Promotions</span></label>
+              <label class="fopt"><input type="checkbox" data-f="social" checked><span>Social media</span></label>
             </div>
           </div>
           <button class="mbtn" id="week-prev" aria-label="Previous week">&#8592;</button>
@@ -547,7 +570,8 @@ td.qcw{padding:0;}
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
               <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
-              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+              <label class="fopt"><input type="checkbox" data-f="promos" checked><span>Promotions</span></label>
+              <label class="fopt"><input type="checkbox" data-f="social" checked><span>Social media</span></label>
             </div>
           </div>
           <button class="mbtn" id="q-prev" aria-label="Previous months">&#8592;</button>
@@ -568,7 +592,8 @@ td.qcw{padding:0;}
               <label class="fopt"><input type="checkbox" data-f="media" checked><span>Media planning</span></label>
               <label class="fopt"><input type="checkbox" data-f="products" checked><span>Product launches</span></label>
               <label class="fopt"><input type="checkbox" data-f="hours" checked><span>Showroom opening hours</span></label>
-              <label class="fopt fopt--off"><input type="checkbox" data-f="social" disabled><span>Social media <em>later</em></span></label>
+              <label class="fopt"><input type="checkbox" data-f="promos" checked><span>Promotions</span></label>
+              <label class="fopt"><input type="checkbox" data-f="social" checked><span>Social media</span></label>
             </div>
           </div>
           <button class="mbtn" id="month-prev" aria-label="Previous month">&#8592;</button>
@@ -635,7 +660,8 @@ const FLAG_SVG={
  "NL":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#21468B"/><rect width="24" height="10.7" fill="#fff"/><rect width="24" height="5.3" fill="#AE1C28"/></svg>',
  "UK":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0L24 16M24 0L0 16" stroke="#fff" stroke-width="3.4"/><path d="M0 0L24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.4"/><path d="M12 0V16M0 8H24" stroke="#fff" stroke-width="5.6"/><path d="M12 0V16M0 8H24" stroke="#C8102E" stroke-width="3.2"/></svg>',
  "DE":'<svg class="flg" viewBox="0 0 24 16"><rect width="24" height="16" fill="#FFCE00"/><rect width="24" height="10.7" fill="#DD0000"/><rect width="24" height="5.3" fill="#000"/></svg>',
- "BE":'<svg class="flg" viewBox="0 0 24 16"><rect width="8" height="16" fill="#000"/><rect x="8" width="8" height="16" fill="#FDDA24"/><rect x="16" width="8" height="16" fill="#EF3340"/></svg>'
+ "BE":'<svg class="flg" viewBox="0 0 24 16"><rect width="8" height="16" fill="#000"/><rect x="8" width="8" height="16" fill="#FDDA24"/><rect x="16" width="8" height="16" fill="#EF3340"/></svg>',
+ "FR":'<svg class="flg" viewBox="0 0 24 16"><rect width="8" height="16" fill="#000091"/><rect x="8" width="8" height="16" fill="#fff"/><rect x="16" width="8" height="16" fill="#E1000F"/></svg>'
 };
 function flagSVG(c){
   const k=countryBadgeTxt(c);
@@ -831,8 +857,171 @@ const MEDIA_DEFAULT = [
   ["2026-09-29","2026-10-07","Reclamefolder.nl","NL","Digitale folder"],
 ];
 let MEDIA=MEDIA_DEFAULT;
-/* Agenda filters. Social media planning is added later. */
-const FILTERS={media:true,hours:true,products:true,social:false};
+/* ---------- promotion periods (tab "Actieperiodes" in Showroomkalender_bron.xlsx) ----------
+   [start, end, name, type, description]. A promotion is a period, so it draws as a bar with
+   the name inside it; the type ("Promotion extension") and the description sit in the hover.
+   No country column in the source, so a promotion counts for every market. */
+const PROMOS_DEFAULT = [
+  ["2026-02-09","2026-02-22","Winter discount 2026","Promotion","2% off the entire range"],
+  ["2026-02-23","2026-03-08","Winter discount 2026","Promotion extension","2% off the entire range"],
+  ["2026-07-28","2026-08-16","10% off selected models","Promotion","10% discount on selected models"],
+  ["2026-08-17","2026-08-31","10% off selected models","Promotion extension","10% discount on selected models"],
+  ["2026-09-08","2026-09-28","Deal weeks 2026","Promotion","2% off the entire range"],
+  ["2026-09-29","2026-10-07","Deal weeks 2026","Promotion extension","2% off the entire range"],
+];
+let PROMOS=PROMOS_DEFAULT;
+const PROMO_CSV_URL = "";     // optional: published CSV of the Actieperiodes tab
+const PROMO_COLOR = "#D4A73C";
+
+/* ---------- social posts (social content v2, section "Ingepland /Geplaatst") ----------
+   [date, title, channels, countries, format]. A post is a single day, so it draws as a
+   one-day block with the title inside it; channels, markets and format sit in the hover.
+   Left out at export: rows without a date, the one row with a date range, duplicates on the
+   same date, and everything before 2026. */
+const SOCIAL_DEFAULT = [
+  ["2026-01-02","Voornemens voor het nieuwe jaar","","",""],
+  ["2026-01-04","Wist je datjes 2","","",""],
+  ["2026-01-05","Opening UK Leicester","","",""],
+  ["2026-01-06","Before/after vrijstaande overkapping - video","","",""],
+  ["2026-01-11","Wist je datjes 3","","",""],
+  ["2026-01-13","Veelgestelde vraag: verlichting","","",""],
+  ["2026-01-15","Deurmeenemers unboxing video","","","Reel"],
+  ["2026-01-19","Blue monday","","NL,DE,FR,UK","Afbeelding"],
+  ["2026-01-21","Heaters - introductievideo","","NL","Reel, Story"],
+  ["2026-01-21","Unboxing - Heaters","","DE,FR,UK","Reel, Story"],
+  ["2026-01-23","Zoek het ontbrekende onderdeel","","NL,DE,FR,UK","Afbeelding"],
+  ["2026-01-25","Glazen spie","","NL,DE,FR,UK","Afbeelding"],
+  ["2026-01-27","Wist je dat: Lighting System & Smart home systeem","","NL,DE,FR,UK","Afbeelding"],
+  ["2026-01-28","Persbericht","Instagram, Facebook","UK","Afbeelding"],
+  ["2026-01-30","Magazijn - reel","Instagram, Facebook","NL,DE","Reel, Story"],
+  ["2026-02-01","Klantfoto's oproep","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-03","#tiptuesday schoonmaaktip","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-05","Actie post","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-06","Bedrijfsvideo","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-02-08","Veelgestelde vraag: scherpe prijzen","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-10","Winactie terrasheater","Instagram, Facebook","NL,DE","Reel, Story"],
+  ["2026-02-12","Things that just make sense - Reel","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-02-14","Valentijnsdag","Instagram, Facebook","NL,DE,FR,UK","Afbeelding, Story"],
+  ["2026-02-17","Winactie terrasheater reminder","Instagram, Facebook","NL,DE","Story"],
+  ["2026-02-19","Actie reminder","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-20","Houd van je huisdierdag","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-22","Deze fout maakt bijna iedereen - video","Instagram, Facebook","NL","Reel"],
+  ["2026-02-23","Actie verlenging","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-24","Showrooms Duitsland","Instagram, Facebook","NL,DE","Reel"],
+  ["2026-02-24","Wist je dat: reinigingsset","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-02-26","Klantreview: levering","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-01","Showroom: welkom zonder afspraak","Instagram, Facebook","NL,DE,UK","Reel"],
+  ["2026-03-03","Bekendmaking winnaar terrasheater","Instagram, Facebook","NL,DE","Reel"],
+  ["2026-03-03","Opening crailsheim","Instagram, Facebook","DE","Afbeelding"],
+  ["2026-03-04","2e herinnering kortingsctie","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-07","Verschillende daktypes","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-03-10","#tiptuesday: planten","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-12","Wist je dat: wij ook montagepartners hebben","Instagram, Facebook","NL,DE","Afbeelding"],
+  ["2026-03-14","R&D (stukje bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-03-17","Jouw tuin blij","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-03-19","Prijsverlaging","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-03-20","Internationale dag van geluk","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-21","Paasversiering","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-24","Zoek de 5 verschillen","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-26","Stevigheid","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-03-28","Pasen CTA 1","Instagram, Facebook","NL,DE","Afbeelding"],
+  ["2026-03-31","FAQ fundering","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-03-31","Zoek de verschillen het antwoord","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-04-02","Hout vs aluminium","Instagram, Facebook, TikTok","NL,DE,UK","Reel"],
+  ["2026-04-03","Pasen CTA 2","Instagram, Facebook","NL,DE","Afbeelding"],
+  ["2026-04-05","Korte story pasen","Instagram, Facebook","NL,DE","Story"],
+  ["2026-04-05","Paaspost DE/FR","Instagram, Facebook","FR,UK","Afbeelding"],
+  ["2026-04-09","Maand van de groene tuin","Instagram, Facebook","NL","Story"],
+  ["2026-04-10","Hoe duur denk je?","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-04-11","Raket inhaker","Instagram, Facebook, TikTok","NL,DE","Reel"],
+  ["2026-04-12","Showroom venlo","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-04-14","Tuindag","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-04-17","Zelf monteren","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-04-18","Opening Ingolstadt","Instagram, Facebook","DE","Afbeelding"],
+  ["2026-04-19","DIY: plantentrap onder je overkapping","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-04-20","Cleaningset promotie","Instagram, Facebook, TikTok","UK","Reel"],
+  ["2026-04-21","Voor/na de vergroening (maand vd groene tuin)","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-04-24","Klant en showroom (bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-04-25","Opening Heidelberg-Mannheim","Instagram, Facebook","DE","Afbeelding"],
+  ["2026-04-26","Koningsdag","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-04-27","Opening heidelberg video","Instagram, Facebook, TikTok","DE","Reel"],
+  ["2026-04-28","Kruiden onder de overkapping","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-05-01","Uitbereidbaarheid","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-05-03","Dag van de zon / Zonwering uitgelegd","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-05-04","Cleaningsset promotie","Instagram, Facebook","UK","Afbeelding"],
+  ["2026-05-05","Spie op schutting > probleem + oplossing","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-05-07","Start heater actie DE","Instagram, Facebook, TikTok","DE","Reel"],
+  ["2026-05-08","Samenstellen en bezorgen (bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-05-10","Showroom video münchen","Instagram, Facebook","DE","Reel"],
+  ["2026-05-13","Wereld cocktaildag","Instagram, Facebook, TikTok","NL,DE,FR,UK","Afbeelding"],
+  ["2026-05-15","Magazijn en bezorging (bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-05-16","BBQ Day - DIY BBQ trolley","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-05-17","Open met Pinksteren (poffertjes)","Instagram, Facebook","NL,DE","Afbeelding"],
+  ["2026-05-19","Teaser Het geluid (slot)","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-05-21","Grote tuinverbouwing over 2 dagen live","Instagram, Facebook","NL","Afbeelding"],
+  ["2026-05-23","Voor 17 uur plaatsen - Grote tuinverbouwing live","Instagram, Facebook","NL","Reel"],
+  ["2026-05-24","Zomerproof","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-05-26","Teaser > Bamboe (bos)","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-05-28","Credibility campaign - EPISODE 1","Instagram, Facebook, TikTok","UK","Reel"],
+  ["2026-05-29","Magazijn en logistiek (bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-05-30","Nederland in beeld teaser","Instagram, Facebook, TikTok","NL","Reel"],
+  ["2026-05-31","Showroom video Venlo","Instagram, Facebook","NL,DE","Reel"],
+  ["2026-06-04","UK credibility - aflevering 2","Instagram, Facebook, TikTok","UK","Reel"],
+  ["2026-06-05","NL Nederland in beeld morgen herhaling","Instagram, Facebook","NL","Reel"],
+  ["2026-06-05","This or that: open vs. gesloten overkapping","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-06-07","Showroom video Eindhoven","Instagram, Facebook, TikTok","NL,DE","Reel"],
+  ["2026-06-11","Start WK","Instagram, Facebook","NL,DE,FR,UK","Reel, Story"],
+  ["2026-06-11","UK credibility - aflevering 3","Instagram, Facebook","UK","Reel"],
+  ["2026-06-13","Nederland in Beeld - samenvatting DE, UK, FR","Instagram, Facebook","DE,FR,UK","Reel"],
+  ["2026-06-14","Hordeur - vliegen onder overkapping","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-06-16","WK - WK bingo","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-06-18","Internationale Picknickdag","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-06-18","UK credibility - aflevering 4","Instagram, Facebook","UK","Reel"],
+  ["2026-06-21","De grote tuinverbouwing - samenvatting","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-06-23","Productie (bedrijfsvideo)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-06-25","UK credibility - aflevering 5","Instagram, Facebook","UK","Reel"],
+  ["2026-06-26","Gevelisolatie montagesysteem","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-06-28","Jaren bestaan AI","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-06-30","Klantreview kwaliteit","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-03","bedrag (Robert)","Instagram, Facebook, TikTok","NL,FR,UK","Reel"],
+  ["2026-07-05","USP's tuinmaximaal","Instagram, Facebook","NL,DE,UK","Reel"],
+  ["2026-07-07","Introductie - Bamboe vlonder","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-10","Before & after met Steel Look schuifwand","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-12","DIY flesverlichting","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-14","Zomerse klantfoto uilichten","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-17","World Emoji Day","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-19","Snelle levering","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-07-21","Eén overkapping, 4 stijlen","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-26","Klantvideo heater > koude zomeravonden","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-07-28","10% korting op geselcteerde modellen","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-07-31","Korting video -10%","Instagram, Facebook, TikTok","NL,DE,UK","Reel"],
+  ["2026-08-02","Eén overkapping, 3 kleuren","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-04","Water Melon Day","Instagram, Facebook, TikTok","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-07","Product van de week - privacy folie","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-09","Video Robert showroom (Ellen)","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-08-10","Open dag fonteyn UK","Instagram, Facebook","UK","Afbeelding"],
+  ["2026-08-11","Klantfoto","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-14","Product van de week - zonwering","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-16","Verlenging kortingsactie","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-18","Klantfoto","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-19","Introductie zwart zonweringdoek","Instagram, Facebook","NL,DE,FR,UK","Reel"],
+  ["2026-08-21","Product van de week - led spots","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-25","This or that: dak van melkglas of helder glas","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-28","Product vd week - tochtstrips","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-08-30","Zonwering demo","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-09-01","Klantfoto","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-09-04","Product van de week - handgrepen","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-09-06","Schoonmaken van de bamboe vlonder","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-09-08","Kortingsactie: voordeelweken","Instagram, Facebook, TikTok","NL,DE,FR,UK","Reel"],
+  ["2026-09-11","Product van de week - aluminium zijwand","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+  ["2026-09-18","Montagepartner post","Instagram, Facebook","NL,DE,FR,UK","Afbeelding"],
+];
+let SOCIAL=SOCIAL_DEFAULT;
+const SOCIAL_CSV_URL = "";    // optional: published CSV of the social planning
+const SOCIAL_COLOR = "#35B79A";
+/* Agenda filters. FILTER_KEYS is also the URL order, so ?f=media-hours-products-promos-social. */
+const FILTER_KEYS=["media","hours","products","promos","social"];
+const FILTERS={media:true,hours:true,products:true,promos:true,social:true};
 /* channel colours copied from the Mediainzet workbook */
 const CHANNEL_COLORS={
   "digitale folder":"#E8467C",
@@ -872,6 +1061,133 @@ function mediaRangeLabel(m){
   const l=m.from.toLocaleDateString("en-GB",{day:"numeric",month:sameMonth?undefined:"short"});
   const r=m.until.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
   return l+"\u2013"+r;
+}
+/* ---------- promotions and social: the same two shapes as the media layer ----------
+   A promotion is a period (bar over the days it runs); a social post is a moment (a one-day
+   block). Both put their title in the block and the rest in the hover. */
+const SOCIAL_CHANNEL_COLORS={
+  "instagram":"#E1699A","facebook":"#5B8DEF","tiktok":"#4FC3C9",
+  "youtube":"#D96A6A","pinterest":"#D2596B","linkedin":"#4E84B5"
+};
+function socialChannels(k){
+  return String(k||"").split(",").map(function(x){return x.trim();}).filter(Boolean);
+}
+function socialChannelDots(k){
+  const ch=socialChannels(k);
+  if(!ch.length)return '<i class="cdot cdot--none"></i>';
+  return ch.map(function(c){
+    return '<i class="cdot" style="--mc:'+(SOCIAL_CHANNEL_COLORS[c.toLowerCase()]||"#8FA37E")+'"></i>';
+  }).join("");
+}
+function marketList(l){
+  return String(l||"").split(",").map(function(x){return countryBadgeTxt(x);}).filter(Boolean);
+}
+function marketFlags(l){
+  const m=marketList(l);
+  if(!m.length)return '<span class="flg flg--txt">?</span>';
+  return m.map(function(c){return flagSVG(c);}).join("");
+}
+function marketTok(l){
+  const m=marketList(l);
+  return m.length?m.map(function(c){return "[[flag:"+c+"]]";}).join(" ")+" ":"";
+}
+function promosOverlapping(from,to){
+  const out=[];
+  PROMOS.forEach(function(r){
+    const a=parseDate(r[0]),b=parseDate(r[1]);
+    if(!a||!b||b<from||a>to)return;
+    out.push({from:a,until:b,name:(r[2]||"Unnamed promotion"),type:(r[3]||""),desc:(r[4]||"")});
+  });
+  out.sort(function(x,y){return x.from-y.from;});
+  return out;
+}
+function promoActive(d){
+  const t=d.getTime();
+  return promosOverlapping(d,d).filter(function(p){return t>=p.from.getTime()&&t<=p.until.getTime();});
+}
+function promoTip(p){
+  return "Promotion: "+p.name+"\n"+(p.type||"Promotion")+" · "+(p.desc||"No description")+
+         "\nRuns "+p.from.toLocaleDateString("en-GB",{day:"numeric",month:"long"})+" – "+
+         p.until.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+}
+function socialOverlapping(from,to){
+  const out=[];
+  SOCIAL.forEach(function(r){
+    const a=parseDate(r[0]);
+    if(!a||a<from||a>to)return;
+    out.push({d:a,title:(r[1]||"Untitled post"),kanaal:(r[2]||""),land:(r[3]||""),format:(r[4]||"")});
+  });
+  out.sort(function(x,y){return (x.d-y.d)||x.title.localeCompare(y.title);});
+  return out;
+}
+function socialOnDay(d){return socialOverlapping(d,d);}
+function socialTip(o){
+  return "Social post: "+marketTok(o.land)+o.title+"\n"+
+         (o.kanaal||"Channel unknown")+(o.format?" · "+o.format:"")+
+         "\nMarkets: "+(marketList(o.land).join(", ")||"unknown")+
+         "\nPlanned "+o.d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+/* pack day-aligned items into as few rows as possible; items carry col + span */
+function packLanes(items,maxLanes){
+  items.sort(function(x,y){return (x.col-y.col)||(y.span-x.span);});
+  const lanes=[];
+  items.forEach(function(it){
+    for(let i=0;i<lanes.length;i++){
+      if(!lanes[i].some(function(o){return it.col<o.col+o.span&&o.col<it.col+it.span;})){lanes[i].push(it);return;}
+    }
+    lanes.push([it]);
+  });
+  const rest=[];
+  lanes.slice(maxLanes).forEach(function(l){l.forEach(function(o){rest.push(o);});});
+  rest.sort(function(a,b){return a.col-b.col;});
+  return {lanes:lanes.slice(0,maxLanes),rest:rest};
+}
+/* one <tr> per lane, plus empty rows so the section always has the same height */
+function layerLaneRows(items,leadCell,maxLanes,cls,pad,barCls,color,moreLabel){
+  const packed=packLanes(items,maxLanes);
+  let html="",used=0;
+  packed.lanes.forEach(function(lane){
+    lane.sort(function(a,b){return a.col-b.col;});
+    let row=leadCell,cur=0;
+    lane.forEach(function(it){
+      if(it.col>cur)row+=`<td colspan="${it.col-cur}" class="mbrgap"></td>`;
+      const edge=(it.contL?" mbr--contL":"")+(it.contR?" mbr--contR":"");
+      row+=`<td colspan="${it.span}" class="mbrcell"><div class="mbr ${barCls}${edge}" data-span="${it.span}" `+
+           `style="--mc:${color}"${tipAttr(it.tip)}>`+
+           `<span class="mbr__t">${it.title}</span><span class="mbr__s">${it.sub}</span></div></td>`;
+      cur=it.col+it.span;
+    });
+    if(cur<7)row+=`<td colspan="${7-cur}" class="mbrgap"></td>`;
+    html+=`<tr class="${cls}">${row}</tr>`;used++;
+  });
+  if(packed.rest.length){
+    html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore"${tipAttr(packed.rest.map(function(o){return o.tip.split("\n")[0];}).join("\n"))}>+${packed.rest.length} ${moreLabel}</td></tr>`;
+    used++;
+  }
+  if(pad){
+    if(!used){html+=`<tr class="${cls} mbrempty">${leadCell}<td colspan="7">${moreLabel==="more posts"?"No posts this week":"No promotion this week"}</td></tr>`;used=1;}
+    for(let i=used;i<maxLanes;i++)html+=`<tr class="${cls} mbrrow--pad"><td colspan="8"></td></tr>`;
+  }
+  return html;
+}
+function promoLaneRows(from,to,leadCell,maxLanes,cls,pad){
+  const items=promosOverlapping(from,to).map(function(p){
+    const sIdx=Math.max(0,Math.round((p.from-from)/DAY)),eIdx=Math.min(6,Math.round((p.until-from)/DAY));
+    return {col:sIdx,span:eIdx-sIdx+1,contL:p.from<from,contR:p.until>to,
+            title:p.name,sub:promoRangeSub(p),tip:promoTip(p)};
+  });
+  return layerLaneRows(items,leadCell,maxLanes,cls,pad,"mbr--promo",PROMO_COLOR,"more promotions");
+}
+function promoRangeSub(p){
+  return (p.type&&/extension/i.test(p.type)?"Extension · ":"")+mediaRangeLabel({from:p.from,until:p.until});
+}
+function socialLaneRows(from,to,leadCell,maxLanes,cls,pad){
+  const items=socialOverlapping(from,to).map(function(o){
+    const idx=Math.max(0,Math.min(6,Math.round((o.d-from)/DAY)));
+    return {col:idx,span:1,contL:false,contR:false,
+            title:o.title,sub:marketFlags(o.land)+socialChannelDots(o.kanaal),tip:socialTip(o)};
+  });
+  return layerLaneRows(items,leadCell,maxLanes,cls,pad,"mbr--social",SOCIAL_COLOR,"more posts");
 }
 function mediaTip(m){
   return "Media: "+flagTok(m.land)+m.partner+"\n"+
@@ -983,7 +1299,7 @@ function mediaGanttRows(from,to,maxRows,cls,pad){
   return html;
 }
 /* one <tr> per lane: leading cell + bar cells with colspan, aligned to the day columns */
-function mediaLaneRows(from,to,leadCell,maxLanes,cls){
+function mediaLaneRows(from,to,leadCell,maxLanes,cls,noMore){
   const res=mediaLanes(from,to,maxLanes);
   let html="";
   res.lanes.forEach(function(lane){
@@ -1002,7 +1318,7 @@ function mediaLaneRows(from,to,leadCell,maxLanes,cls){
     if(cur<7)row+=`<td colspan="${7-cur}" class="mbrgap"></td>`;
     html+=`<tr class="${cls}">${row}</tr>`;
   });
-  if(res.hidden)html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore"${tipAttr(res.hiddenTip)}>+${res.hidden} more campaigns</td></tr>`;
+  if(res.hidden&&!noMore)html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore"${tipAttr(res.hiddenTip)}>+${res.hidden} more campaigns</td></tr>`;
   return html;
 }
 /* ---------- product introductions (informational layer) ----------
@@ -1293,9 +1609,12 @@ function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n
 const DAY=86400000;
 function fmtWhen(d){return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});}
 function fmtRange(a,b){
-  const sameMonth=a.getMonth()===b.getMonth();
-  const left=a.toLocaleDateString("en-GB",{day:"numeric",month:sameMonth?undefined:"short"});
-  const right=b.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  /* the year is always in the label: stepping ten weeks forward otherwise left you guessing
+     which year you were looking at */
+  const sameMonth=a.getMonth()===b.getMonth(),sameYear=a.getFullYear()===b.getFullYear();
+  const left=a.toLocaleDateString("en-GB",{day:"numeric",
+    month:(sameMonth&&sameYear)?undefined:"short",year:sameYear?undefined:"numeric"});
+  const right=b.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
   return `${left} \u2013 ${right}`;
 }
 function parseCSV(text){
@@ -1588,10 +1907,8 @@ function buildGrid(exList,mon,todayD){
   }
   head+=`</tr>`;
   let body="";
-  const bars=FILTERS.media
-    ? mediaGanttRows(mon,addDays(mon,6),FILTERS.hours?4:18,"mbrrow",FILTERS.hours)
-    : "";
-  if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${bars}</tbody></table>`;
+  const lower=lowerSections(mon,addDays(mon,6));
+  if(!FILTERS.hours)return `<table class="grid grid--media"><thead>${head}</thead><tbody>${lower}</tbody></table>`;
   SHOWROOMS.forEach(s=>{
     body+=`<tr class="growrow"><td class="gc gc--room"><span class="gflag">${flagSVG(s.country)}</span><span class="grname">${s.name}</span></td>`;
     for(let i=0;i<7;i++){
@@ -1601,9 +1918,24 @@ function buildGrid(exList,mon,todayD){
     }
     body+=`</tr>`;
   });
-  if(bars)body+=`<tr class="mbrspacer"><td colspan="8"></td></tr>`+
-    `<tr class="mbrhead"><td colspan="8"><span>Media planning</span></td></tr>`+bars;
-  return `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  return `<table class="grid"><thead>${head}</thead><tbody>${body}${lower}</tbody></table>`;
+}
+/* Every active layer gets its own heading, also when the showroom rows are filtered out —
+   otherwise "Media planning" disappeared as soon as you unticked the opening hours. */
+function sectionHeadRow(title){
+  return `<tr class="mbrhead"><td colspan="8"><span>${title}</span></td></tr>`;
+}
+function lowerSections(mon,end){
+  const lead='<td class="gc gc--room mbrlead"></td>';
+  const pad=FILTERS.hours;   // fixed heights only matter next to the showroom grid
+  let h="";
+  if(FILTERS.media)h+=sectionHeadRow("Media planning")+
+    mediaGanttRows(mon,end,FILTERS.hours?3:18,"mbrrow",pad);
+  if(FILTERS.promos)h+=sectionHeadRow("Promotions")+
+    promoLaneRows(mon,end,lead,FILTERS.hours?1:3,"mbrrow",pad);
+  if(FILTERS.social)h+=sectionHeadRow("Social media")+
+    socialLaneRows(mon,end,lead,FILTERS.hours?2:5,"mbrrow",pad);
+  return h;
 }
 /* ---------- month calendar view ---------- */
 let MONTH_OFFSET=0, QUARTER_OFFSET=0, WEEK_OFFSET=(function(){try{return (new URLSearchParams(location.search).get("view")==="next")?1:0;}catch(e){return 0;}})(), LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
@@ -1613,6 +1945,8 @@ function dayClosedTip(d,exMap){
   const hol=holidaysOnDay(d);
   hol.forEach(function(h){parts.push("Public holiday: "+h);});
   (FILTERS.products?productsOnDay(d):[]).forEach(function(pr){parts.push("Product launch: "+pr.name);});
+  (FILTERS.promos?promoActive(d):[]).forEach(function(pr){parts.push("Promotion: "+pr.name+" \u00b7 "+(pr.desc||pr.type));});
+  (FILTERS.social?socialOnDay(d):[]).forEach(function(o){parts.push("Social: "+marketTok(o.land)+o.title+" \u00b7 "+(o.kanaal||"channel unknown"));});
   if(!FILTERS.hours)return parts.join("\n");
   const closedRows=[];
   SHOWROOMS.forEach(s=>{
@@ -1634,6 +1968,30 @@ function fullReason(r){
 }
 function displayReason(r){
   return String(r||"").replace(/\s*\([^)]*\)\s*$/,"").trim();
+}
+/* Local wording shouldn't split one day into two entries: "Monday after autumn holiday (BW)"
+   and "Monday after autumn half-term" are the same event with a different name per market.
+   Grouping happens on this key; the entry then carries the name used by the most showrooms
+   and lists the other names in its hover. */
+function reasonKey(r){
+  return displayReason(r).toLowerCase()
+    .replace(/half[-\s]?term/g,"holiday")
+    .replace(/\bvacation\b/g,"holiday")
+    .replace(/\bschool\b/g," ")
+    .replace(/[^a-z0-9 ]/g," ")
+    .replace(/\s+/g," ").trim();
+}
+/* pick the label most showrooms use, and describe the rest for the hover */
+function reasonVariants(rows){
+  const by={};
+  rows.forEach(function(x){const v=displayReason(x.Reason)||"";(by[v]=by[v]||[]).push(x);});
+  const names=Object.keys(by);
+  let best=names[0]||"",n=-1;
+  names.forEach(function(v){if(by[v].length>n){n=by[v].length;best=v;}});
+  const lines=names.length>1?names.map(function(v){
+    return "Called \""+v+"\" in "+roomList(by[v],true);
+  }):[];
+  return {title:best,reason:(by[best][0]||{}).Reason||"",lines:lines};
 }
 function isQuietReason(r){return QUIET_REASONS.some(function(re){return re.test(r||"");});}
 function buildMonth(data,anchor){
@@ -1669,9 +2027,10 @@ function buildMonth(data,anchor){
       if(!inMonth){h+=`<td class="mcd mcd--out"></td>`;continue;}
       // group per reason
       const ev=new Map();
-      if(FILTERS.hours)items.filter(rowHasImpact).forEach(it=>{const key=displayReason(it.Reason)||"";
+      if(FILTERS.hours)items.filter(rowHasImpact).forEach(it=>{const key=reasonKey(it.Reason);
         if(!ev.has(key))ev.set(key,{reason:it.Reason||"",rows:[]});
         ev.get(key).rows.push(it);});
+      ev.forEach(function(e){const v=reasonVariants(e.rows);e.title=v.title;e.reason=v.reason;e.vlines=v.lines;});
       let cell="";
       let shown=0;
       ev.forEach(e=>{
@@ -1697,6 +2056,7 @@ function buildMonth(data,anchor){
         });
         // full hover card text
         const tp=[fullReason(e.reason)||"Special day"];
+        (e.vlines||[]).forEach(function(x){tp.push(x);});
         holidaysOnDay(d).forEach(function(x){tp.push("Public holiday: "+x);});
         if(closed.length)tp.push("Closed: "+roomList(closed,true));
         adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
@@ -1704,13 +2064,13 @@ function buildMonth(data,anchor){
           const cw=crowdInfo(x.Crowd);
           if(cw)tp.push(`${x.Showroom}: open as usual, expected footfall ${cw.label}`);
         });
-        const shownTitle=isQuietReason(e.reason)?"":`<div class="mev__t">${icon?icon+" ":""}${displayReason(e.reason)||"Special day"}</div>`;
+        const shownTitle=isQuietReason(e.reason)?"":`<div class="mev__t">${icon?icon+" ":""}${e.title||displayReason(e.reason)||"Special day"}</div>`;
         cell+=`<div class="mev"${tipAttr(tp.join("\n"))}>${shownTitle}${lines}</div>`;
       });
       if(ev.size>2){
         const hidden=[...ev.values()].slice(2).map(function(x){
           const cl=x.rows.filter(function(y){return isClosed(y.Status);});
-          return displayReason(x.reason)+(cl.length?" \u2014 closed: "+roomList(cl,true):"");
+          return (x.title||displayReason(x.reason))+(cl.length?" \u2014 closed: "+roomList(cl,true):"");
         });
         cell+=`<div class="mev__more"${tipAttr(hidden.join("\n"))}>+${ev.size-2} more</div>`;
       }
@@ -1719,6 +2079,7 @@ function buildMonth(data,anchor){
         cell+=`<div class="mev mev--prod"${tipAttr("Product launch: "+pr.name+"\nLaunch date: "+full)}>`+
               `<div class="mev__t">${ROCKET} ${pr.name}</div></div>`;
       });
+      const soc=FILTERS.social?socialOnDay(d):[];
       let dtip=dayClosedTip(d,exMap);
       if(FILTERS.media){
         const ma=mediaActive(d);
@@ -1729,10 +2090,14 @@ function buildMonth(data,anchor){
       }
       const isHol=holidaysOnDay(d).length>0;
       h+=`<td class="mcd${past?" mcd--past":""}">`+
-         `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
+         `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}`+
+         (soc.length?`<i class="ndot ndot--social"></i>`:"")+`</div>${cell}</td>`;
     }
     h+=`</tr>`;
-    if(FILTERS.media)h+=mediaLaneRows(wkMon,addDays(wkMon,6),'<td class="mcw mcw--bar"></td>',2,"mbrrow mbrrow--month");
+    /* one band per week has room for two bar rows; with promotions on, media gives up its
+       second lane (the rest stays reachable through "+N more campaigns") */
+    if(FILTERS.media)h+=mediaLaneRows(wkMon,addDays(wkMon,6),'<td class="mcw mcw--bar"></td>',FILTERS.promos?1:2,"mbrrow mbrrow--month",FILTERS.promos);
+    if(FILTERS.promos)h+=promoLaneRows(wkMon,addDays(wkMon,6),'<td class="mcw mcw--bar"></td>',1,"mbrrow mbrrow--month",false);
   }
   h+=`</tbody></table>`;
   return h;
@@ -1807,12 +2172,24 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const impact=items.filter(rowHasImpact);
       if(impact.length&&FILTERS.hours){
         [...new Set(impact.map(x=>displayReason(x.Reason)||"Special day"))].forEach(function(n){parts.push(n);});
+        /* one line per event, not per local name */
         const closed=impact.filter(x=>isClosed(x.Status));
         if(closed.length)parts.push("Closed: "+roomList(closed,true));
       }
       const isHol=holidaysOnDay(d).length>0;
       const isProd=FILTERS.products&&productsOnDay(d).length>0;
       let segs="";
+      if(FILTERS.promos){
+        const pact=promoActive(d);
+        pact.slice(0,1).forEach(function(pr){
+          const isStart=pr.from.getTime()===d.getTime(),isEnd=pr.until.getTime()===d.getTime();
+          segs+=`<i class="mseg mseg--promo${isStart?" mseg--s":""}${isEnd?" mseg--e":""}" `+
+                `style="--mc:${PROMO_COLOR};--lane:3"></i>`;
+          parts.push("Promotion: "+pr.name+" \u00b7 "+(pr.desc||pr.type)+" \u00b7 "+mediaRangeLabel({from:pr.from,until:pr.until}));
+        });
+      }
+      const sact=FILTERS.social?socialOnDay(d):[];
+      sact.forEach(function(o){parts.push("Social: "+marketTok(o.land)+o.title+" \u00b7 "+(o.kanaal||"channel unknown"));});
       if(FILTERS.media){
         const act=mediaActive(d);
         if(act.length){
@@ -1828,7 +2205,8 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       }
       h+=`<td class="qcd${past?" qcd--past":""}${isToday?" qcd--today":""}"${tipAttr(parts.join("\n"))}>`+
          `<span class="qcd__n${isHol?" qcd__n--hol":""}">${d.getDate()}</span>`+
-         (impact.length&&FILTERS.hours?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+segs+`</td>`;
+         (impact.length&&FILTERS.hours?`<i class="qdot"></i>`:"")+(isProd?`<i class="qdot qdot--prod"></i>`:"")+
+         (sact.length?`<i class="qdot qdot--social"></i>`:"")+segs+`</td>`;
     }
     h+=`</tr>`;
   }
@@ -1845,11 +2223,12 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       const d=parseDate(it.Date);
       if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
       if(!rowHasImpact(it))return;
-      const key=it.Date+"|"+(displayReason(it.Reason)||"");
+      const key=it.Date+"|"+reasonKey(it.Reason);
       if(!ev.has(key))ev.set(key,{d:d,reason:it.Reason||"Special day",rows:[]});
       ev.get(key).rows.push(it);
     });
   });
+  ev.forEach(function(e){const v=reasonVariants(e.rows);e.title=v.title;e.reason=v.reason||e.reason;e.vlines=v.lines;});
   const evs=FILTERS.hours?[...ev.values()].sort((a,b)=>a.d-b.d):[];
   let list="";
   evs.slice(0,7).forEach(e=>{
@@ -1872,6 +2251,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
       });
     }
     const qtp=[fullReason(e.reason)||"Special day"];
+    (e.vlines||[]).forEach(function(x){qtp.push(x);});
     if(closed.length)qtp.push("Closed: "+roomList(closed,true));
     e.rows.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));}).forEach(function(x){
       const cw=crowdInfo(x.Crowd);
@@ -1879,7 +2259,7 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     });
     holidaysOnDay(e.d).forEach(function(x){qtp.push("Public holiday: "+x);});
     list+=`<div class="qev"${tipAttr(qtp.join("\n"))}><span class="qev__d">${e.d.getDate()} ${e.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
-          `<span class="qev__t">${icon?icon+" ":""}${displayReason(e.reason)}${who}</span></div>`;
+          `<span class="qev__t">${icon?icon+" ":""}${e.title||displayReason(e.reason)}${who}</span></div>`;
   });
   if(evs.length>7)list+=`<div class="qev qev--more">+${evs.length-7} more</div>`;
   if(!evs.length)list=`<div class="qev qev--none">No special days</div>`;
@@ -1898,6 +2278,18 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
            `<span class="qev__t">${ROCKET} ${pl.name}</span></div>`;
   });
   if(plist)list+=`<div class="qev__sep">Product launches</div>`+plist;
+  if(FILTERS.promos){
+    const mstart0=new Date(anchor.getFullYear(),anchor.getMonth(),1);
+    const mend0=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
+    let prlist="";
+    promosOverlapping(mstart0,mend0).forEach(function(pr){
+      prlist+=`<div class="qev qev--promo"${tipAttr(promoTip(pr))}>`+
+              `<span class="qev__d">${mediaRangeLabel({from:pr.from,until:pr.until})}</span>`+
+              `<span class="qev__t"><i class="dotc" style="background:${PROMO_COLOR}"></i>${pr.name}`+
+              `${/extension/i.test(pr.type)?' <span class="rl__sep">\u00b7</span> extension':""}</span></div>`;
+    });
+    if(prlist)list+=`<div class="qev__sep">Promotions</div>`+prlist;
+  }
   if(FILTERS.media){
     const mstart=new Date(anchor.getFullYear(),anchor.getMonth(),1);
     const mend=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
@@ -1943,7 +2335,7 @@ function renderQuarter(data,problems){
   }
 }
 function filterQuery(){
-  const on=[];["media","hours","products"].forEach(function(k){if(FILTERS[k])on.push(k);});
+  const on=[];FILTER_KEYS.forEach(function(k){if(FILTERS[k])on.push(k);});
   return "f="+on.join("-");
 }
 function syncFilterURL(){
@@ -1963,7 +2355,7 @@ function initNav(){
     const f=p.get("f");
     if(f!==null){
       const on=f.split("-");
-      ["media","hours","products"].forEach(function(k){FILTERS[k]=on.indexOf(k)>=0;});
+      FILTER_KEYS.forEach(function(k){FILTERS[k]=on.indexOf(k)>=0;});
       document.querySelectorAll('.fdrop input[data-f]').forEach(function(i){
         const k=i.getAttribute("data-f");
         if(FILTERS.hasOwnProperty(k))i.checked=!!FILTERS[k];
@@ -2011,7 +2403,8 @@ function render(data,problems){
   document.getElementById("title").textContent="Tuinmaximaal calendar";
   document.getElementById("subtitle").textContent=CAL_SUB;
   const sched=document.getElementById("sched");sched.style.display="flex";
-  const wl=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":"Week "+isoWeek(mon);
+  const near=WEEK_OFFSET===0?"This week":WEEK_OFFSET===1?"Next week":WEEK_OFFSET===-1?"Last week":"";
+  const wl=near?near+" \u00b7 W"+isoWeek(mon):"Week "+isoWeek(mon);
   document.getElementById("week-title").textContent=wl+" \u00b7 "+fmtRange(mon,addDays(mon,6));
   document.getElementById("grid-this").innerHTML=buildGrid(data,mon,WEEK_OFFSET===0?base:null);
   const pw=FILTERS.products?productsInWeek(mon):[], pstrip=document.getElementById("week-prod");
@@ -2046,7 +2439,10 @@ function fitSched(){
   const wrap=document.getElementById("sched");if(!wrap||wrap.style.display==="none")return;
   const inner=document.getElementById("sched-inner");
   inner.style.transform="none";
-  const avail=wrap.clientHeight,need=inner.scrollHeight;
+  /* what is left for the table after the bar and the product strip above it — measuring
+     against the whole container let the lowest section run off the screen */
+  const top=inner.getBoundingClientRect().top-wrap.getBoundingClientRect().top;
+  const avail=Math.max(120,wrap.clientHeight-top),need=inner.scrollHeight;
   const k=need>avail+1?avail/need:1;
   inner.style.transform="scale("+k+")";inner.style.transformOrigin="top center";
 }
