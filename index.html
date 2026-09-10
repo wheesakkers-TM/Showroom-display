@@ -376,13 +376,18 @@ tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left
 .mbrrow--month .mbr__t{font-size:12px;}
 .mbrrow--month .mbr__s{display:none;}
 .mbr[data-span="1"] .mbr__s,.mbr[data-span="2"] .mbr__s{display:none;}
-/* a social post is one day wide, so its sub-line drops the words and keeps the signals:
-   a flag per market and a dot per channel */
+/* a social post gets a taller card: title on top, then the markets as flags and the channel
+   per platform. SOCIAL_ICONS is where the official channel PNGs go (base64 data URI); until
+   they are in, the channel shows as a coloured dot with its name. */
 .mbr--social[data-span="1"] .mbr__s,.mbr--social[data-span="2"] .mbr__s{display:flex;}
 .mbr--social{padding:0 8px;}
-.mbr--social .mbr__t{font-size:12px;}
-.mbr--social .mbr__s{gap:3px;margin-top:1px;}
-.mbr--social .mbr__s svg.flg{width:11px;height:7px;}
+.mbr--social .mbr__t{font-size:14px;margin-bottom:3px;}
+.mbr--social .mbr__s{gap:6px;margin-top:auto;font-size:11px;}
+.mbr--social .mbr__s svg.flg{width:13px;height:9px;}
+.mbr--social .sflags{display:inline-flex;gap:2px;align-items:center;}
+.mbr--social .schan{display:inline-flex;gap:5px;align-items:center;color:#BFE7DC;font-weight:700;}
+.mbr--social .schan__i{display:inline-flex;align-items:center;gap:3px;}
+.mbr--social .schan img{width:13px;height:13px;border-radius:3px;display:block;}
 .mbr--social .mbr__s .flg--txt{font-size:8px;min-width:14px;}
 .mbr--social .cdot{width:6px;height:6px;border-radius:50%;background:var(--mc);flex-shrink:0;}
 .mbr--social .cdot--none{background:var(--sage-dim);}
@@ -390,7 +395,8 @@ tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left
 .mbr--promo .mbr__s{display:none;}
 /* 23px keeps a social row exactly as tall as an empty one, so a week with posts
    does not shift the grid by a pixel */
-.mbr--social{height:23px;}
+.mbr--social{height:46px;padding:5px 9px;justify-content:flex-start;}
+tr.mbrrow--socrow{height:50px;}
 .mbrlead{}
 .clg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .clg .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);}
@@ -1104,6 +1110,23 @@ function socialChannelDots(k){
     return '<i class="cdot" style="--mc:'+(SOCIAL_CHANNEL_COLORS[c.toLowerCase()]||"#8FA37E")+'"></i>';
   }).join("");
 }
+/* official channel artwork, keyed on the channel name in the planning; add the PNGs as
+   "data:image/png;base64,..." and the cards use them instead of the dot + name */
+const SOCIAL_SHORT={"instagram":"IG","facebook":"FB","tiktok":"TT","youtube":"YT","pinterest":"PIN","linkedin":"LI"};
+const SOCIAL_ICONS={
+  "instagram":"", "facebook":"", "tiktok":"", "youtube":"", "pinterest":"", "linkedin":""
+};
+function socialChannelMarks(k){
+  const ch=socialChannels(k);
+  if(!ch.length)return '<span class="schan"><i class="cdot cdot--none"></i>Channel unknown</span>';
+  return '<span class="schan">'+ch.map(function(c){
+    const src=SOCIAL_ICONS[c.toLowerCase()];
+    if(src)return '<span class="schan__i"><img src="'+src+'" alt="'+c+'"></span>';
+    return '<span class="schan__i"><i class="cdot" style="--mc:'+
+      (SOCIAL_CHANNEL_COLORS[c.toLowerCase()]||"#8FA37E")+'"></i>'+
+      (SOCIAL_SHORT[c.toLowerCase()]||c.slice(0,2).toUpperCase())+'</span>';
+  }).join("")+'</span>';
+}
 function marketList(l){
   return String(l||"").split(",").map(function(x){return countryBadgeTxt(x);}).filter(Boolean);
 }
@@ -1168,7 +1191,7 @@ function packLanes(items,maxLanes){
   return {lanes:lanes.slice(0,maxLanes),rest:rest};
 }
 /* one <tr> per lane, plus empty rows so the section always has the same height */
-function layerLaneRows(items,leadCell,maxLanes,cls,pad,barCls,color,moreLabel){
+function layerLaneRows(items,leadCell,maxLanes,cls,pad,barCls,color,moreLabel,rowCls,padTo){
   const packed=packLanes(items,maxLanes);
   let html="",used=0;
   packed.lanes.forEach(function(lane){
@@ -1183,15 +1206,15 @@ function layerLaneRows(items,leadCell,maxLanes,cls,pad,barCls,color,moreLabel){
       cur=it.col+it.span;
     });
     if(cur<7)row+=`<td colspan="${7-cur}" class="mbrgap"></td>`;
-    html+=`<tr class="${cls}">${row}</tr>`;used++;
+    html+=`<tr class="${cls}${rowCls?" "+rowCls:""}">${row}</tr>`;used++;
   });
   if(packed.rest.length){
     html+=`<tr class="${cls}">${leadCell}<td colspan="7" class="mbrmore"${tipAttr(packed.rest.map(function(o){return o.tip.split("\n")[0];}).join("\n"))}>+${packed.rest.length} ${moreLabel}</td></tr>`;
     used++;
   }
   if(pad){
-    if(!used){html+=`<tr class="${cls} mbrempty">${leadCell}<td colspan="7">${moreLabel==="more posts"?"No posts this week":"No promotion this week"}</td></tr>`;used=1;}
-    for(let i=used;i<maxLanes;i++)html+=`<tr class="${cls} mbrrow--pad"><td colspan="8"></td></tr>`;
+    if(!used){html+=`<tr class="${cls}${rowCls?" "+rowCls:""} mbrempty">${leadCell}<td colspan="7">${moreLabel==="more posts"?"No posts this week":"No promotion this week"}</td></tr>`;used=1;}
+    for(let i=used;i<(padTo||maxLanes);i++)html+=`<tr class="${cls} mbrrow--pad"><td colspan="8"></td></tr>`;
   }
   return html;
 }
@@ -1206,13 +1229,14 @@ function promoLaneRows(from,to,leadCell,maxLanes,cls,pad){
 function promoRangeSub(p){
   return (p.type&&/extension/i.test(p.type)?"Extension · ":"")+mediaRangeLabel({from:p.from,until:p.until});
 }
-function socialLaneRows(from,to,leadCell,maxLanes,cls,pad){
+function socialLaneRows(from,to,leadCell,maxLanes,cls,pad,padTo){
   const items=socialOverlapping(from,to).map(function(o){
     const idx=Math.max(0,Math.min(6,Math.round((o.d-from)/DAY)));
     return {col:idx,span:1,contL:false,contR:false,
-            title:o.title,sub:marketFlags(o.land)+socialChannelDots(o.kanaal),tip:socialTip(o)};
+            title:o.title,sub:'<span class="sflags">'+marketFlags(o.land)+'</span>'+socialChannelMarks(o.kanaal),
+            tip:socialTip(o)};
   });
-  return layerLaneRows(items,leadCell,maxLanes,cls,pad,"mbr--social",SOCIAL_COLOR,"more posts");
+  return layerLaneRows(items,leadCell,maxLanes,cls,pad,"mbr--social",SOCIAL_COLOR,"more posts","mbrrow--socrow",padTo);
 }
 function mediaTip(m){
   return "Media: "+flagTok(m.land)+m.partner+"\n"+
@@ -1958,8 +1982,10 @@ function lowerSections(mon,end){
     promoLaneRows(mon,end,lead,FILTERS.hours?1:3,"mbrrow",pad);
   if(FILTERS.media)h+=sectionHeadRow("Media planning")+
     mediaGanttRows(mon,end,FILTERS.hours?3:18,"mbrrow",pad);
+  /* one tall card instead of two thin ones: a day with two posts folds the second into
+     "+1 more posts", and the section keeps the same height either way */
   if(FILTERS.social)h+=sectionHeadRow("Social media")+
-    socialLaneRows(mon,end,lead,FILTERS.hours?2:5,"mbrrow",pad);
+    socialLaneRows(mon,end,lead,FILTERS.hours?1:5,"mbrrow",pad,FILTERS.hours?2:0);
   return h;
 }
 /* ---------- month calendar view ---------- */
