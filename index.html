@@ -1916,11 +1916,13 @@ function effectiveDay(room,country,d,exMap){
     if(isClosed(ex.Status))return {closed:true,reason:ex.Reason,isException:true,holidays:hl};
     if(isAdjusted(ex.Status)||(ex.OpenFrom&&ex.OpenUntil))
       return {closed:false,from:ex.OpenFrom,until:ex.OpenUntil,crowd:ex.Crowd,reason:ex.Reason,isException:true,holidays:hl};
-    // Normal hours row: only an exception when the expected footfall differs from normal
+    /* Normal hours row: the times are the standard times, so this is not an exception on the
+       opening hours — orange stays reserved for closed and adjusted. The footfall dot carries
+       the message and the reason stays in the hover. */
     const st=standardHours(room,d)||{closed:false,from:"",until:""};
     const impact=rowHasImpact(ex);
     return {closed:!!st.closed,from:st.from,until:st.until,crowd:ex.Crowd,
-            reason:impact?ex.Reason:"",isException:impact,holidays:hl};
+            reason:impact?ex.Reason:"",isException:false,noteOnly:impact,holidays:hl};
   }
   const st=standardHours(room,d);
   if(!st)return {closed:false,from:"",until:"",unknown:true};
@@ -1948,7 +1950,7 @@ function gridCellHTML(cell,isToday){
   const dot=cw?`<i class="gdot" style="--dot:${cw.color}"></i>`:"";
   const exc=cell.isException?' gc--exc':'';
   if(hol)parts.push("Public holiday: "+hol.join(", ")+" \u2014 open as shown");
-  if(cell.isException&&cell.reason)parts.push(cell.reason);
+  if((cell.isException||cell.noteOnly)&&cell.reason)parts.push(cell.reason);
   if(cw)parts.push("Expected footfall: "+cw.label);
   return `<td class="gc${exc}${hol?" gc--hol":""}"${isToday?' data-today="1"':''}${tipAttr(parts.join("\n"))}><span class="gc__t">${cell.from}\u2013${cell.until}</span>${dot}</td>`;
 }
