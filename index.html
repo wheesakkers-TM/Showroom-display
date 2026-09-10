@@ -663,9 +663,12 @@ window.addEventListener("unhandledrejection",function(e){showErr(e.reason&&e.rea
 /* ============================================================
    CONFIG
    ============================================================ */
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=199674533&single=true&output=csv";
-const FORECAST_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1453274401&single=true&output=csv";
-const STANDARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQljZo3GKkiyHdH36wcWicZ_uuuWUgdKIHgf-c1T0AbNvH1uAxPNvkorjhtkuYbxn0bgrDtgONxhLav/pub?gid=1306704827&single=true&output=csv";
+/* Google Sheet disconnected 10-9-2026. Showroomkalender_bron.xlsx (SharePoint) is the single
+   source: every tab is exported into the built-in tables further down, so the board needs no
+   network at all. Fill a URL back in only to go live on a published CSV again. */
+const CSV_URL = "";          // exceptions  -> SAMPLE_DATA (tab Uitzonderingen)
+const FORECAST_CSV_URL = ""; // daily forecast; footfall now comes from the Drukte tab
+const STANDARD_CSV_URL = ""; // standard hours -> STANDARD_DEFAULT (tab Standaard)
 const PRODUCT_CSV_URL = "";   // optional: published CSV of the product introduction planning
                               // (columns Date | Product | Status). Empty = built-in list below.
 const HOLIDAY_CSV_URL = "";   // optional: published CSV of the "Feestdagen" tab (Date | Holiday | Group).
@@ -733,28 +736,110 @@ const SHOWROOMS = [
    Columns: Date | Showroom | Country | Status | Open from | Open until | Reason | Crowd
    Date: dd-mm-yyyy (yyyy-mm-dd also works). */
 const SAMPLE_DATA = [
-  {Date:"24-05-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Sunday",Crowd:""},
-  {Date:"25-05-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
-  {Date:"25-05-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
-  {Date:"25-05-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:00",Reason:"Whit Monday",Crowd:"Busy"},
-  {Date:"25-05-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Spring Bank Holiday",Crowd:""},
-  {Date:"25-05-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
-  {Date:"04-06-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Corpus Christi",Crowd:""},
-  {Date:"14-06-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"12:00",OpenUntil:"17:00",Reason:"Sunday opening",Crowd:"Quiet"},
+  {Date:"14-06-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"12:00",OpenUntil:"17:00",Reason:"Sunday opening",Crowd:""},
+  {Date:"26-06-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"",Crowd:""},
   {Date:"15-08-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Assumption of Mary",Crowd:""},
+  {Date:"03-10-2026",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
+  {Date:"03-10-2026",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
+  {Date:"03-10-2026",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
+  {Date:"03-10-2026",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
   {Date:"03-10-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"German Unity Day",Crowd:""},
-  {Date:"01-11-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"All Saints' Day",Crowd:""},
-  {Date:"25-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"04-10-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"18-10-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"01-11-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"15-11-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"29-11-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"13-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
   {Date:"25-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
-  {Date:"26-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"25-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
   {Date:"26-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
-  {Date:"28-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:30",Reason:"Busy day",Crowd:"Busy"},
-  {Date:"29-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
-  {Date:"29-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
-  {Date:"29-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Normal hours",OpenFrom:"",OpenUntil:"",Reason:"Between Christmas and New Year",Crowd:"Busy"},
-  {Date:"31-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
-  {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:"Quiet"},
-  {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""}
+  {Date:"26-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"26-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"27-12-2026",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"28-12-2026",Showroom:"Leicester",Country:"United Kingdom",Status:"Adjusted hours",OpenFrom:"09:00",OpenUntil:"17:30",Reason:"Busy day",Crowd:""},
+  {Date:"28-12-2026",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"31-12-2026",Showroom:"Eindhoven",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:""},
+  {Date:"31-12-2026",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Eve",Crowd:""},
+  {Date:"31-12-2026",Showroom:"Venlo",Country:"Netherlands",Status:"Adjusted hours",OpenFrom:"08:00",OpenUntil:"17:00",Reason:"New Year's Eve",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"01-01-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"New Year's Day",Crowd:""},
+  {Date:"06-01-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Epiphany",Crowd:""},
+  {Date:"06-01-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Epiphany",Crowd:""},
+  {Date:"06-01-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Epiphany",Crowd:""},
+  {Date:"17-01-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"31-01-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"14-02-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"28-02-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"14-03-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"26-03-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Good Friday",Crowd:""},
+  {Date:"28-03-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"No Sunday opening (winter season)",Crowd:""},
+  {Date:"29-03-2027",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"29-03-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"29-03-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"29-03-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"29-03-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"29-03-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Easter Monday",Crowd:""},
+  {Date:"01-05-2027",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Labour Day",Crowd:""},
+  {Date:"01-05-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Labour Day",Crowd:""},
+  {Date:"01-05-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Labour Day",Crowd:""},
+  {Date:"01-05-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Labour Day",Crowd:""},
+  {Date:"01-05-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Labour Day",Crowd:""},
+  {Date:"03-05-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Early May bank holiday",Crowd:""},
+  {Date:"03-05-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Early May bank holiday",Crowd:""},
+  {Date:"06-05-2027",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Ascension Day",Crowd:""},
+  {Date:"06-05-2027",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Ascension Day",Crowd:""},
+  {Date:"06-05-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Ascension Day",Crowd:""},
+  {Date:"06-05-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Ascension Day",Crowd:""},
+  {Date:"06-05-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Ascension Day",Crowd:""},
+  {Date:"17-05-2027",Showroom:"Bremen",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
+  {Date:"17-05-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
+  {Date:"17-05-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
+  {Date:"17-05-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Whit Monday",Crowd:""},
+  {Date:"27-05-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Corpus Christi",Crowd:""},
+  {Date:"27-05-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Corpus Christi",Crowd:""},
+  {Date:"27-05-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Corpus Christi",Crowd:""},
+  {Date:"31-05-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Spring bank holiday",Crowd:""},
+  {Date:"31-05-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Spring bank holiday",Crowd:""},
+  {Date:"30-08-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Summer bank holiday",Crowd:""},
+  {Date:"30-08-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Summer bank holiday",Crowd:""},
+  {Date:"01-11-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"All Saints' Day",Crowd:""},
+  {Date:"01-11-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"All Saints' Day",Crowd:""},
+  {Date:"01-11-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"All Saints' Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Berlin",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Crailsheim",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Heidelberg",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Ingolstadt",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Munich",Country:"Germany",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"25-12-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"26-12-2027",Showroom:"Uddel",Country:"Netherlands",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"27-12-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"27-12-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Christmas Day",Crowd:""},
+  {Date:"28-12-2027",Showroom:"Leicester",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
+  {Date:"28-12-2027",Showroom:"London",Country:"United Kingdom",Status:"Closed",OpenFrom:"",OpenUntil:"",Reason:"Boxing Day",Crowd:""},
 ];
 
 const MEDIA_DEFAULT = [
@@ -903,11 +988,107 @@ const PROMOS_DEFAULT = [
   ["2026-02-09","2026-02-22","Winter discount 2026","Promotion","2% off the entire range"],
   ["2026-02-23","2026-03-08","Winter discount 2026","Promotion extension","2% off the entire range"],
   ["2026-07-28","2026-08-16","10% off selected models","Promotion","10% discount on selected models"],
-  ["2026-08-17","2026-08-31","10% off selected models","Promotion extension","10% discount on selected models"],
+  ["2026-08-17","2026-12-31","10% off selected models","Promotion extension","10% discount on selected models"],
   ["2026-09-08","2026-09-28","Deal weeks 2026","Promotion","2% off the entire range"],
   ["2026-09-29","2026-10-07","Deal weeks 2026","Promotion extension","2% off the entire range"],
 ];
 let PROMOS=PROMOS_DEFAULT;
+
+/* ---------- expected footfall (tab "Drukte" in Showroomkalender_bron.xlsx) ----------
+   [date, showroom, country, footfall, reason]. These days keep their normal opening hours,
+   so they are NOT exceptions: no orange cell. They only colour the footfall dot and explain
+   themselves in the hover, and they feed the "Busier than usual" chip in month and quarter.
+   Kept out of the Uitzonderingen tab on purpose (decision 10-9-2026). */
+const FOOTFALL_DEFAULT = [
+  ["31-08-2026","Uddel","Netherlands","High","Monday after summer holiday (Region Central)"],
+  ["01-09-2026","Leicester","United Kingdom","High","First day after summer holiday"],
+  ["01-09-2026","London","United Kingdom","High","First day after summer holiday"],
+  ["14-09-2026","Crailsheim","Germany","High","Monday after summer holiday (BW)"],
+  ["14-09-2026","Heidelberg","Germany","High","Monday after summer holiday (BW)"],
+  ["21-09-2026","Ingolstadt","Germany","High","Monday after summer holiday (Bavaria)"],
+  ["21-09-2026","Munich","Germany","High","Monday after summer holiday (Bavaria)"],
+  ["26-10-2026","Bremen","Germany","High","Monday after autumn holiday (Bremen)"],
+  ["26-10-2026","Eindhoven","Netherlands","High","Monday after autumn half-term"],
+  ["26-10-2026","Uddel","Netherlands","High","Monday after autumn half-term"],
+  ["26-10-2026","Venlo","Netherlands","High","Monday after autumn half-term"],
+  ["02-11-2026","Berlin","Germany","High","Monday after autumn holiday (Berlin)"],
+  ["02-11-2026","Crailsheim","Germany","High","Monday after autumn holiday (BW)"],
+  ["02-11-2026","Heidelberg","Germany","High","Monday after autumn holiday (BW)"],
+  ["02-11-2026","Leicester","United Kingdom","High","Monday after autumn half-term"],
+  ["02-11-2026","London","United Kingdom","High","Monday after autumn half-term"],
+  ["09-11-2026","Ingolstadt","Germany","High","Monday after autumn holiday (Bavaria)"],
+  ["09-11-2026","Munich","Germany","High","Monday after autumn holiday (Bavaria)"],
+  ["28-12-2026","Berlin","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Bremen","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Crailsheim","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Eindhoven","Netherlands","High","Between Christmas and New Year"],
+  ["28-12-2026","Heidelberg","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Ingolstadt","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Munich","Germany","High","Between Christmas and New Year"],
+  ["28-12-2026","Uddel","Netherlands","High","Between Christmas and New Year"],
+  ["28-12-2026","Venlo","Netherlands","High","Between Christmas and New Year"],
+  ["29-12-2026","Berlin","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Bremen","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Crailsheim","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Eindhoven","Netherlands","High","Between Christmas and New Year"],
+  ["29-12-2026","Heidelberg","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Ingolstadt","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Leicester","United Kingdom","High","Between Christmas and New Year"],
+  ["29-12-2026","London","United Kingdom","High","Between Christmas and New Year"],
+  ["29-12-2026","Munich","Germany","High","Between Christmas and New Year"],
+  ["29-12-2026","Uddel","Netherlands","High","Between Christmas and New Year"],
+  ["29-12-2026","Venlo","Netherlands","High","Between Christmas and New Year"],
+  ["30-12-2026","Berlin","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Bremen","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Crailsheim","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Eindhoven","Netherlands","High","Between Christmas and New Year"],
+  ["30-12-2026","Heidelberg","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Ingolstadt","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Leicester","United Kingdom","High","Between Christmas and New Year"],
+  ["30-12-2026","London","United Kingdom","High","Between Christmas and New Year"],
+  ["30-12-2026","Munich","Germany","High","Between Christmas and New Year"],
+  ["30-12-2026","Uddel","Netherlands","High","Between Christmas and New Year"],
+  ["30-12-2026","Venlo","Netherlands","High","Between Christmas and New Year"],
+  ["14-06-2026","Uddel","Netherlands","Quiet",""],
+  ["28-12-2026","Leicester","United Kingdom","High",""],
+  ["31-12-2026","Venlo","Netherlands","Quiet",""],
+  ["31-12-2026","Eindhoven","Netherlands","Quiet",""],
+];
+let FOOTFALL=FOOTFALL_DEFAULT;
+const FOOTFALL_CSV_URL = "";  // optional: published CSV of the Drukte tab
+/* merged into the exceptions list as "Normal hours" rows, and only where that day has no
+   exception of its own — so a real closure or adjusted time always wins */
+function withCrowdRows(list){
+  /* one place where every incoming row gets its times padded, whatever the source wrote */
+  const out=list.map(function(it){
+    if(!it.OpenFrom&&!it.OpenUntil)return it;
+    const c=Object.assign({},it);
+    c.OpenFrom=padTime(it.OpenFrom); c.OpenUntil=padTime(it.OpenUntil);
+    return c;
+  });
+  const idx={};
+  out.forEach(function(it,n){const d=parseDate(it.Date);if(d)idx[fcKey(d,it.Showroom)]=n;});
+  FOOTFALL.forEach(function(r){
+    const d=parseDate(r[0]);
+    if(!d)return;
+    const k=fcKey(d,r[1]);
+    if(k in idx){
+      /* that day already has a closure or an adjusted time: that row keeps the cell, the
+         footfall only rides along so the dot and the hover still tell the story.
+         A closed showroom cannot be busy, so there it is dropped. */
+      const n=idx[k];
+      if(isClosed(out[n].Status))return;
+      const row=Object.assign({},out[n]);
+      if(!row.Crowd)row.Crowd=r[3];
+      if(!row.Reason&&r[4])row.Reason=r[4];
+      out[n]=row;
+      return;
+    }
+    out.push({Date:r[0],Showroom:r[1],Country:r[2],Status:"Normal hours",
+              OpenFrom:"",OpenUntil:"",Reason:r[4],Crowd:r[3]});
+  });
+  return out;
+}
 const PROMO_CSV_URL = "";     // optional: published CSV of the Actieperiodes tab
 const PROMO_COLOR = "#D4A73C";
 
@@ -1616,6 +1797,13 @@ function fmtTime(t){
   const m=(t||"").trim().match(/^(\d{1,2}):(\d{1,2})(?::\d{1,2})?$/);
   if(!m)return (t||"").trim();
   return String(+m[1]).padStart(2,"0")+":"+String(+m[2]).padStart(2,"0");
+}
+/* Excel stores a time cell as 9:00, the standard table as 09:00 — one column of times has to
+   line up on the board, so pad whatever the source hands over */
+function padTime(t){
+  t=String(t||"").trim();
+  const m=t.match(/^(\d{1,2}):(\d{2})/);
+  return m?String(+m[1]).padStart(2,"0")+":"+m[2]:t;
 }
 function parseDate(s){
   s=(s||"").trim();
@@ -2689,7 +2877,7 @@ async function refresh(){
   if(pr.status==="fulfilled"){PRODUCTS=pr.value;PROD_INDEX=null;}
   FORECAST = fc.status==="fulfilled" ? fc.value : {};
   STANDARD = st.status==="fulfilled" ? st.value : STANDARD_DEFAULT;
-  const data = ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]);
+  const data = withCrowdRows(ex.status==="fulfilled" ? ex.value : (LAST_GOOD_DATA||[]));
   const problems=[];
   if(FORECAST_CSV_URL && fc.status!=="fulfilled"){problems.push("forecast");console.warn("Forecast CSV:",fc.reason);}
   if(CSV_URL && ex.status!=="fulfilled"){problems.push("hours");console.warn("Hours CSV:",ex.reason);}
