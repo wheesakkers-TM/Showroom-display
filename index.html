@@ -381,13 +381,14 @@ tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left
    they are in, the channel shows as a coloured dot with its name. */
 .mbr--social[data-span="1"] .mbr__s,.mbr--social[data-span="2"] .mbr__s{display:flex;}
 .mbr--social{padding:0 8px;}
-.mbr--social .mbr__t{font-size:14px;margin-bottom:3px;}
+.mbr--social .mbr__t{font-size:14px;margin-bottom:3px;white-space:normal;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.2;}
 .mbr--social .mbr__s{gap:6px;margin-top:auto;font-size:11px;}
 .mbr--social .mbr__s svg.flg{width:13px;height:9px;}
 .mbr--social .sflags{display:inline-flex;gap:2px;align-items:center;}
 .mbr--social .schan{display:inline-flex;gap:5px;align-items:center;color:#BFE7DC;font-weight:700;}
 .mbr--social .schan__i{display:inline-flex;align-items:center;gap:3px;}
-.mbr--social .schan img{width:13px;height:13px;border-radius:3px;display:block;}
+.mbr--social .schan img{width:15px;height:15px;display:block;}
 .mbr--social .mbr__s .flg--txt{font-size:8px;min-width:14px;}
 .mbr--social .cdot{width:6px;height:6px;border-radius:50%;background:var(--mc);flex-shrink:0;}
 .mbr--social .cdot--none{background:var(--sage-dim);}
@@ -395,8 +396,8 @@ tr.mbrempty td{color:var(--sage-dim);font-weight:600;font-size:15px;padding-left
 .mbr--promo .mbr__s{display:none;}
 /* 23px keeps a social row exactly as tall as an empty one, so a week with posts
    does not shift the grid by a pixel */
-.mbr--social{height:46px;padding:5px 9px;justify-content:flex-start;}
-tr.mbrrow--socrow{height:50px;}
+.mbr--social{height:68px;padding:5px 9px;justify-content:flex-start;}
+tr.mbrrow--socrow{height:72px;}
 .mbrlead{}
 .clg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
 .clg .flg{width:17px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.18);}
@@ -1114,7 +1115,11 @@ function socialChannelDots(k){
    "data:image/png;base64,..." and the cards use them instead of the dot + name */
 const SOCIAL_SHORT={"instagram":"IG","facebook":"FB","tiktok":"TT","youtube":"YT","pinterest":"PIN","linkedin":"LI"};
 const SOCIAL_ICONS={
-  "instagram":"", "facebook":"", "tiktok":"", "youtube":"", "pinterest":"", "linkedin":""
+  "instagram":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAWRJREFUeAHtlo1NwzAQhZ8RA2SEsEG7gZkANiBMQDeoOwHZoO0EsEFhAtiAjNANzLv6KqKq9Y+CFKnKk14dJXf+4r9rjKcwhsYAC/MGI2kCXz/4NieIm9CyeaFruroQtqc7+t0Ys8VQMKGOzZL+Vsdk6Ufm3BHuUh37yDPrg5bIlMRqjkWMmQCv6R/kAVuJpStt3yKxyQJS42R6mTOjd/5Pci1xncRyimWtPzT3onI2174Hrdns9N5Cb0v7Rd8T2vbyKgwE97VW6FxHJi+zVfCrwHM7Kj3Hlm6PUJFey0hnKFApWCDnprBCYmqHgmWjNbrWB+l1Q29QoNI1fkZYT9nJG4RRNvpshQIVjZjr2bGZIxyXhUJlFub67Ch5oS7a2X8VkJO8ZAHJLZkO+VCnOU+RGG8OP1QkSOq0g1Ym9ArKGVmEiuXY5WoQWAMfENazRvpvUc75Z6I/P31lTuDrA5sxdrXoF/Eq/pDD3idTAAAAAElFTkSuQmCC",
+  "facebook":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAALdJREFUeAHtloEJwjAQRe/EATpCN7EbuIJu4AgdxVEcwQ10g+gE5w9EKEElPwhHQx58So9LPne5lqgB8cDDOHpuxIlu3L7xVirBYE547KHhHVPVI7MB/TlhyWwfINYbbYz00b5A7GE1rR6z9wt0FpaKig9ZoTshcf1zFVeczvYGhazikOJRQ7EnafyLIIX8u9V3JpmZ6gc0Jc2L+Am6Qk9hKG31In/dU92Nu3F7xv1e3b6xepxx5AWZgvJpMNpq5QAAAABJRU5ErkJggg==",
+  "tiktok":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAVBJREFUeAHtluFxwjAMhWWOARjBI9AJaCconQA26HWCjMAI6QbtBrQTABMkTAAbmCfQHcZ3jmUSyA94d4qTWNZnnyUnxkHUh/oAM3NAPenxwENqIWzVFM27PO6NMV85g69OLgwt3Fm7jHGdJtcI8V61zl3vcQm41Th2DbawJeCz1ARukdUW9g2reAJ0R7BKajAnDuwTVkoZhaphL7A/bUCX6Ods/XGXKqSv8N5VwZgJtzHmMAVFs6LTvqmFg2SP5r/JJ3VyLQIoB1zDttRSUbCsdu69YuCbrKa1mpJrHDx/dAVNga13XwNaU7OyJjVQBrKRk2gc8U8rVk5SEjuvXFY+HPfzoMRmWcymOkbXIgjOE1nKJHxVTvlx0IJHEjSlKWUoCRYn3t8yAqxgE8oUDzTHC6RwtnT6zeGE4kT6hW2uKTHVim8hZj7/q+8m08cesw7hD3cj/IVHrwAAAABJRU5ErkJggg==",
+  "youtube":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAXFJREFUeAHtVtFRwkAQ3XMogA5ICViBV0KoIHaAVgBWEK1AOjBWIFYgVuB1IFYQ35LnGJjkuIMw+cmbebm9zbIvye7dYUpA+kAfwqp5JT1hEG4ESjJW0k6kC4Q0F0Is+MEHKM8V32mGdjXCvsEUfOMDzMGM91L6bgNzRQnnFM9oP4Nf/Bo6TiJyRS2nV1Dr/M5xDTpwIicgRtjpxRjjpAOcs5ymUr35lnMrEYgRVoEl7QeKFvgCWoJHzpfB2UIbokuo5uhIgMWwABOJgwOf8DUKX/KyxZ9ys9B1e0PelfvIubG0wbZp+mo856hNlIKGPidVvZUbzh1jNzVbsWhL7hNOOI7JP5+lwIw+ba5rcCVV080ackQJhyJDLfXt15y7kB91fSzqLpaHBPqEt5579W4teGQqf8D7kByjI8mntK3813lF29V8KWN1I3k5yNEM3wbC5XIqcp+m2V0AT1Ai8SfQJxuuVXj4ezsIXwymj+ZS/AJFKGLWRUzwbgAAAABJRU5ErkJggg==",
+  "pinterest":"", "linkedin":""
 };
 function socialChannelMarks(k){
   const ch=socialChannels(k);
