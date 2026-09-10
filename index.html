@@ -223,6 +223,19 @@ th.gh--room{width:23%;}
 .mcd--out{border-top:1px solid var(--hair-soft);}
 .mcd--past{opacity:.38;}
 .mev{margin-bottom:7px;}
+/* month day cell: one chip per kind of information */
+.mchip{display:flex;align-items:center;gap:5px;font-weight:700;font-size:13px;line-height:1.15;
+  padding:3px 7px;margin-bottom:4px;border-radius:6px;cursor:help;background:rgba(255,255,255,.05);
+  border-left:3px solid var(--mc,#8FA37E);color:#E7EFE2;}
+.mchip svg{width:11px;height:11px;fill:currentColor;flex-shrink:0;}
+.mchip__l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px;}
+.mchip__n{margin-left:auto;font-size:12px;font-weight:600;color:var(--sage);}
+.mchip .bdot{width:7px;height:7px;border-radius:50%;background:var(--dot);flex-shrink:0;}
+.mchip--closed{--mc:#8FA37E;color:#CBD8C4;}
+.mchip--adj{--mc:var(--orange);color:#FFD9AE;}
+.mchip--busy{--mc:#C9A227;}
+.mchip--prod{--mc:var(--lime);color:#DCEBBF;}
+.mchip--social{--mc:#35B79A;color:#BFE7DC;}
 .mev[data-tip]{cursor:help;}
 .mev__t{font-weight:700;font-size:15px;color:#fff;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
 .mline{display:flex;align-items:flex-start;gap:5px;margin-top:2px;font-weight:600;font-size:13px;color:var(--sage);}
@@ -1946,6 +1959,11 @@ function lowerSections(mon,end){
 }
 /* ---------- month calendar view ---------- */
 let MONTH_OFFSET=0, QUARTER_OFFSET=0, WEEK_OFFSET=(function(){try{return (new URLSearchParams(location.search).get("view")==="next")?1:0;}catch(e){return 0;}})(), LAST_RENDER_DATA=null, LAST_PROBLEMS=[];
+function escAttr(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+function chipHTML(cls,label,count,tip){
+  return `<div class="mchip ${cls}"${tipAttr(tip)}><span class="mchip__l">${label}</span>`+
+         (count>1?`<span class="mchip__n">${count}</span>`:"")+`</div>`;
+}
 function dayClosedTip(d,exMap){
   // holidays (all countries) + which showrooms are closed on this date
   const parts=[];
@@ -2058,79 +2076,46 @@ function buildMonth(data,anchor){
       const k=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
       const items=byDay[k]||[];
       if(!inMonth){h+=`<td class="mcd mcd--out"></td>`;continue;}
-      // group per reason
-      const ev=new Map();
-      if(FILTERS.hours)items.filter(rowHasImpact).forEach(it=>{const key=reasonKey(it.Reason);
-        if(!ev.has(key))ev.set(key,{reason:it.Reason||"",rows:[]});
-        ev.get(key).rows.push(it);});
-      ev.forEach(function(e){const v=reasonVariants(e.rows);e.title=v.title;e.reason=v.reason;e.vlines=v.lines;});
+      /* One labelled chip per kind of information. The month view is an overview: the chip
+         says what it is and how many, its own hover carries the specifics. Media planning has
+         no chip because it runs every day — it sits in the bars under the week and in the
+         hover of the day number. Promotions likewise: the bar under the week already says it. */
       let cell="";
-      let shown=0;
-      ev.forEach(e=>{
-        if(shown>=2){return;}
-        shown++;
-        const icon=iconFor(e.reason);
-        const closed=e.rows.filter(x=>isClosed(x.Status));
-        const adj=e.rows.filter(x=>!isClosed(x.Status)&&(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil)));
-        let lines="";
-        if(closed.length)lines+=`<div class="mline mline--closed">${closedLineHTML(closed)}</div>`;
-        if(adj.length)lines+=`<div class="mline mline--adj">${CLOCK_SVG}<span>${roomList(adj)}</span></div>`;
-        // why is this on the board? show the expected consequence
-        const busy={};
-        e.rows.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));})
-          .forEach(function(x){
-            const cw=crowdInfo(x.Crowd);if(!cw)return;
-            (busy[cw.label]=busy[cw.label]||{color:cw.color,rows:[]}).rows.push(x);
-          });
-        Object.keys(busy).forEach(function(lbl){
-          const g=busy[lbl];
-          lines+=`<div class="mline mline--busy"><i class="bdot" style="--dot:${g.color}"></i>`+
-                 `<span><b>${lbl==="High"?"Busier than usual":lbl+" footfall"}</b> \u2014 ${roomList(g.rows)}</span></div>`;
+      const imp=FILTERS.hours?items.filter(rowHasImpact):[];
+      if(imp.length){
+        const impTip=impactTipLines(items).join("\n");
+        const closed=imp.filter(function(x){return isClosed(x.Status);});
+        const adj=imp.filter(function(x){return !isClosed(x.Status)&&(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));});
+        const crowd={};
+        imp.filter(function(x){return !isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil));})
+          .forEach(function(x){const cw=crowdInfo(x.Crowd);if(!cw)return;
+            (crowd[cw.label]=crowd[cw.label]||{color:cw.color,rows:[]}).rows.push(x);});
+        if(closed.length)cell+=chipHTML("mchip--closed",LOCK_SVG+"Closed",closed.length,impTip);
+        if(adj.length)cell+=chipHTML("mchip--adj",CLOCK_SVG+"Adjusted hours",adj.length,impTip);
+        Object.keys(crowd).forEach(function(lbl){
+          const g=crowd[lbl];
+          cell+=chipHTML("mchip--busy",`<i class="bdot" style="--dot:${g.color}"></i>`+
+            (lbl==="High"?"Busier than usual":lbl+" footfall"),g.rows.length,impTip);
         });
-        // full hover card text
-        const tp=[fullReason(e.reason)||"Special day"];
-        (e.vlines||[]).forEach(function(x){tp.push(x);});
-        holidaysOnDay(d).forEach(function(x){tp.push("Public holiday: "+x);});
-        if(closed.length)tp.push("Closed: "+roomList(closed,true));
-        adj.forEach(x=>tp.push(`${x.Showroom}: ${x.OpenFrom}\u2013${x.OpenUntil}`));
-        e.rows.filter(x=>!isClosed(x.Status)&&!(isAdjusted(x.Status)||(x.OpenFrom&&x.OpenUntil))).forEach(x=>{
-          const cw=crowdInfo(x.Crowd);
-          if(cw)tp.push(`${x.Showroom}: open as usual, expected footfall ${cw.label}`);
-        });
-        const shownTitle=isQuietReason(e.reason)?"":`<div class="mev__t">${icon?icon+" ":""}${e.title||displayReason(e.reason)||"Special day"}</div>`;
-        cell+=`<div class="mev"${tipAttr(tp.join("\n"))}>${shownTitle}${lines}</div>`;
-      });
-      if(ev.size>2){
-        const hidden=[...ev.values()].slice(2).map(function(x){
-          const cl=x.rows.filter(function(y){return isClosed(y.Status);});
-          return (x.title||displayReason(x.reason))+(cl.length?" \u2014 closed: "+roomList(cl,true):"");
-        });
-        cell+=`<div class="mev__more"${tipAttr(hidden.join("\n"))}>+${ev.size-2} more</div>`;
       }
-      (FILTERS.products?productsOnDay(d):[]).forEach(function(pr){
-        const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-        cell+=`<div class="mev mev--prod"${tipAttr("Product launch: "+pr.name+"\nLaunch date: "+full)}>`+
-              `<div class="mev__t">${ROCKET} ${pr.name}</div></div>`;
-      });
+      const prods=FILTERS.products?productsOnDay(d):[];
+      if(prods.length){
+        const pfull=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+        cell+=chipHTML("mchip--prod",ROCKET+"Product launch",prods.length,
+          prods.map(function(pr){return "Product launch: "+pr.name;}).join("\n")+"\nLaunch date: "+pfull);
+      }
       const soc=FILTERS.social?socialOnDay(d):[];
-      /* the post itself, not just a marker: one clamped line, the rest folded into a counter */
-      soc.slice(0,1).forEach(function(o){
-        cell+=`<div class="mev mev--social"${tipAttr(socialTip(o))}>`+
-              `<div class="mev__t"><span class="sflags">${marketFlags(o.land)}</span>${o.title}</div></div>`;
+      if(soc.length)cell+=chipHTML("mchip--social","Social post",soc.length,soc.map(socialTip).join("\n\n"));
+      /* the day number carries only what has no chip of its own */
+      const dt=[];
+      holidaysOnDay(d).forEach(function(x){dt.push("Public holiday: "+x);});
+      if(FILTERS.media)mediaActive(d).forEach(function(m){
+        dt.push("Media: "+flagTok(m.land)+m.partner+" ("+(m.kanaal||"channel unknown")+") "+mediaRangeLabel(m));
       });
-      if(soc.length>1)cell+=`<div class="mev__more mev__more--social"${tipAttr(soc.slice(1).map(socialTip).join("\n"))}>+${soc.length-1} more posts</div>`;
-      let dtip=dayClosedTip(d,exMap);
-      if(FILTERS.media){
-        const ma=mediaActive(d);
-        if(ma.length){
-          const mlines=ma.map(function(m){return "Media: "+flagTok(m.land)+m.partner+" ("+(m.kanaal||"channel unknown")+") "+mediaRangeLabel(m);});
-          dtip=(dtip?dtip+"\n":"")+mlines.join("\n");
-        }
-      }
+      const dtip=dt.join("\n");
       const isHol=holidaysOnDay(d).length>0;
       h+=`<td class="mcd${past?" mcd--past":""}">`+
-         `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}`+
-         (soc.length?`<i class="ndot ndot--social"></i>`:"")+`</div>${cell}</td>`;
+         `<div class="mcd__n${isToday?" mcd__n--today":""}${isHol?" mcd__n--hol":""}"${tipAttr(dtip)}>${d.getDate()}</div>${cell}</td>`;
     }
     h+=`</tr>`;
     /* one band per week has room for two bar rows; with promotions on, media gives up its
@@ -2267,35 +2252,31 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
   /* the special days are no longer listed under the calendar — hovering the day's dot shows
      the whole story instead. The list keeps the layers, in board order. */
   let plist="";
-  let pcount=0,phidden=[];
   if(FILTERS.products)PRODUCTS.forEach(function(r){
     const d=parseDate(r[0]);
     if(!d||d.getMonth()!==anchor.getMonth()||d.getFullYear()!==anchor.getFullYear())return;
-    if(pcount++>=3){phidden.push(r[1]+": "+d.toLocaleDateString("en-GB",{day:"numeric",month:"long"}));return;}
     const full=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-    plist+=`<div class="qev qev--prod"${tipAttr("Product launch: "+r[1]+"\nLaunch date: "+full)}>`+
+    plist+=`<div class="qev qev--prod" data-fit="${escAttr(d.getDate()+" "+d.toLocaleDateString("en-GB",{month:"short"})+": "+r[1])}"${tipAttr("Product launch: "+r[1]+"\nLaunch date: "+full)}>`+
            `<span class="qev__d">${d.getDate()} ${d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
            `<span class="qev__t">${ROCKET} ${r[1]}</span></div>`;
   });
   (FILTERS.products?periodLaunches(anchor):[]).forEach(function(pl){
-    plist+=`<div class="qev qev--prod"${tipAttr("Product launch: "+pl.name+"\nTarget launch: "+pl.label+" (provisional)")}>`+
+    plist+=`<div class="qev qev--prod" data-fit="${escAttr(pl.label+": "+pl.name)}"${tipAttr("Product launch: "+pl.name+"\nTarget launch: "+pl.label+" (provisional)")}>`+
            `<span class="qev__d">${pl.label.split(" ")[0].slice(0,3)}</span>`+
            `<span class="qev__t">${ROCKET} ${pl.name}</span></div>`;
   });
-  if(phidden.length)plist+=`<div class="qev qev--more"${tipAttr(phidden.join("\n"))}>+${phidden.length} more launches</div>`;
   if(plist)list+=`<div class="qev__sep">Product launches</div>`+plist;
   if(FILTERS.promos){
     const mstart0=new Date(anchor.getFullYear(),anchor.getMonth(),1);
     const mend0=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
     let prlist="";
     const pall=promosOverlapping(mstart0,mend0);
-    pall.slice(0,3).forEach(function(pr){
-      prlist+=`<div class="qev qev--promo"${tipAttr(promoTip(pr))}>`+
+    pall.forEach(function(pr){
+      prlist+=`<div class="qev qev--promo" data-fit="${escAttr(mediaRangeLabel({from:pr.from,until:pr.until})+": "+pr.name+(/extension/i.test(pr.type)?" (extension)":""))}"${tipAttr(promoTip(pr))}>`+
               `<span class="qev__d">${mediaRangeLabel({from:pr.from,until:pr.until})}</span>`+
               `<span class="qev__t"><i class="dotc" style="background:${PROMO_COLOR}"></i>${pr.name}`+
               `${/extension/i.test(pr.type)?' <span class="rl__sep">\u00b7</span> extension':""}</span></div>`;
     });
-    if(pall.length>3)prlist+=`<div class="qev qev--more"${tipAttr(pall.slice(3).map(function(pr){return pr.name+" \u00b7 "+mediaRangeLabel({from:pr.from,until:pr.until});}).join("\n"))}>+${pall.length-3} more promotions</div>`;
     if(prlist)list+=`<div class="qev__sep">Promotions</div>`+prlist;
   }
   if(FILTERS.media){
@@ -2303,12 +2284,11 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     const mend=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
     const ml=mediaOverlapping(mstart,mend);
     let mhtml="";
-    ml.slice(0,3).forEach(function(m){
-      mhtml+=`<div class="qev qev--media"${tipAttr(mediaTip(m))}>`+
+    ml.forEach(function(m){
+      mhtml+=`<div class="qev qev--media" data-fit="${escAttr(mediaRangeLabel(m)+": "+marketTok(m.land)+m.partner+" \u00b7 "+(m.kanaal||"channel unknown"))}"${tipAttr(mediaTip(m))}>`+
              `<span class="qev__d">${mediaRangeLabel(m)}</span>`+
              `<span class="qev__t"><i class="dotc" style="background:${channelColor(m.kanaal)}"></i>${m.partner}</span></div>`;
     });
-    if(ml.length>3)mhtml+=`<div class="qev qev--more"${tipAttr(ml.slice(3).map(function(m){return flagTok(m.land)+m.partner+": "+(m.kanaal||"channel unknown")+" \u00b7 "+mediaRangeLabel(m);}).join("\n"))}>+${ml.length-3} more campaigns</div>`;
     if(mhtml)list+=`<div class="qev__sep">Media planning</div>`+mhtml;
   }
   if(FILTERS.social){
@@ -2316,15 +2296,14 @@ function buildMiniMonth(data,anchor,exMap,byDay,t0){
     const send=new Date(anchor.getFullYear(),anchor.getMonth()+1,0);
     const sl=socialOverlapping(sstart,send);
     let shtml="";
-    sl.slice(0,3).forEach(function(o){
-      shtml+=`<div class="qev qev--social"${tipAttr(socialTip(o))}>`+
+    sl.forEach(function(o){
+      shtml+=`<div class="qev qev--social" data-fit="${escAttr(o.d.getDate()+" "+o.d.toLocaleDateString("en-GB",{month:"short"})+": "+marketTok(o.land)+o.title+" \u00b7 "+(o.kanaal||"channel unknown"))}"${tipAttr(socialTip(o))}>`+
              `<span class="qev__d">${o.d.getDate()} ${o.d.toLocaleDateString("en-GB",{month:"short"})}</span>`+
              `<span class="qev__t"><span class="sflags">${marketFlags(o.land)}</span>${o.title}</span></div>`;
     });
-    if(sl.length>3)shtml+=`<div class="qev qev--more"${tipAttr(sl.slice(3).map(function(o){return o.d.getDate()+" "+o.d.toLocaleDateString("en-GB",{month:"short"})+": "+o.title;}).join("\n"))}>+${sl.length-3} more posts</div>`;
     if(shtml)list+=`<div class="qev__sep">Social media</div>`+shtml;
   }
-  if(!list)list=`<div class="qev qev--none">Nothing planned</div>`;
+  if(!list)list=`<div class="qev qev--none">Nothing planned yet</div>`;
   return `<div class="qm"><div class="qm__title">${anchor.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}</div>${h}<div class="qm__list">${list}</div></div>`;
 }
 function renderQuarter(data,problems){
@@ -2351,6 +2330,7 @@ function renderQuarter(data,problems){
   }
   h+='</div>';
   document.getElementById("q-grid").innerHTML=h;
+  fitQuarterLists();
   if(problems.length){
     const f=document.querySelector(".foot");if(f)f.style.display="flex";
     document.getElementById("updated").textContent="\u26A0 "+problems.join(" & ")+" data unavailable, retrying";
@@ -2467,6 +2447,34 @@ function fitSched(){
   const avail=Math.max(120,wrap.clientHeight-top),need=inner.scrollHeight;
   const k=need>avail+1?avail/need:1;
   inner.style.transform="scale("+k+")";inner.style.transformOrigin="top center";
+}
+/* The quarter lists render in full; this trims only what actually runs past the bottom of
+   the column, so a month with room shows everything. */
+function fitQuarterLists(){
+  const wrap=document.getElementById("quarterv");
+  if(!wrap||wrap.style.display==="none")return;
+  const limit=wrap.getBoundingClientRect().bottom-4;
+  wrap.querySelectorAll(".qm__list").forEach(function(list){
+    list.querySelectorAll(".qev--fitmore").forEach(function(e){e.remove();});
+    const rows=[].slice.call(list.children);
+    rows.forEach(function(r){r.style.display="";});
+    let cut=-1;
+    for(let i=0;i<rows.length;i++){
+      if(rows[i].getBoundingClientRect().bottom>limit){cut=i;break;}
+    }
+    if(cut<0)return;
+    if(cut>0)cut--;                       // the "+N more" line needs a row of its own
+    const hidden=rows.slice(cut);
+    hidden.forEach(function(r){r.style.display="none";});
+    const lines=hidden.filter(function(r){return r.hasAttribute("data-fit");})
+                      .map(function(r){return r.getAttribute("data-fit");});
+    if(!lines.length)return;
+    const el=document.createElement("div");
+    el.className="qev qev--more qev--fitmore";
+    el.textContent="+"+lines.length+" more";
+    el.setAttribute("data-tip",lines.join("\n"));
+    list.appendChild(el);
+  });
 }
 function fitColumns(){
   const fits=[...document.querySelectorAll(".fit")];if(!fits.length)return;
@@ -2714,7 +2722,7 @@ function fitStage(){
   window.addEventListener("scroll",hide,true);
   window.addEventListener("resize",hide);
 })();
-window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();});
+window.addEventListener("resize",()=>{fitStage();fitColumns();fitSched();fitQuarterLists();});
 initNav();
 /* instant first paint: show the grid with standard hours while the CSVs load */
 if(VIEW!=="holidays"){try{render([],[]);}catch(e){console.warn("first paint:",e);}}
