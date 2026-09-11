@@ -1437,24 +1437,28 @@ function mediaTip(m){
 }
 
 const FORECAST_WEEK_DEFAULT = {
-  "Eindhoven":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"M",8:"H",9:"H",10:"H",11:"H",12:"H",13:"H",14:"H",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"M",31:"H",32:"M",33:"M",34:"M",35:"M",36:"Q",37:"Q",38:"M",39:"Q",40:"M",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Venlo":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"M",10:"H",11:"H",12:"M",13:"H",14:"H",15:"H",16:"M",17:"H",18:"H",19:"H",20:"H",21:"M",22:"H",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"M",40:"H",41:"Q",42:"M",43:"M",44:"M",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Uddel":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"H",20:"H",21:"Q",22:"H",23:"M",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"H",31:"H",32:"H",33:"H",34:"H",35:"M",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Leicester":{1:"M",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"Q",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"M",24:"H",25:"Q",26:"M",27:"M",28:"Q",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"Q",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "London":{1:"M",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"Q",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"M",20:"H",21:"M",22:"M",23:"M",24:"H",25:"Q",26:"M",27:"M",28:"Q",29:"M",30:"M",31:"M",32:"M",33:"M",34:"M",35:"Q",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Crailsheim":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Ingolstadt":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"Q",17:"Q",18:"M",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"H",30:"M",31:"Q",32:"M",33:"Q",34:"M",35:"H",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Heidelberg":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"H",17:"H",18:"Q",19:"Q",20:"Q",21:"M",22:"H",23:"H",24:"H",25:"H",26:"M",27:"M",28:"M",29:"M",30:"M",31:"H",32:"M",33:"Q",34:"M",35:"M",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Bremen":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Berlin":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"Q",11:"Q",12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
-  "Munich":{1:"M",2:"M",3:"M",4:"M",5:"H",6:"Q",7:"Q",8:"Q",9:"Q",10:"M",11:"H",12:"H",13:"H",14:"H",15:"H",16:"Q",17:"Q",18:"M",19:"M",20:"H",21:"M",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"H",30:"M",31:"Q",32:"M",33:"Q",34:"M",35:"H",36:"M",37:"M",38:"M",39:"Q",40:"H",41:"Q",42:"Q",43:"Q",44:"Q",45:"Q",46:"Q",47:"Q",48:"Q",49:"Q",50:"Q",51:"Q",52:"Q"},
+  "Eindhoven":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"M",8:"H",9:"M",10:"H",11:"H",12:"H",13:"H",14:"H",15:"H",16:"H",17:"M",18:"H",19:"M",20:"H",21:"M",22:"M",23:"M",24:"M",25:"Q",26:"Q",27:"M",28:"M",29:"M",30:"M",31:"M",32:"M",33:"Q",34:"M",35:"Q",36:"Q"},
+  "Venlo":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"M",10:"H",11:"H",12:"M",13:"H",14:"H",15:"H",16:"M",17:"H",18:"H",19:"H",20:"H",21:"M",22:"H",23:"H",24:"M",25:"M",26:"Q",27:"M",28:"M",29:"M",30:"Q",31:"M",32:"M",33:"Q",34:"M",35:"M",36:"Q"},
+  "Uddel":{1:"Q",2:"Q",3:"Q",4:"Q",5:"Q",6:"Q",7:"Q",8:"M",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"M",18:"H",19:"H",20:"H",21:"Q",22:"H",23:"M",24:"Q",25:"M",26:"Q",27:"Q",28:"M",29:"M",30:"M",31:"H",32:"H",33:"H",34:"H",35:"M",36:"M"},
+  "Leicester":{4:"Q",5:"Q",6:"Q",7:"Q",8:"Q",9:"H",10:"M",11:"M",12:"M",13:"M",14:"M",15:"H",16:"H",17:"H",18:"H",19:"H",20:"H",21:"M",22:"Q",23:"M",24:"H",25:"Q",26:"M",27:"M",28:"Q",29:"M",30:"M",31:"M",32:"M",33:"H",34:"M",35:"Q",36:"Q"},
+  "Crailsheim":{12:"M",13:"M",14:"Q",15:"M",16:"Q",17:"H",18:"H",19:"M",20:"H",21:"H",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"M",29:"Q",30:"M",31:"Q",32:"Q",33:"Q",34:"M",35:"M",36:"Q"},
+  "Ingolstadt":{17:"Q",18:"M",19:"Q",20:"H",21:"H",22:"M",23:"H",24:"M",25:"M",26:"Q",27:"Q",28:"M",29:"H",30:"M",31:"Q",32:"M",33:"Q",34:"H",35:"H",36:"M"},
+  "Heidelberg":{19:"Q",20:"Q",21:"M",22:"H",23:"H",24:"H",25:"H",26:"M",27:"Q",28:"Q",29:"M",30:"M",31:"H",32:"M",33:"Q",34:"M",35:"M",36:"M"},
 };
+
 const FC_LETTER={H:"Busy",M:"Moderate",Q:"Quiet"};
-/* Weekly footfall level per showroom, derived from the Dashboard CS ticket data.
-   Measured for 2026 weeks 1-36; later weeks use last year's same week, otherwise the
-   seasonal curve. Rooms without their own ticket data borrow the nearest comparable
-   showroom (London<-Leicester, Bremen/Berlin<-Crailsheim, Munich<-Ingolstadt).
-   A daily row in the forecast tab always wins over this weekly fallback. */
+/* Weekly footfall level per showroom, straight from "Dashboard CS 2026.xlsx" (SharePoint
+   Marketing > Showrooms > Kalender): handled tickets per showroom per ISO week, classified
+   against that showroom's OWN spread - Venlo runs a median of 269 tickets a week and
+   Ingolstadt 21, so one shared threshold would be meaningless.
+   Only measured weeks are in here (2026 weeks 1-36). Deliberately NOT in here:
+   - weeks 37-52, which have no ticket data; the FC tickets rows in that workbook are empty
+   - the opening ramp of a new showroom, where a low week means "just opened", not "quiet":
+     Leicester from week 4, Crailsheim from 12, Ingolstadt from 17, Heidelberg from 19
+   - London, Bremen, Berlin and Munich, which have no rows in that workbook at all
+   A week with no entry gets NO dot. Guessing is worse than showing nothing: only the Drukte
+   tab can still colour such a day, and there the reason is known (decision 11-9-2026).
+   A daily forecast row would win over this table, but there is no forecast source anymore. */
 function forecastWeekLevel(d,room){
   const t=FORECAST_WEEK_DEFAULT[room];if(!t)return "";
   const l=t[isoWeek(d)];
